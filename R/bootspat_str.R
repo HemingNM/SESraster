@@ -83,7 +83,10 @@ bootspat_str <- function(x, prob=NULL, rich=NULL, fr=NULL, cores = 1, filename =
   }
 
   if(is.null(fr)){
-    fr <- subset(terra::freq(x), 'value'==1)[,"count"]
+    # uses utils::globalVariables because of https://github.com/r-lib/devtools/issues/1714
+    # utils::globalVariables(value)
+    value <- NULL
+    fr <- subset(terra::freq(x), value==1)[,"count"]
   }
 
   if(is.null(prob)){
