@@ -11,7 +11,7 @@ Authors@R:
     person("Flávio", "Mota", , "flaviomoc@gmail.com", 
            role = c("ctb", "cre"),
            comment = c(ORCID = "0000-0002-0308-7151"))
-Description: The SESraster randomizes spatial data for calculating Standardized Effect Sizes (SES). It can randomize with or without including spatial structure on the data.
+Description: The SESraster randomizes spatial data with or without including spatial structure for calculating Standardized Effect Sizes (SES).
 License: GPL (>= 3)
 URL: https://github.com/HemingNM/SESraster
 BugReports: https://github.com/HemingNM/SESraster/issues
