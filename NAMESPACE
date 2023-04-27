@@ -2,3 +2,4 @@
 
 export(bootspat_naive)
 export(bootspat_str)
+export(fr2prob)

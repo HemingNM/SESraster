@@ -8,7 +8,7 @@ bootspat_str(
   x,
   prob = NULL,
   rich = NULL,
-  fr = NULL,
+  fr_prob = NULL,
   cores = 1,
   filename = "",
   memory = NULL,
@@ -24,7 +24,7 @@ pattern of each randomized species.}
 \item{rich}{SpatRaster. Richness pattern structuring the sample size of
 each cell randomization. Calculated if not provided.}
 
-\item{fr}{frequency of pixels that a species is observed within each layer of x}
+\item{fr_prob}{Either frequency of pixels or probability that a species is observed within each layer of x}
 
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 

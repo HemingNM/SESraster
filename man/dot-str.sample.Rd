@@ -4,7 +4,7 @@
 \alias{.str.sample}
 \title{Vectorized structured sample}
 \usage{
-.str.sample(x, sp, resu, fr)
+.str.sample(x, sp, resu, fr_prob)
 }
 \arguments{
 \item{x}{vector containing sample size (i.e. richness) in the first element
@@ -14,7 +14,7 @@ and probabilities on the remaining}
 
 \item{resu}{vector of results, must be the same length of sp}
 
-\item{fr}{frequency of each sp element. This will be multiplied by the
+\item{fr_prob}{Frequency or probability of each sp element. This will be multiplied by the
 probability vector}
 }
 \value{
