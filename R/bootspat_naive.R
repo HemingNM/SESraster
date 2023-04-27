@@ -3,9 +3,10 @@
 #' @param x numeric. A vector containing values to resampling.
 #' @param fr data.frame A data.frame with 3 columns (layer, value, count).
 #' @return vector
-# #' @export
+#' @author Neander Marcel Heming
 #'
 # #' @examples
+#' @keywords internal
 .lyr.sample <- function(x, fr){
   sapply(x, function(x, fr){
     if(is.na(x)){
@@ -21,28 +22,14 @@
 #' @param x  numeric. A vector containing values to resampling.
 #'
 #' @return vector
-# #' @export
+#' @author Neander Marcel Heming
 #'
 # #' @examples
+#' @keywords internal
 .sample.not.NA <- function(x){
   s <- !is.na(x)
   x[s] <- sample(x[s])
   x
-}
-
-#' Function to evaluate if the rasters generated in the function fits on memory
-#'
-#' @param x number of rasters generated in the function
-#'
-#' @return logical
-# #' @export
-# #' @examples
-.fit.memory <- function(x){
-  # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  sink(nullfile())    # suppress output
-  mi <- terra::mem_info(x, 1)[5] != 0 # proc in memory = T TRUE means that it fits in the pc's memory, so you wouldn't have to use temporary files
-  sink()
-  return(mi)
 }
 
 #' Randomize a set of rasters according to the observed frequency.
@@ -58,15 +45,15 @@
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
-#' @export
 #'
 #' @examples
 #' \dontrun{
 #' ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-#' sr <- spat.rand(ras, random = "site")
+#' sr <- bootspat_naive(ras, random = "site")
 #' plot(sr)
 #' }
-spat.rand <- function(x, random = c("site", "species", "both"),
+#' @export
+bootspat_naive <- function(x, random = c("site", "species", "both"),
                       filename = "", memory = NULL, cores = 1, ...){
 
 

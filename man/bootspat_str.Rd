@@ -50,28 +50,23 @@ probability that each species is sampled in a given raster cell.
 \dontrun{
 library(SESraster)
 library(terra)
+# creating random species distributions
 f <- system.file("ex/elev.tif", package="terra")
 r <- rast(f)
 set.seed(510)
-r10 <- rast(lapply(1:10,
+r10 <- rast(lapply(1:18,
                 function(i, r, mn, mx){
                   app(r, function(x, t){
                     sapply(x, function(x, t){
-                      x>t
+                       x<max(t) & x>min(t)
                     }, t=t)
-                  }, t=sample(seq(mn, mx), 1))
+                  }, t=sample(seq(mn, mx), 2))
                 }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10))
-r10 <- c(r10,
-      rast(lapply(1:4,
-                  function(i, r, mn, mx){
-                    app(r, function(x, t){
-                      sapply(x, function(x, t){
-                        x<t
-                      }, t=t)
-                    }, t=sample(seq(mn, mx), 1))
-                  }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10)))
+
 names(r10) <- paste("sp", 1:nlyr(r10))
 plot(r10)
+
+# bootstrapping once
 randr10 <- bootspat_str(r10, rprobnull)
 plot(randr10)
 plot(r10)
@@ -79,4 +74,7 @@ plot(c(sum(r10), sum(randr10)))
 cbind(rand=sapply(randr10, function(x)freq(x)[2,3]),
       actual=sapply(r10, function(x)freq(x)[2,3]))
 }
+}
+\author{
+Neander Marcel Heming
 }

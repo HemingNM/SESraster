@@ -23,4 +23,7 @@ vector of sampled sp elements
 \description{
 Vectorized structured sample
 }
+\author{
+Neander Marcel Heming
+}
 \keyword{internal}

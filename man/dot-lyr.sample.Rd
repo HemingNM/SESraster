@@ -17,3 +17,7 @@ vector
 \description{
 Intern function to resampling a vector according to the observed frequency
 }
+\author{
+Neander Marcel Heming
+}
+\keyword{internal}

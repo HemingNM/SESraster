@@ -15,3 +15,7 @@ logical
 \description{
 Function to evaluate if the rasters generated in the function fits on memory
 }
+\author{
+Neander Marcel Heming and Gabriela Alves-Ferreira
+}
+\keyword{internal}

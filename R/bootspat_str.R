@@ -7,6 +7,7 @@
 #' @param fr frequency of each sp element. This will be multiplied by the
 #' probability vector
 #' @return vector of sampled sp elements
+#' @author Neander Marcel Heming
 # #' @examples
 #'
 #' @keywords internal
@@ -40,33 +41,29 @@
 # #' @param filename Character. Filename for output SpatRaster.
 #' @param memory logical. Checks if there is enough available RAM memory. Calculated if NULL
 #' @param ... additional parameters for terra::app
+#' @author Neander Marcel Heming
 #'
 #' @examples
 #' \dontrun{
 #' library(SESraster)
 #' library(terra)
+#' # creating random species distributions
 #' f <- system.file("ex/elev.tif", package="terra")
 #' r <- rast(f)
 #' set.seed(510)
-#' r10 <- rast(lapply(1:10,
+#' r10 <- rast(lapply(1:18,
 #'                 function(i, r, mn, mx){
 #'                   app(r, function(x, t){
 #'                     sapply(x, function(x, t){
-#'                       x>t
+#'                        x<max(t) & x>min(t)
 #'                     }, t=t)
-#'                   }, t=sample(seq(mn, mx), 1))
+#'                   }, t=sample(seq(mn, mx), 2))
 #'                 }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10))
-#' r10 <- c(r10,
-#'       rast(lapply(1:4,
-#'                   function(i, r, mn, mx){
-#'                     app(r, function(x, t){
-#'                       sapply(x, function(x, t){
-#'                         x<t
-#'                       }, t=t)
-#'                     }, t=sample(seq(mn, mx), 1))
-#'                   }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10)))
+#'
 #' names(r10) <- paste("sp", 1:nlyr(r10))
 #' plot(r10)
+#'
+#' # bootstrapping once
 #' randr10 <- bootspat_str(r10, rprobnull)
 #' plot(randr10)
 #' plot(r10)
@@ -109,5 +106,6 @@ bootspat_str <- function(x, prob=NULL, rich=NULL, fr=NULL, cores = 1, filename =
   cores = cores, filename = filename, overwrite = T)
 
   terra::set.names(r, names(prob))
-  r
+
+  return(r)
 }

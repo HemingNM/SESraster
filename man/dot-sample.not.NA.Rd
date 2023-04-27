@@ -15,3 +15,7 @@ vector
 \description{
 Intern function to sample vectors with non-NA values
 }
+\author{
+Neander Marcel Heming
+}
+\keyword{internal}
