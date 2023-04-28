@@ -5,7 +5,8 @@
 #' across the raster, so that the sampled frequency of occurrence of the
 #' species is closer to the observed
 #'
-#' @param x SpatRaster. A presence-absence SpatRaster.
+#' @param x SpatRaster. A presence-absence raster (stack).
+#' @param rprob SpatRaster. A raster (stack) of probabilities.
 #'
 #' @return numeric vector
 #' @export
@@ -32,18 +33,27 @@
 #' # raw frequencies
 #' subset(terra::freq(r10), value==1)[,"count"]
 #' }
-fr2prob <- function(x){
-  value <- NULL
-  fr <- subset(terra::freq(x), value==1)[,"count"]
-  all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
-
+fr2prob <- function(x, rprob=NULL){
+  fr <- unlist(global(x, function(x)sum(x, na.rm=T)))
+  all <- unlist(global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
   p <- fr/all
+
+  if(is.null(rprob)){
+    ppr <- 1
+    # all*(1/all) # probability across all raster
+  } else {
+    frp <- unlist(global(rprob, function(x)sum(x, na.rm=T)))
+    ppr <- frp/all # probability when there are constraints (not all raster is available)
+    # frp*(1/all) # probability when there are constraints (not all raster is available)
+  }
+
   pin <- sapply(seq_along(p),
                 function(i, p){
                   sum(p[-i])
                 }, p=p)
 
-  p*pin/(1-p)
+  (p*pin/(1-p))/ppr
+  # p*pin/(1-p)
 }
 
 #' Vectorized structured sample
@@ -79,11 +89,12 @@ fr2prob <- function(x){
 #' probability that each species is sampled in a given raster cell.
 #'
 #' @param x SpatRaster. A presence-absence SpatRaster.
-#' @param prob SpatRaster. Stack of probability values. Structures the spatial
+#' @param rprob SpatRaster. Stack of probability values. Structures the spatial
 #' pattern of each randomized species.
 #' @param rich SpatRaster. Richness pattern structuring the sample size of
 #' each cell randomization. Calculated if not provided.
-#' @param fr_prob Either frequency of pixels or probability that a species is observed within each layer of x
+#' @param fr_prob Either frequency of pixels or probability that a species is
+#' observed across the whole layer.
 #' @inheritParams terra::app
 # #' @param cores
 # #' @param filename Character. Filename for output SpatRaster.
@@ -121,21 +132,18 @@ fr2prob <- function(x){
 #' }
 #' @return SpatRaster object
 #' @export
-bootspat_str <- function(x, prob=NULL, rich=NULL, fr_prob=NULL, cores = 1, filename = "", memory = NULL, ...){
+bootspat_str <- function(x, rprob=NULL, rich=NULL, fr_prob=NULL, cores = 1, filename = "", memory = NULL, ...){
 
   if(is.null(memory)){
     memory <- .fit.memory(x)
   }
 
   if(is.null(fr_prob)){
-    # uses utils::globalVariables because of https://github.com/r-lib/devtools/issues/1714
-    # utils::globalVariables(value)
-    value <- NULL
-    fr_prob <- subset(terra::freq(x), value==1)[,"count"]
+    fr_prob <- fr2prob(x, rprob)
   }
 
-  if(is.null(prob)){
-    prob <- terra::app(x,
+  if(is.null(rprob)){
+    rprob <- terra::app(x,
                        function(x){
                          ifelse(is.na(x), 0, 1)
                        })
@@ -148,12 +156,12 @@ bootspat_str <- function(x, prob=NULL, rich=NULL, fr_prob=NULL, cores = 1, filen
   sp <- seq_len(terra::nlyr(x))
   resu <- vector("numeric", length(sp))
 
-  r <- terra::app(c(rich, prob),
+  r <- terra::app(c(rich, rprob),
                   .str.sample,
                   sp=sp, resu=resu, fr_prob=fr_prob,
   cores = cores, filename = filename, overwrite = T)
 
-  terra::set.names(r, names(prob))
+  terra::set.names(r, names(x))
 
   return(r)
 }
