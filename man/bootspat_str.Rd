@@ -6,7 +6,7 @@
 \usage{
 bootspat_str(
   x,
-  prob = NULL,
+  rprob = NULL,
   rich = NULL,
   fr_prob = NULL,
   cores = 1,
@@ -18,13 +18,14 @@ bootspat_str(
 \arguments{
 \item{x}{SpatRaster. A presence-absence SpatRaster.}
 
-\item{prob}{SpatRaster. Stack of probability values. Structures the spatial
+\item{rprob}{SpatRaster. Stack of probability values. Structures the spatial
 pattern of each randomized species.}
 
 \item{rich}{SpatRaster. Richness pattern structuring the sample size of
 each cell randomization. Calculated if not provided.}
 
-\item{fr_prob}{Either frequency of pixels or probability that a species is observed within each layer of x}
+\item{fr_prob}{Either frequency of pixels or probability that a species is
+observed across the whole layer.}
 
 \item{cores}{positive integer. If \code{cores > 1}, a 'parallel' package cluster with that many cores is created and used. You can also supply a cluster object. Ignored for functions that are implemented by terra in C++ (see under fun)}
 

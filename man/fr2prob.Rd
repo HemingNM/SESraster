@@ -4,17 +4,20 @@
 \alias{fr2prob}
 \title{Adjust probability of sampling based on frequency of occurrences.}
 \usage{
-fr2prob(x)
+fr2prob(x, rprob = NULL)
 }
 \arguments{
-\item{x}{SpatRaster. A presence-absence SpatRaster.}
+\item{x}{SpatRaster. A presence-absence raster (stack).}
+
+\item{rprob}{SpatRaster. A raster (stack) of probabilities.}
 }
 \value{
 numeric vector
 }
 \description{
-This function is to be used for adjusting probability of sampling a species to
-get the frequency of sampled occurrences closer to the observed frequencies.
+This function is used to adjust the probability of a species to be sampled
+across the raster, so that the sampled frequency of occurrence of the
+species is closer to the observed
 }
 \examples{
 \dontrun{
