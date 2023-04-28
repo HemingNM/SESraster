@@ -39,6 +39,6 @@ r10 <- rast(lapply(1:18,
 names(r10) <- paste("sp", 1:nlyr(r10))
 fr2prob(r10)
 # raw frequencies
-subset(terra::freq(r10), value==1)[,"count"]
+unlist(terra::global(x, function(x)sum(x, na.rm=T)))
 }
 }

@@ -31,18 +31,18 @@
 #' names(r10) <- paste("sp", 1:nlyr(r10))
 #' fr2prob(r10)
 #' # raw frequencies
-#' subset(terra::freq(r10), value==1)[,"count"]
+#' unlist(terra::global(x, function(x)sum(x, na.rm=T)))
 #' }
 fr2prob <- function(x, rprob=NULL){
-  fr <- unlist(global(x, function(x)sum(x, na.rm=T)))
-  all <- unlist(global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
+  fr <- unlist(terra::global(x, function(x)sum(x, na.rm=T)))
+  all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
   p <- fr/all
 
   if(is.null(rprob)){
     ppr <- 1
     # all*(1/all) # probability across all raster
   } else {
-    frp <- unlist(global(rprob, function(x)sum(x, na.rm=T)))
+    frp <- unlist(terra::global(rprob, function(x)sum(x, na.rm=T)))
     ppr <- frp/all # probability when there are constraints (not all raster is available)
     # frp*(1/all) # probability when there are constraints (not all raster is available)
   }
