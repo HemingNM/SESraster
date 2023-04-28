@@ -39,21 +39,16 @@ fr2prob <- function(x, rprob=NULL){
   p <- fr/all
 
   if(is.null(rprob)){
-    ppr <- 1
-    # all*(1/all) # probability across all raster
+    # in frp*(1/all), fpr=all  # probability across all raster
+    # so all*(1/all), and
+    # ppr <- 1
+    p/(1-p)
   } else {
     frp <- unlist(terra::global(rprob, function(x)sum(x, na.rm=T)))
     ppr <- frp/all # probability when there are constraints (not all raster is available)
     # frp*(1/all) # probability when there are constraints (not all raster is available)
+    (p/(1-p))/ppr
   }
-
-  pin <- sapply(seq_along(p),
-                function(i, p){
-                  sum(p[-i])
-                }, p=p)
-
-  (p*pin/(1-p))/ppr
-  # p*pin/(1-p)
 }
 
 #' Vectorized structured sample
