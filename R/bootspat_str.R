@@ -42,7 +42,7 @@ fr2prob <- function(x, rprob=NULL){
     # in frp*(1/all), fpr=all  # probability across all raster
     # so all*(1/all), and
     # ppr <- 1
-    p/(1-p)
+    p/(1.00001-p)
   } else {
     frp <- unlist(terra::global(rprob, function(x)sum(x, na.rm=T)))
     ppr <- frp/all # probability when there are constraints (not all raster is available)
