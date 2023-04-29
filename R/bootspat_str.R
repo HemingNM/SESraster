@@ -36,7 +36,7 @@
 fr2prob <- function(x, rprob=NULL){
   fr <- unlist(terra::global(x, function(x)sum(x, na.rm=T)))
   all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
-  p <- fr/all
+  p <- fr/(all+1)
 
   if(is.null(rprob)){
     # in frp*(1/all), fpr=all  # probability across all raster
