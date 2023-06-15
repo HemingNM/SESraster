@@ -1,26 +1,31 @@
 Package: SESraster
-Title: Randomization of Spatial Data for Standardized Effect Size Calculations
-Version: 0.1.0.0000
-Authors@R: 
+Title: Randomization of Spatial Data for Standardized Effect Size Calculations 
+    and Null Hypothesis Testing
+Version: 0.1.5.0000
+Authors@R:
     person("Neander Marcel", "Heming", , "neanderh@yahoo.com.br", 
-           role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0003-2461-5045"))
+            role = c("aut", "cre"),
+            comment = c(ORCID = "0000-0003-2461-5045"))
     person(given = "Gabriela", family = "Alves-Ferreira", , "gabriela-alves77@hotmail.com",
-           role = c("ctb", "cre"),
-           comment = c(ORCID = "0000-0001-5661-3381"))
+            role = c("ctb", "cre"),
+            comment = c(ORCID = "0000-0001-5661-3381"))
     person("Flávio", "Mota", , "flaviomoc@gmail.com", 
-           role = c("ctb", "cre"),
-           comment = c(ORCID = "0000-0002-0308-7151"))
-Description: The SESraster randomizes spatial data with or without including spatial structure for calculating Standardized Effect Sizes (SES).
+            role = c("ctb", "cre"),
+            comment = c(ORCID = "0000-0002-0308-7151"))
+Description: The package SESraster provides functions to randomize spatial data
+    with or without including spatial structure for calculating standardized 
+    effect sizes (SES) necessary for null hypothesis testing.
 License: GPL (>= 3)
 URL: https://github.com/HemingNM/SESraster
 BugReports: https://github.com/HemingNM/SESraster/issues
 Imports: 
     terra
+Suggests: 
+    devtools,
+    knitr,
+    rmarkdown
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Suggests: 
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr
