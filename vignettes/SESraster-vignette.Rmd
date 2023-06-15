@@ -45,11 +45,12 @@ library(SESraster)
 
 ## Analysis {#analysis}
 
-The `SESraster` package implements functions to randomize spatial data with or without including spatial structure through the functions `bootspat_str` and `bootspat_naive`, respectively. The function `bootspat_str` randomizes a raster stack with fixed richness. Randomizations are based on frequencies (given or calculated from the output raster (a presence-absence SpatRaster) and, optionally, a probability raster stack. Both, frequencies and probability raster stack, control the probability of a given species is sampled in each cell raster. Frequency control the probability of each species compared to all others. Probability raster stack control the probability that each species is sampled in a given raster cell. The function `bootspat_naive` randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells). The first method (site) is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change. The second method (species) is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The third method (both) combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness, species distribution sizes and location at the same time. The randomization not assign values to cells with nodata.
+The `SESraster` package implements functions to randomize spatial data with or without including spatial structure through the functions `bootspat_str` and `bootspat_naive`, respectively. The function `bootspat_str` randomizes a raster stack with fixed richness. Randomizations are based on frequencies (given or calculated from the output raster (a presence-absence SpatRaster) and, optionally, a probability raster stack. Both, frequencies and probability raster stack, control the probability of a given species is sampled in each cell raster. Frequency control the probability of each species compared to all others. Probability raster stack control the probability that each species is sampled in a given raster cell. The function `bootspat_naive` randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells). The first method (site) is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change. The second method (species) is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The third method (both) combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness, species distribution sizes and location at the same time. The randomization does not assign values to cells with nodata.
 
+### Random species generation 
 Now, let's see some of the package functionalities. First, we will create some random species distributions using the package `terra`.
 
-```{r}
+```{r, fig.height=8, fig.width=6}
 library(SESraster)
 library(terra)
 # creating random species distributions
@@ -66,10 +67,57 @@ r10 <- rast(lapply(1:18,
                 }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10))
 
 names(r10) <- paste("sp", 1:nlyr(r10))
-plot(r10)
+par(mar=c(3, 2, 2, 2))
+plot(r10, legend=F)
 ```
 
-With the distributions in hands, we can randomizes that using the spatially structured randomization from the function `bootspat_str`.
+With the distributions in hand, we can do the spatial randomizations
+
+### Spatially Unstructured Randomization
+First, let's randomize species distribution ignoring the spatial structure with the function `bootspat_naive`. 
+
+#### both, by site and species simultaneously
+We can randomize the presences/absences (1s/0s) using the method `both`. This method combines randomization by site and species at the same time. It will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. Notice that NA cells are ignored.
+
+```{r, fig.height=8, fig.width=6}
+srb <- bootspat_naive(r10, random = "both")
+plot(srb, legend=F)
+```
+
+```{r, fig.height=4, fig.width=6}
+plot(c(sum(r10), sum(srb)), main=c("observed", "randomized"))
+```
+
+
+#### by species
+We can randomize by `species`. This second method is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). When running by frequency, presences/absences (1s and 0s) are sampled at each pixel based on the probability (frequency) that the species is found within the study area. For each species, the randomized frequency of presences is very similar to the actual frequency.
+
+```{r, fig.height=8, fig.width=6}
+sr1 <- bootspat_naive(r10, random = "species")
+plot(sr1, legend=F)
+```
+
+```{r, fig.height=4, fig.width=6}
+plot(c(sum(r10), sum(sr1)), main=c("observed", "randomized"))
+```
+
+
+#### by site
+Now, we will randomize by `site`. This method randomizes the position (presence/absence) of the species within each site (cell) of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change, as more or less pixels can be randomly assigned to each species (raster layer). Notice that, although the spatial structure of species richness is held constant, the number of pixels that each species occupy is completely randomized. 
+
+```{r, fig.height=8, fig.width=6}
+sr2 <- bootspat_naive(r10, random = "site")
+plot(sr2, legend=F)
+```
+
+
+```{r, fig.height=4, fig.width=6}
+plot(c(sum(r10), sum(sr2)), main=c("observed", "randomized"))
+```
+
+
+### Spatially Structured Randomization
+Finally, we can randomize the species distributions using the spatially structured randomization from the function `bootspat_str`.
 
 ```{r}
 # bootstrapping once
@@ -82,42 +130,22 @@ prob <- terra::app(r10,
 randr10 <- bootspat_str(r10, rprob = prob, fr_prob = fr.prob)
 ```
 
-Let's visualize the results. In the image below we can see that the distribution of species was spatially randomized according to the frequency of presence of each species.
+The species distribution was spatially randomized according to the frequency of presence of each species. This method randomizes the position of species presences in space keeping the species richness constant and number of occupied pixels of randomized distributions very similar those on the actual distributions.
 
-```{r}
-plot(randr10)
+```{r, fig.height=8, fig.width=6}
+plot(randr10, legend=F)
 ```
 
-One important aspect of this function is that it keeps the species richness constant, as we can see in the following image.
+See unchanged spatial pattern of species richness.
 
-```{r}
-plot(c(sum(r10), sum(randr10)))
+```{r, fig.height=4, fig.width=6}
+plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
 ```
 
-And also keeps the number of occupied pixels very similar.
+Check that the number of occupied pixels of randomized distributions are very similar to the actual distributions.
 
 ```{r}
 cbind(rand = sapply(randr10, function(x)freq(x)[2,3]),
       actual = sapply(r10, function(x)freq(x)[2,3]))
 ```
 
-Now, let's randomizes species distribution without consider any spatial structure using the function `bootspat_naive`. First, we will calculate using the randomization called `site`.
-
-```{r}
-sr <- bootspat_naive(r10, random = "site")
-plot(sr)
-```
-
-We can also use the randomization method called `species`. Although this method does not keep the richness constant, it keeps the number of pixels of each species very similar between the randomized and non-randomized distribution.
-
-```{r}
-sr2 <- bootspat_naive(r10, random = "species")
-plot(sr2)
-```
-
-And finally, we can run the function using the method `both`.
-
-```{r}
-sr3 <- bootspat_naive(r10, random = "both")
-plot(sr3)
-```
