@@ -31,7 +31,6 @@ The development version of `SESraster` can be downloaded from [GitHub](https://g
 
 ```{r}
 require(devtools)
-devtools::load_all()
 devtools::install_github("HemingNM/SESraster")
 library(SESraster)
 ```
