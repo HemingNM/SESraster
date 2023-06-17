@@ -11,10 +11,13 @@ test_that("function bootspat_str works", {
   bin1[1] <- NA
 
   # applying the function
+  set.seed(100)
   rand.str <- bootspat_str(bin1)
   rand.str2 <- bootspat_str(bin1, rprob = bin2)
 
   # testing
   expect_true(class(rand.str) == "SpatRaster", "TRUE")
   expect_true(class(rand.str2) == "SpatRaster", "TRUE")
+  expect_equal(unlist(rand.str2[2]), setNames(c(1,1,0,0,0), names(bin1)))
+  expect_true(all(is.na(unlist(rand.str2[1]))))
 })
