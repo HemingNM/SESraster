@@ -65,21 +65,23 @@ bootspat_naive <- function(x, random = c("site", "species", "both"),
 
     if(memory){ # when fits on the memory
 
-      resu <- terra::rast(lapply(1:terra::nlyr(x),
-                                 function(i, r){
-                                   terra::app(r[[i]],
-                                              fun = .sample.not.NA)
-                                 }, r = x))
+      resu <- terra::rast(sapply(names(x),#lapply(1:terra::nlyr(x),
+                                                  function(i, r){
+                                                    terra::app(r[[i]],
+                                                               fun = .sample.not.NA)
+                                                  }, r = x))
     } else { # when does not fit on the memory
 
       message("The file does not fit on the memory. Randomization will be done by probability.")
       fr <- terra::freq(x)
-      resu <- terra::writeRaster(terra::rast(lapply(1:terra::nlyr(x),
-                                                    function(i, r, fr){
-                                                      terra::app(r[[i]], fun = .lyr.sample,
-                                                                 fr = fr[fr$layer==i,])
-                                                    }, r = x, fr = fr)),
-                                 filename = filename)
+      resu <- terra::rast(sapply(names(x),#seq_len(terra::nlyr(x)),
+                                 function(i, r, fr){
+                                   terra::app(r[[i]], fun = .lyr.sample,
+                                              fr = fr[fr$layer==which(names(r) == i),])
+                                 }, r = x, fr = fr))
+      if(filename != ""){
+        resu <- terra::writeRaster(resu, filename = filename)
+      }
 
     }
 
@@ -115,7 +117,7 @@ bootspat_naive <- function(x, random = c("site", "species", "both"),
   } else {
     stop("Choose a valid randomization method! The methods currently available are: 'site', 'species', 'both'.")
   }
-
+  terra::set.names(resu, names(x))
   return(resu)
 
 }

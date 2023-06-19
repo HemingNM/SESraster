@@ -3,3 +3,4 @@
 export(bootspat_naive)
 export(bootspat_str)
 export(fr2prob)
+export(load_ext_data)

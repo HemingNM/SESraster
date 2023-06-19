@@ -1,7 +1,7 @@
 Package: SESraster
 Title: Randomization of Spatial Data for Standardized Effect Size Calculations 
     and Null Hypothesis Testing
-Version: 0.1.5.0000
+Version: 0.2.0.0000
 Authors@R:
     person("Neander Marcel", "Heming", , "neanderh@yahoo.com.br", 
             role = c("aut", "cre"),
@@ -23,12 +23,14 @@ Imports:
 Suggests: 
     devtools,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Suggests: 
-    testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyData: true
