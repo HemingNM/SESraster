@@ -20,10 +20,15 @@ across the raster, so that the sampled frequency of occurrence of the
 species is closer to the observed
 }
 \examples{
-\dontrun{
 library(SESraster)
 library(terra)
-# creating random species distributions
+# load random species distributions
+r <- load_ext_data()
+
+# applying the function
+fr2prob(r)
+
+\dontrun{
 f <- system.file("ex/elev.tif", package="terra")
 r <- rast(f)
 set.seed(510)

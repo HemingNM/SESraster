@@ -48,6 +48,23 @@ of each species compared to all others. Probability raster stack control the
 probability that each species is sampled in a given raster cell.
 }
 \examples{
+# load random species distributions
+library(SESraster)
+library(terra)
+r <- load_ext_data()
+plot(r)
+
+# applying the function
+rand.str <- bootspat_str(r)
+plot(rand.str)
+
+# With null probability raster
+rprobnull <- terra::app(r,
+                       function(x){
+                       ifelse(is.na(x), NA, 1)
+                       })
+rand.str2 <- bootspat_str(r, rprob = rprobnull)
+
 \dontrun{
 library(SESraster)
 library(terra)

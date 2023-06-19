@@ -9,13 +9,17 @@
 #' @param rprob SpatRaster. A raster (stack) of probabilities.
 #'
 #' @return numeric vector
-#' @export
 #'
 #' @examples
-#' \dontrun{
 #' library(SESraster)
 #' library(terra)
-#' # creating random species distributions
+#' # load random species distributions
+#' r <- load_ext_data()
+#'
+#' # applying the function
+#' fr2prob(r)
+#'
+#' \dontrun{
 #' f <- system.file("ex/elev.tif", package="terra")
 #' r <- rast(f)
 #' set.seed(510)
@@ -33,6 +37,7 @@
 #' # raw frequencies
 #' unlist(terra::global(x, function(x)sum(x, na.rm=T)))
 #' }
+#' @export
 fr2prob <- function(x, rprob=NULL){
   fr <- unlist(terra::global(x, function(x)sum(x, na.rm=T)))
   all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
@@ -98,6 +103,23 @@ fr2prob <- function(x, rprob=NULL){
 #' @author Neander Marcel Heming
 #'
 #' @examples
+#' # load random species distributions
+#' library(SESraster)
+#' library(terra)
+#' r <- load_ext_data()
+#' plot(r)
+#'
+#' # applying the function
+#' rand.str <- bootspat_str(r)
+#' plot(rand.str)
+#'
+#' # With null probability raster
+#' rprobnull <- terra::app(r,
+#'                        function(x){
+#'                        ifelse(is.na(x), NA, 1)
+#'                        })
+#' rand.str2 <- bootspat_str(r, rprob = rprobnull)
+#'
 #' \dontrun{
 #' library(SESraster)
 #' library(terra)

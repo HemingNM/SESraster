@@ -27,7 +27,7 @@ bootspat_naive(
 \item{...}{additional arguments to be passed passed down from a calling function.}
 }
 \value{
-SpatRaster
+SpatRaster object
 }
 \description{
 Randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells). The randomization not assign values to cells with nodata.
@@ -36,10 +36,41 @@ Randomize a set of rasters according to the observed frequency using the methods
 The first method (site) is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change. The second method (species) is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The third method (both) combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time.
 }
 \examples{
+library(terra)
+# load random species distributions
+r <- load_ext_data()
+plot(r)
+
+# randomize pres/abs data by site
+rn <- bootspat_naive(r, "site")
+plot(rn)
+
 \dontrun{
-ras <- terra::rast(system.file("extdata", "rast.presab.tif", package="phylogrid"))
-sr <- bootspat_naive(ras, random = "site")
-plot(sr)
+library(SESraster)
+library(terra)
+# creating random species distributions
+f <- system.file("ex/elev.tif", package="terra")
+r <- rast(f)
+set.seed(510)
+r10 <- rast(lapply(1:18,
+                function(i, r, mn, mx){
+                  app(r, function(x, t){
+                    sapply(x, function(x, t){
+                       x<max(t) & x>min(t)
+                    }, t=t)
+                  }, t=sample(seq(mn, mx), 2))
+                }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10))
+
+names(r10) <- paste("sp", 1:nlyr(r10))
+plot(r10)
+
+# bootstrapping once
+randr10 <- bootspat_naive(r10, "site")
+plot(randr10)
+plot(r10)
+plot(c(sum(r10), sum(randr10)))
+cbind(rand=sapply(randr10, function(x)freq(x)[2,3]),
+      actual=sapply(r10, function(x)freq(x)[2,3]))
 }
 }
 \author{
