@@ -23,19 +23,20 @@ knitr::opts_chunk$set(
 
 ## Introduction {#intro}
 
-Species distributions are dynamic and ever-changing, exhibiting variations both across time and space. To study and understand the complex mechanisms underlying species distributions, null models are often used. A null model is a simplified representation of how species distributions would look if specific ecological processes or factors were not operating. The package [`SESraster`](https://github.com/HemingNM/SESraster) covers a current gap by offering functions for randomization of presence and absence rasters with or without including spatial structure.
+Species distributions are dynamic and ever-changing, exhibiting variations both across time and space. To study and understand the complex mechanisms underlying species distributions, null models are often used. A null model is a simplified representation of how species distributions would look if specific ecological processes or factors were not operating. The package [`SESraster`](https://github.com/HemingNM/SESraster) covers a current gap by offering functions for randomization of presence and absence rasters with or without including spatial structure on randomized patterns of species distribution.
+
 
 ## Installation {#install}
 
-The development version of `SESraster` can be downloaded from [GitHub](https://github.com/HemingNM/SESraster). If you have any questions, let us know through the topic ["Issues"](https://github.com/HemingNM/SESraster/issues). To install the package, run the following code:
+The development version of `SESraster` can be downloaded from [GitHub](https://github.com/HemingNM/SESraster). If you find any bug, let us know through [SESraster Issues](https://github.com/HemingNM/SESraster/issues). To install the package, run the following code:
 
-```{r}
+```{r, eval = FALSE}
 require(devtools)
 devtools::install_github("HemingNM/SESraster", build_vignettes = TRUE)
 library(SESraster)
 ```
 
-The package `SESraster` uses the R package `terra` (version \>= 1.6) (Hijmans, 2022) as dependencies. Once installed, packages can be loaded into R using `library()`:
+The package `SESraster` uses the R package `terra` (version \>= 1.6) (Hijmans, 2022) as dependency. Once installed, package can be loaded into R using `library()`:
 
 ```{r, warning = FALSE, message = FALSE}
 library(terra)
@@ -44,12 +45,13 @@ library(SESraster)
 
 ## Analysis {#analysis}
 
-The `SESraster` package implements functions to randomize spatial data with or without including spatial structure through the functions `bootspat_str` and `bootspat_naive`, respectively. The function `bootspat_str` randomizes a raster stack with fixed richness. Randomizations are based on frequencies (given or calculated from the output raster (a presence-absence SpatRaster) and, optionally, a probability raster stack. Both, frequencies and probability raster stack, control the probability of a given species is sampled in each cell raster. Frequency control the probability of each species compared to all others. Probability raster stack control the probability that each species is sampled in a given raster cell. The function `bootspat_naive` randomize a set of rasters according to the observed frequency using the methods: sites (by cells), species (by layer) or both (layers and cells). The first method (site) is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change. The second method (species) is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The third method (both) combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness, species distribution sizes and location at the same time. The randomization does not assign values to cells with nodata.
+The `SESraster` package implements functions to randomize spatial data with or without including spatial structure through the functions `bootspat_str()` and `bootspat_naive()`, respectively. The function `bootspat_naive()` randomizes a raster stack according to the observed frequency of presences for each species (layer) using the methods: sites (raster cells), species (raster layers) or both (layers and cells). This is the most commonly used method of randomization for community data.
+The function `bootspat_str()` randomizes a raster stack keeping the species richness fixed across raster cells. This method is less commonly seen in the literature.
 
 ### Random species generation 
-Now, let's see some of the package functionalities. First, we will create some random species distributions using the package `terra`.
+Now, let's see some of the package features. First, we will create some random species distributions using the package `terra`.
 
-```{r, fig.height=8, fig.width=6}
+```{r, rand-spp, fig.height=8, fig.width=6}
 library(SESraster)
 library(terra)
 # creating random species distributions
@@ -70,7 +72,7 @@ par(mar=c(3, 2, 2, 2))
 plot(r10, legend=F)
 ```
 
-With the distributions in hand, we can do the spatial randomizations
+With the distributions in hand, we can perform the spatial randomizations.
 
 ### Spatially Unstructured Randomization
 First, let's randomize species distribution ignoring the spatial structure with the function `bootspat_naive`. 
@@ -78,25 +80,25 @@ First, let's randomize species distribution ignoring the spatial structure with 
 #### both, by site and species simultaneously
 We can randomize the presences/absences (1s/0s) using the method `both`. This method combines randomization by site and species at the same time. It will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. Notice that NA cells are ignored.
 
-```{r, fig.height=8, fig.width=6}
+```{r, naive-both, fig.height=8, fig.width=6}
 srb <- bootspat_naive(r10, random = "both")
 plot(srb, legend=F)
 ```
 
-```{r, fig.height=4, fig.width=6}
+```{r, naive-both-rich, fig.height=4, fig.width=6}
 plot(c(sum(r10), sum(srb)), main=c("observed", "randomized"))
 ```
 
 
 #### by species
-We can randomize by `species`. This second method is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). When running by frequency, presences/absences (1s and 0s) are sampled at each pixel based on the probability (frequency) that the species is found within the study area. For each species, the randomized frequency of presences is very similar to the actual frequency.
+We can randomize by `species`. This second method is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method is equivalent to the flatland model of [Laffan & Crisp (2003)](https://onlinelibrary.wiley.com/doi/abs/10.1046/j.1365-2699.2003.00875.x) and changes the species richness at each cell while retaining the size of the species distribution (except if randomization is performed by frequency). When running by frequency, presences/absences (1s/0s) are sampled at each pixel based on the probability (frequency) that the species is found within the study area. For each species, the randomized frequency of presences is very similar to the actual frequency but not exactly the same.
 
-```{r, fig.height=8, fig.width=6}
+```{r, naive-spp, fig.height=8, fig.width=6}
 sr1 <- bootspat_naive(r10, random = "species")
 plot(sr1, legend=F)
 ```
 
-```{r, fig.height=4, fig.width=6}
+```{r, naive-spp-rich, fig.height=4, fig.width=6}
 plot(c(sum(r10), sum(sr1)), main=c("observed", "randomized"))
 ```
 
@@ -104,19 +106,23 @@ plot(c(sum(r10), sum(sr1)), main=c("observed", "randomized"))
 #### by site
 Now, we will randomize by `site`. This method randomizes the position (presence/absence) of the species within each site (cell) of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change, as more or less pixels can be randomly assigned to each species (raster layer). Notice that, although the spatial structure of species richness is held constant, the number of pixels that each species occupy is completely randomized. 
 
-```{r, fig.height=8, fig.width=6}
+```{r, naive-site, fig.height=8, fig.width=6}
 sr2 <- bootspat_naive(r10, random = "site")
 plot(sr2, legend=F)
 ```
 
 
-```{r, fig.height=4, fig.width=6}
+```{r, naive-site-rich, fig.height=4, fig.width=6}
 plot(c(sum(r10), sum(sr2)), main=c("observed", "randomized"))
 ```
 
 
 ### Spatially Structured Randomization
-Finally, we can randomize the species distributions using the spatially structured randomization from the function `bootspat_str`.
+Notice that randomization by `site` from `bootspat_naive` keeps the species richness fixed (i.e. equal to the input raster), but the size of the species' distribution (i.e. number of pixels of each species) is completely randomized. On the other hand, randomization by `species` keeps the number of pixels of each species fixed, but the richness is completely randomized.
+
+In the function `bootspat_str` we implement a spatially structured randomization that keeps both, species richness pattern and distribution size of each species, fixed. This method is based on the second null model of [Laffan & Crisp (2003)](https://onlinelibrary.wiley.com/doi/abs/10.1046/j.1365-2699.2003.00875.x), but uses probability of sampling presences based on frequency of presences for each species. In the same way, notice that although the size of the species distribution is retained, it will lack spatial structure.
+
+Randomizations are based on frequencies (given or calculated from the output raster (a presence-absence SpatRaster) and, optionally, a probability raster stack. Both, frequencies and probability raster stack, control the probability that a given species is sampled in each cell raster. Frequency control the probability of each species compared to all others. Probability raster stack control the probability that each species is sampled on a given raster cell.
 
 ```{r}
 # bootstrapping once
@@ -131,19 +137,19 @@ randr10 <- bootspat_str(r10, rprob = prob, fr_prob = fr.prob)
 
 The species distribution was spatially randomized according to the frequency of presence of each species. This method randomizes the position of species presences in space keeping the species richness constant and number of occupied pixels of randomized distributions very similar those on the actual distributions.
 
-```{r, fig.height=8, fig.width=6}
+```{r, str-site, fig.height=8, fig.width=6}
 plot(randr10, legend=F)
 ```
 
 See unchanged spatial pattern of species richness.
 
-```{r, fig.height=4, fig.width=6}
+```{r, str-site-rich, fig.height=4, fig.width=6}
 plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
 ```
 
 Check that the number of occupied pixels of randomized distributions are very similar to the actual distributions.
 
-```{r}
+```{r, table-freq}
 cbind(rand = sapply(randr10, function(x)freq(x)[2,3]),
       actual = sapply(r10, function(x)freq(x)[2,3]))
 ```
