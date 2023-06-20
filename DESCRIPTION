@@ -1,20 +1,20 @@
 Package: SESraster
 Title: Randomization of Spatial Data for Standardized Effect Size Calculations 
     and Null Hypothesis Testing
-Version: 0.2.0.0000
-Authors@R:
+Version: 0.5
+Authors@R: c(
     person("Neander Marcel", "Heming", , "neanderh@yahoo.com.br", 
             role = c("aut", "cre", 'cph'),
-            comment = c(ORCID = "0000-0003-2461-5045"))
-    person(given = "Gabriela", family = "Alves-Ferreira", , "gabriela-alves77@hotmail.com",
-            role = c("ctb", "cre"),
-            comment = c(ORCID = "0000-0001-5661-3381"))
+            comment = c(ORCID = "0000-0003-2461-5045")),
     person("Flávio", "Mota", , "flaviomoc@gmail.com", 
-            role = c("ctb", "cre"),
-            comment = c(ORCID = "0000-0002-0308-7151"))
-Description: The package SESraster provides functions to randomize spatial data
-    with or without including spatial structure for calculating standardized 
-    effect sizes (SES) necessary for null hypothesis testing.
+            role = c("aut"),
+            comment = c(ORCID = "0000-0002-0308-7151")),
+    person(given = "Gabriela", family = "Alves-Ferreira", , "gabriela-alves77@hotmail.com",
+            role = c("aut"),
+            comment = c(ORCID = "0000-0001-5661-3381")))
+Description: Randomization of presence/absence species distribution raster data 
+    with or without including spatial structure for calculating standardized effect
+    sizes necessary for null hypothesis testing.
 License: GPL (>= 3)
 URL: https://github.com/HemingNM/SESraster
 BugReports: https://github.com/HemingNM/SESraster/issues
