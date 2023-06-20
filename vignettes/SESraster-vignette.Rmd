@@ -1,10 +1,10 @@
 ---
-title: "Introduction to the SESraster package and its functionalities"
+title: "Introduction to SESraster"
 author: "Neander Heming, Flávio Mota and Gabriela Alves-Ferreira"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to the SESraster package and its functionalities}
+  %\VignetteIndexEntry{Introduction to SESraster}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib

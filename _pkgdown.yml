@@ -1,4 +1,8 @@
 url: https://hemingnm.github.io/SESraster/
 template:
   bootstrap: 5
-
+  bootswatch: litera
+  bslib:
+    pkgdown-nav-height: 100px
+  navbar:
+  #  bg: dark
