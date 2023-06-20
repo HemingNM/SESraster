@@ -1,7 +1,7 @@
 Package: SESraster
 Title: Randomization of Spatial Data for Standardized Effect Size Calculations 
     and Null Hypothesis Testing
-Version: 0.6.0.9000
+Version: 0.6.1
 Authors@R: c(
     person("Neander Marcel", "Heming", , "neanderh@yahoo.com.br", 
             role = c("aut", "cre", 'cph'),
