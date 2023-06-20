@@ -14,8 +14,9 @@ Authors@R: c(
             comment = c(ORCID = "0000-0001-5661-3381")))
 Description: Randomization of presence/absence species distribution raster data 
     with or without including spatial structure for calculating standardized effect
-    sizes necessary for null hypothesis testing.The unstructured randomization 
-    algorithms are based on fixed-fixed algorithms for matrices from Gotelli (2000, <doi:10.2307/177478>).
+    sizes necessary for null hypothesis testing. 
+    The unstructured randomization algorithms are based on fixed-fixed algorithms 
+    for matrices from Gotelli (2000, <doi:10.2307/177478>).
     The spatially structured randomization algorithm is based on the second null
     model of Laffan & Crisp (2003, <doi:10.1046/j.1365-2699.2003.00875.x>).
 License: GPL (>= 3)
