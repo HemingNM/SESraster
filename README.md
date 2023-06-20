@@ -1,3 +1,7 @@
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/HemingNM/SESraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/HemingNM/SESraster/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 # SESraster
 The SESraster randomizes presence/absence species distribution raster data with or without including spatial structure for calculating Standardized Effect Sizes (SES) necessary for null hypothesis testing.
 If you have any questions, let us know through the topic ["Issues"](https://github.com/HemingNM/SESraster/issues). To install the package, run the following code:

@@ -16,7 +16,7 @@ Description: Randomization of presence/absence species distribution raster data
     with or without including spatial structure for calculating standardized effect
     sizes necessary for null hypothesis testing.
 License: GPL (>= 3)
-URL: https://github.com/HemingNM/SESraster
+URL: https://github.com/HemingNM/SESraster, https://hemingnm.github.io/SESraster/
 BugReports: https://github.com/HemingNM/SESraster/issues
 Imports: 
     terra
