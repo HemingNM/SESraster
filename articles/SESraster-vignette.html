@@ -195,14 +195,14 @@ location at the same time. Notice that NA cells are ignored.</p>
 <p>We can randomize by <code>species</code>. This second method is
 performed at each layer (species) of the stack by randomizing the
 position of species presences in space. This method is equivalent to the
-flatland model of <a href="doi.org/10.1046/j.1365-2699.2003.00875.x">Laffan &amp; Crisp
-(2003)</a> and changes the species richness at each cell while retaining
-the size of the species distribution (except if randomization is
-performed by frequency). When running by frequency, presences/absences
-(1s/0s) are sampled at each pixel based on the probability (frequency)
-that the species is found within the study area. For each species, the
-randomized frequency of presences is very similar to the actual
-frequency but not exactly the same.</p>
+flatland model of Laffan &amp; Crisp <span class="citation">(<strong>laffan2003?</strong>)</span> and changes the
+species richness at each cell while retaining the size of the species
+distribution (except if randomization is performed by frequency). When
+running by frequency, presences/absences (1s/0s) are sampled at each
+pixel based on the probability (frequency) that the species is found
+within the study area. For each species, the randomized frequency of
+presences is very similar to the actual frequency but not exactly the
+same.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sr1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootspat_naive.html">bootspat_naive</a></span><span class="op">(</span><span class="va">r10</span>, random <span class="op">=</span> <span class="st">"species"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sr1</span>, legend<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
@@ -244,11 +244,10 @@ randomized.</p>
 <p>In the function <code>bootspat_str</code> we implement a spatially
 structured randomization that keeps both, species richness pattern and
 distribution size of each species, fixed. This method is based on the
-second null model of <a href="doi.org/10.1046/j.1365-2699.2003.00875.x">Laffan &amp; Crisp
-(2003)</a>, but uses probability of sampling presences based on
-frequency of presences for each species. In the same way, notice that
-although the size of the species distribution is retained, it will lack
-spatial structure.</p>
+second null model of Laffan &amp; Crisp <span class="citation">(<strong>laffan2003?</strong>)</span>, but uses
+probability of sampling presences based on frequency of presences for
+each species. In the same way, notice that although the size of the
+species distribution is retained, it will lack spatial structure.</p>
 <p>Randomizations are based on frequencies (given or calculated from the
 output raster (a presence-absence SpatRaster) and, optionally, a
 probability raster stack. Both, frequencies and probability raster
@@ -302,6 +301,13 @@ are very similar to the actual distributions.</p>
 <span><span class="co">#&gt; [17,] 2542   2427</span></span>
 <span><span class="co">#&gt; [18,]  185    235</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<p>Laffan, Shawn W., and Michael D. Crisp. 2003. "Assessing Endemism at
+Multiple Spatial Scales, with an Example from the Australian Vascular
+Flora." <em>Journal of Biogeography</em> 30 (4): 511–20.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
