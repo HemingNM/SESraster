@@ -210,6 +210,34 @@ same.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sr1</span><span class="op">)</span><span class="op">)</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"observed"</span>, <span class="st">"randomized"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SESraster-vignette_files/figure-html/naive-spp-rich-1.png" width="576"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sr1b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootspat_naive.html">bootspat_naive</a></span><span class="op">(</span><span class="va">r10</span>, random <span class="op">=</span> <span class="st">"species"</span>, memory <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; The file does not fit on the memory. Randomization will be done by probability.</span></span></code></pre></div>
+<p>Check that the number of occupied pixels of randomized distributions
+are similar to those of the observed distributions.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>observed<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">r10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/freq.html" class="external-link">freq</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      randomized<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sr1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/freq.html" class="external-link">freq</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      randomized_freq<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sr1b</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/freq.html" class="external-link">freq</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       observed randomized randomized_freq</span></span>
+<span><span class="co">#&gt;  [1,]      767        767             773</span></span>
+<span><span class="co">#&gt;  [2,]     3443       3443            3452</span></span>
+<span><span class="co">#&gt;  [3,]     1175       1175            1180</span></span>
+<span><span class="co">#&gt;  [4,]      889        889             872</span></span>
+<span><span class="co">#&gt;  [5,]      908        908             952</span></span>
+<span><span class="co">#&gt;  [6,]     2160       2160            2143</span></span>
+<span><span class="co">#&gt;  [7,]      548        548             544</span></span>
+<span><span class="co">#&gt;  [8,]      133        133             127</span></span>
+<span><span class="co">#&gt;  [9,]      122        122             118</span></span>
+<span><span class="co">#&gt; [10,]     4174       4174            4171</span></span>
+<span><span class="co">#&gt; [11,]     2565       2565            2502</span></span>
+<span><span class="co">#&gt; [12,]     3031       3031            3029</span></span>
+<span><span class="co">#&gt; [13,]       36         36              35</span></span>
+<span><span class="co">#&gt; [14,]     4387       4387            4398</span></span>
+<span><span class="co">#&gt; [15,]     3270       3270            3235</span></span>
+<span><span class="co">#&gt; [16,]     2198       2198            2216</span></span>
+<span><span class="co">#&gt; [17,]     2427       2427            2392</span></span>
+<span><span class="co">#&gt; [18,]      235        235             229</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="by-site">by site<a class="anchor" aria-label="anchor" href="#by-site"></a>
@@ -222,11 +250,11 @@ pixels can be randomly assigned to each species (raster layer). Notice
 that, although the spatial structure of species richness is held
 constant, the number of pixels that each species occupy is completely
 randomized.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sr2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootspat_naive.html">bootspat_naive</a></span><span class="op">(</span><span class="va">r10</span>, random <span class="op">=</span> <span class="st">"site"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sr2</span>, legend<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SESraster-vignette_files/figure-html/naive-site-1.png" width="576"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sr2</span><span class="op">)</span><span class="op">)</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"observed"</span>, <span class="st">"randomized"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SESraster-vignette_files/figure-html/naive-site-rich-1.png" width="576"></p>
 </div>
@@ -255,7 +283,7 @@ stack, control the probability that a given species is sampled in each
 cell raster. Frequency control the probability of each species compared
 to all others. Probability raster stack control the probability that
 each species is sampled on a given raster cell.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># bootstrapping once</span></span>
 <span><span class="va">fr.prob</span> <span class="op">&lt;-</span> <span class="fu">SESraster</span><span class="fu">::</span><span class="fu"><a href="../reference/fr2prob.html">fr2prob</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span></span>
 <span><span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/app.html" class="external-link">app</a></span><span class="op">(</span><span class="va">r10</span>,</span>
@@ -269,37 +297,37 @@ frequency of presence of each species. This method randomizes the
 position of species presences in space keeping the species richness
 constant and number of occupied pixels of randomized distributions very
 similar those on the actual distributions.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">randr10</span>, legend<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SESraster-vignette_files/figure-html/str-site-1.png" width="576"></p>
 <p>See unchanged spatial pattern of species richness.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">randr10</span><span class="op">)</span><span class="op">)</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"observed"</span>, <span class="st">"randomized"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SESraster-vignette_files/figure-html/str-site-rich-1.png" width="576"></p>
 <p>Check that the number of occupied pixels of randomized distributions
-are very similar to the actual distributions.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>rand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">randr10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/freq.html" class="external-link">freq</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>      actual <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">r10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/freq.html" class="external-link">freq</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;       rand actual</span></span>
-<span><span class="co">#&gt;  [1,]  695    767</span></span>
-<span><span class="co">#&gt;  [2,] 3528   3443</span></span>
-<span><span class="co">#&gt;  [3,] 1063   1175</span></span>
-<span><span class="co">#&gt;  [4,]  791    889</span></span>
-<span><span class="co">#&gt;  [5,]  789    908</span></span>
-<span><span class="co">#&gt;  [6,] 2109   2160</span></span>
-<span><span class="co">#&gt;  [7,]  464    548</span></span>
-<span><span class="co">#&gt;  [8,]  133    133</span></span>
-<span><span class="co">#&gt;  [9,]  107    122</span></span>
-<span><span class="co">#&gt; [10,] 4253   4174</span></span>
-<span><span class="co">#&gt; [11,] 2559   2565</span></span>
-<span><span class="co">#&gt; [12,] 3145   3031</span></span>
-<span><span class="co">#&gt; [13,]   28     36</span></span>
-<span><span class="co">#&gt; [14,] 4424   4387</span></span>
-<span><span class="co">#&gt; [15,] 3366   3270</span></span>
-<span><span class="co">#&gt; [16,] 2287   2198</span></span>
-<span><span class="co">#&gt; [17,] 2542   2427</span></span>
-<span><span class="co">#&gt; [18,]  185    235</span></span></code></pre></div>
+are very similar those of the observed distributions.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>observed<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">r10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/freq.html" class="external-link">freq</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      randomized<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">randr10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/freq.html" class="external-link">freq</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;       observed randomized</span></span>
+<span><span class="co">#&gt;  [1,]      767        681</span></span>
+<span><span class="co">#&gt;  [2,]     3443       3532</span></span>
+<span><span class="co">#&gt;  [3,]     1175       1119</span></span>
+<span><span class="co">#&gt;  [4,]      889        849</span></span>
+<span><span class="co">#&gt;  [5,]      908        832</span></span>
+<span><span class="co">#&gt;  [6,]     2160       2138</span></span>
+<span><span class="co">#&gt;  [7,]      548        461</span></span>
+<span><span class="co">#&gt;  [8,]      133        104</span></span>
+<span><span class="co">#&gt;  [9,]      122         95</span></span>
+<span><span class="co">#&gt; [10,]     4174       4246</span></span>
+<span><span class="co">#&gt; [11,]     2565       2602</span></span>
+<span><span class="co">#&gt; [12,]     3031       3127</span></span>
+<span><span class="co">#&gt; [13,]       36         32</span></span>
+<span><span class="co">#&gt; [14,]     4387       4413</span></span>
+<span><span class="co">#&gt; [15,]     3270       3379</span></span>
+<span><span class="co">#&gt; [16,]     2198       2193</span></span>
+<span><span class="co">#&gt; [17,]     2427       2483</span></span>
+<span><span class="co">#&gt; [18,]      235        182</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
