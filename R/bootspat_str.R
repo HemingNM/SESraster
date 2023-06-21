@@ -34,12 +34,12 @@
 #' names(r10) <- paste("sp", 1:nlyr(r10))
 #' fr2prob(r10)
 #' # raw frequencies
-#' unlist(terra::global(r10, function(x)sum(x, na.rm=T)))
+#' unlist(terra::global(r10, function(x)sum(x, na.rm=TRUE)))
 #'
 #' @export
 fr2prob <- function(x, rprob=NULL){
-  fr <- unlist(terra::global(x, function(x)sum(x, na.rm=T)))
-  all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
+  fr <- unlist(terra::global(x, function(x)sum(x, na.rm=TRUE)))
+  all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=TRUE)))
   p <- fr/(all+1)
 
   if(is.null(rprob)){
@@ -48,7 +48,7 @@ fr2prob <- function(x, rprob=NULL){
     # ppr <- 1
     p/(1.00001-p)
   } else {
-    frp <- unlist(terra::global(rprob, function(x)sum(x, na.rm=T)))
+    frp <- unlist(terra::global(rprob, function(x)sum(x, na.rm=TRUE)))
     ppr <- frp/all # probability when there are constraints (not all raster is available)
     # frp*(1/all) # probability when there are constraints (not all raster is available)
     (p/(1-p))/ppr
@@ -170,7 +170,7 @@ bootspat_str <- function(x, rprob=NULL, rich=NULL, fr_prob=NULL, cores = 1, file
   }
 
   if(is.null(rich)){
-    rich <- terra::app(x, sum, na.rm=T)
+    rich <- terra::app(x, sum, na.rm=TRUE)
   }
 
   sp <- seq_len(terra::nlyr(x))
@@ -179,7 +179,7 @@ bootspat_str <- function(x, rprob=NULL, rich=NULL, fr_prob=NULL, cores = 1, file
   r <- terra::app(c(rich, rprob),
                   .str.sample,
                   sp=sp, resu=resu, fr_prob=fr_prob,
-  cores = cores, filename = filename, overwrite = T)
+  cores = cores, filename = filename, overwrite = TRUE)
 
   terra::set.names(r, names(x))
 

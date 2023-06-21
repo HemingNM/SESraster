@@ -107,6 +107,19 @@ plot(sr1, legend=F)
 plot(c(sum(r10), sum(sr1)), main=c("observed", "randomized"))
 ```
 
+
+```{r, naive-sppb, fig.height=8, fig.width=6}
+sr1b <- bootspat_naive(r10, random = "species", memory = FALSE)
+```
+
+Check that the number of occupied pixels of randomized distributions are similar to those of the observed distributions.
+
+```{r, table-freq-naive}
+cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+      randomized=sapply(sr1, function(x)freq(x)[2,3]),
+      randomized_freq=sapply(sr1b, function(x)freq(x)[2,3]))
+```
+
 #### by site
 
 Now, we will randomize by `site`. This method randomizes the position (presence/absence) of the species within each site (cell) of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change, as more or less pixels can be randomly assigned to each species (raster layer). Notice that, although the spatial structure of species richness is held constant, the number of pixels that each species occupy is completely randomized.
@@ -151,11 +164,11 @@ See unchanged spatial pattern of species richness.
 plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
 ```
 
-Check that the number of occupied pixels of randomized distributions are very similar to the actual distributions.
+Check that the number of occupied pixels of randomized distributions are very similar those of the observed distributions.
 
 ```{r, table-freq}
-cbind(rand = sapply(randr10, function(x)freq(x)[2,3]),
-      actual = sapply(r10, function(x)freq(x)[2,3]))
+cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+      randomized=sapply(randr10, function(x)freq(x)[2,3]))
 ```
 
 ## References {#references}

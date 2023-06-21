@@ -120,12 +120,12 @@ bootspat_naive <- function(x, random = c("site", "species", "both"),
 
     if(memory){
 
-      resu <- terra::app(x, sample, cores = cores, overwrite = T)
+      resu <- terra::app(x, sample, cores = cores, overwrite = TRUE)
 
     } else {
 
       ### randomize by cells- species in each site
-      resu <- terra::app(x, sample, cores = cores, filename = filename, overwrite = T)
+      resu <- terra::app(x, sample, cores = cores, filename = filename, overwrite = TRUE)
 
     }
 
@@ -141,7 +141,7 @@ bootspat_naive <- function(x, random = c("site", "species", "both"),
       fr <- terra::freq(x)
       ### randomize by sites and species!
       resu <- terra::app(x, fun = .lyr.sample, fr = fr, cores = cores,
-                         filename = filename, overwrite = T)
+                         filename = filename, overwrite = TRUE)
 
     }
 
