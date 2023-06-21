@@ -95,7 +95,7 @@ species is closer to the observed</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   global1   global2   global3   global4   global5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.9230592 1.4999625 0.5624912 1.0833108 0.9230592 </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"ex/elev.tif"</span>, package<span class="op">=</span><span class="st">"terra"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/terra/man/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">510</span><span class="op">)</span></span></span>
@@ -110,9 +110,21 @@ species is closer to the observed</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sp"</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html" class="external-link">nlyr</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fr2prob</span><span class="op">(</span><span class="va">r10</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      global1      global2      global3      global4      global5      global6 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.199633212  2.952713473  0.342161977  0.238975534  0.245336042  0.881976051 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      global7      global8      global9     global10     global11     global12 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.134940601  0.029713724  0.027189380  9.594385735  1.254864072  1.920729704 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     global13     global14     global15     global16     global17     global18 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.007872215 19.757159426  2.442036928  0.911637488  1.112258816  0.053726000 </span>
 <span class="r-in"><span><span class="co"># raw frequencies</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/global.html" class="external-link">global</a></span><span class="op">(</span><span class="va">x</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/global.html" class="external-link">global</a></span><span class="op">(</span><span class="va">r10</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  global1  global2  global3  global4  global5  global6  global7  global8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      767     3443     1175      889      908     2160      548      133 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  global9 global10 global11 global12 global13 global14 global15 global16 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      122     4174     2565     3031       36     4387     3270     2198 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> global17 global18 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     2427      235 </span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
