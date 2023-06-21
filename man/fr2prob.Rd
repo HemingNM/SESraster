@@ -44,6 +44,6 @@ r10 <- rast(lapply(1:18,
 names(r10) <- paste("sp", 1:nlyr(r10))
 fr2prob(r10)
 # raw frequencies
-unlist(terra::global(r10, function(x)sum(x, na.rm=T)))
+unlist(terra::global(r10, function(x)sum(x, na.rm=TRUE)))
 
 }
