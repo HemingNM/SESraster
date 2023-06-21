@@ -28,7 +28,7 @@ r <- load_ext_data()
 # applying the function
 fr2prob(r)
 
-\dontrun{
+
 f <- system.file("ex/elev.tif", package="terra")
 r <- rast(f)
 set.seed(510)
@@ -44,6 +44,6 @@ r10 <- rast(lapply(1:18,
 names(r10) <- paste("sp", 1:nlyr(r10))
 fr2prob(r10)
 # raw frequencies
-unlist(terra::global(x, function(x)sum(x, na.rm=T)))
-}
+unlist(terra::global(r10, function(x)sum(x, na.rm=T)))
+
 }

@@ -1,4 +1,3 @@
-
 #' Adjust probability of sampling based on frequency of occurrences.
 #'
 #' This function is used to adjust the probability of a species to be sampled
@@ -19,7 +18,7 @@
 #' # applying the function
 #' fr2prob(r)
 #'
-#' \dontrun{
+#'
 #' f <- system.file("ex/elev.tif", package="terra")
 #' r <- rast(f)
 #' set.seed(510)
@@ -35,8 +34,8 @@
 #' names(r10) <- paste("sp", 1:nlyr(r10))
 #' fr2prob(r10)
 #' # raw frequencies
-#' unlist(terra::global(x, function(x)sum(x, na.rm=T)))
-#' }
+#' unlist(terra::global(r10, function(x)sum(x, na.rm=T)))
+#'
 #' @export
 fr2prob <- function(x, rprob=NULL){
   fr <- unlist(terra::global(x, function(x)sum(x, na.rm=T)))
@@ -120,7 +119,7 @@ fr2prob <- function(x, rprob=NULL){
 #'                        })
 #' rand.str2 <- bootspat_str(r, rprob = rprobnull)
 #'
-#' \dontrun{
+#'
 #' library(SESraster)
 #' library(terra)
 #' # creating random species distributions
@@ -139,14 +138,18 @@ fr2prob <- function(x, rprob=NULL){
 #' names(r10) <- paste("sp", 1:nlyr(r10))
 #' plot(r10)
 #'
+#' rprobnull <- terra::app(r10,
+#'                        function(x){
+#'                        ifelse(is.na(x), NA, 1)
+#'                        })
+#'
 #' # bootstrapping once
 #' randr10 <- bootspat_str(r10, rprobnull)
 #' plot(randr10)
-#' plot(r10)
-#' plot(c(sum(r10), sum(randr10)))
-#' cbind(rand=sapply(randr10, function(x)freq(x)[2,3]),
-#'       actual=sapply(r10, function(x)freq(x)[2,3]))
-#' }
+#' plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
+#' cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+#'       randomized=sapply(randr10, function(x)freq(x)[2,3]))
+#'
 #' @return SpatRaster object
 #' @export
 bootspat_str <- function(x, rprob=NULL, rich=NULL, fr_prob=NULL, cores = 1, filename = "", memory = NULL, ...){

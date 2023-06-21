@@ -2,7 +2,7 @@
 % Please edit documentation in R/bootspat_naive.R
 \name{.lyr.sample}
 \alias{.lyr.sample}
-\title{Intern function to resampling a vector according to the observed frequency}
+\title{Internal function to resample a vector according to the observed frequency}
 \usage{
 .lyr.sample(x, fr)
 }
@@ -15,7 +15,7 @@
 vector
 }
 \description{
-Intern function to resampling a vector according to the observed frequency
+Internal function to resample a vector according to the observed frequency
 }
 \author{
 Neander Marcel Heming

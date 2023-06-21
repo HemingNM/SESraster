@@ -2,7 +2,7 @@
 % Please edit documentation in R/bootspat_naive.R
 \name{.sample.not.NA}
 \alias{.sample.not.NA}
-\title{Intern function to sample vectors with non-NA values}
+\title{Internal function to sample vectors with non-NA values}
 \usage{
 .sample.not.NA(x)
 }
@@ -13,7 +13,7 @@
 vector
 }
 \description{
-Intern function to sample vectors with non-NA values
+Internal function to sample vectors with non-NA values
 }
 \author{
 Neander Marcel Heming

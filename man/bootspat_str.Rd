@@ -65,7 +65,7 @@ rprobnull <- terra::app(r,
                        })
 rand.str2 <- bootspat_str(r, rprob = rprobnull)
 
-\dontrun{
+
 library(SESraster)
 library(terra)
 # creating random species distributions
@@ -84,14 +84,18 @@ r10 <- rast(lapply(1:18,
 names(r10) <- paste("sp", 1:nlyr(r10))
 plot(r10)
 
+rprobnull <- terra::app(r10,
+                       function(x){
+                       ifelse(is.na(x), NA, 1)
+                       })
+
 # bootstrapping once
 randr10 <- bootspat_str(r10, rprobnull)
 plot(randr10)
-plot(r10)
-plot(c(sum(r10), sum(randr10)))
-cbind(rand=sapply(randr10, function(x)freq(x)[2,3]),
-      actual=sapply(r10, function(x)freq(x)[2,3]))
-}
+plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
+cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+      randomized=sapply(randr10, function(x)freq(x)[2,3]))
+
 }
 \author{
 Neander Marcel Heming

@@ -1,4 +1,4 @@
-#' Intern function to resampling a vector according to the observed frequency
+#' Internal function to resample a vector according to the observed frequency
 #'
 #' @param x numeric. A vector containing values to resampling.
 #' @param fr data.frame A data.frame with 3 columns (layer, value, count).
@@ -17,7 +17,7 @@
   }, fr = fr)
 }
 
-#' Intern function to sample vectors with non-NA values
+#' Internal function to sample vectors with non-NA values
 #'
 #' @param x  numeric. A vector containing values to resampling.
 #'
@@ -56,7 +56,7 @@
 #' rn <- bootspat_naive(r, "site")
 #' plot(rn)
 #'
-#' \dontrun{
+#'
 #' library(SESraster)
 #' library(terra)
 #' # creating random species distributions
@@ -78,11 +78,11 @@
 #' # bootstrapping once
 #' randr10 <- bootspat_naive(r10, "site")
 #' plot(randr10)
-#' plot(r10)
-#' plot(c(sum(r10), sum(randr10)))
-#' cbind(rand=sapply(randr10, function(x)freq(x)[2,3]),
-#'       actual=sapply(r10, function(x)freq(x)[2,3]))
-#' }
+#'
+#' plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
+#' cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+#'       randomized=sapply(randr10, function(x)freq(x)[2,3]))
+#'
 #' @export
 bootspat_naive <- function(x, random = c("site", "species", "both"),
                       filename = "", memory = NULL, cores = 1, ...){

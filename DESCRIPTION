@@ -1,6 +1,5 @@
 Package: SESraster
-Title: Randomization of Spatial Data for Standardized Effect Size Calculations 
-    and Null Hypothesis Testing
+Title: Raster Randomization for Null Hypothesis Testing
 Version: 0.6.1
 Authors@R: c(
     person("Neander Marcel", "Heming", , "neanderh@yahoo.com.br", 
@@ -14,7 +13,7 @@ Authors@R: c(
             comment = c(ORCID = "0000-0001-5661-3381")))
 Description: Randomization of presence/absence species distribution raster data 
     with or without including spatial structure for calculating standardized effect
-    sizes necessary for null hypothesis testing. 
+    sizes and testing null hypothesis.
     The spatially unstructured randomization algorithms are based on fixed-fixed
     algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>).
     The spatially structured randomization algorithm is based on the preserved richness

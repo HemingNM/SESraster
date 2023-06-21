@@ -45,7 +45,7 @@ plot(r)
 rn <- bootspat_naive(r, "site")
 plot(rn)
 
-\dontrun{
+
 library(SESraster)
 library(terra)
 # creating random species distributions
@@ -67,11 +67,11 @@ plot(r10)
 # bootstrapping once
 randr10 <- bootspat_naive(r10, "site")
 plot(randr10)
-plot(r10)
-plot(c(sum(r10), sum(randr10)))
-cbind(rand=sapply(randr10, function(x)freq(x)[2,3]),
-      actual=sapply(r10, function(x)freq(x)[2,3]))
-}
+
+plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
+cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+      randomized=sapply(randr10, function(x)freq(x)[2,3]))
+
 }
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira
