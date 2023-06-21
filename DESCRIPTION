@@ -15,10 +15,10 @@ Authors@R: c(
 Description: Randomization of presence/absence species distribution raster data 
     with or without including spatial structure for calculating standardized effect
     sizes necessary for null hypothesis testing. 
-    The unstructured randomization algorithms are based on fixed-fixed algorithms 
-    for matrices from Gotelli (2000, <doi:10.2307/177478>).
-    The spatially structured randomization algorithm is based on the second null
-    model of Laffan & Crisp (2003, <doi:10.1046/j.1365-2699.2003.00875.x>).
+    The spatially unstructured randomization algorithms are based on fixed-fixed
+    algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>).
+    The spatially structured randomization algorithm is based on the preserved richness
+    null model (Laffan & Crisp 2003, <doi:10.1046/j.1365-2699.2003.00875.x>).
 License: GPL (>= 3)
 URL: https://github.com/HemingNM/SESraster, https://hemingnm.github.io/SESraster/
 BugReports: https://github.com/HemingNM/SESraster/issues

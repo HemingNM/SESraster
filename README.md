@@ -10,7 +10,7 @@ If you have any questions, let us know through the topic ["Issues"](https://gith
 install.packages("SESraster")
 ```
 
-The development version of `SESraster` can be installed from the [`SESraster repository in Github`](https://github.com/HemingNM/SESraster):
+The development version of `SESraster` can be installed from the [`SESraster repository`](https://github.com/HemingNM/SESraster) in Github:
 
 ```
 require(devtools)
