@@ -75,7 +75,7 @@
                         <h4 data-toc-skip class="author">Neander Heming,
 Flávio Mota and Gabriela Alves-Ferreira</h4>
             
-            <h4 data-toc-skip class="date">2023-06-21</h4>
+            <h4 data-toc-skip class="date">2023-06-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HemingNM/SESraster/blob/HEAD/vignettes/SESraster-vignette.Rmd" class="external-link"><code>vignettes/SESraster-vignette.Rmd</code></a></small>
       <div class="d-none name"><code>SESraster-vignette.Rmd</code></div>
@@ -162,8 +162,7 @@ some random species distributions using the package
 <span>                <span class="op">}</span>, r<span class="op">=</span><span class="va">r</span>, mn<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/minmax.html" class="external-link">minmax</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">+</span><span class="fl">10</span>, mx<span class="op">=</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/minmax.html" class="external-link">minmax</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">-</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sp"</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html" class="external-link">nlyr</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">r10</span>, legend<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span></span></code></pre></div>
 <p><img src="SESraster-vignette_files/figure-html/rand-spp-1.png" width="576"></p>
 <p>With the distributions in hand, we can perform the spatial
 randomizations.</p>
