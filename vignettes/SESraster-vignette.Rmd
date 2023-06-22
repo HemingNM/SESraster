@@ -71,8 +71,7 @@ r10 <- rast(lapply(1:18,
                 }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10))
 
 names(r10) <- paste("sp", 1:nlyr(r10))
-par(mar=c(3, 2, 2, 2))
-plot(r10, legend=F)
+plot(r10)
 ```
 
 With the distributions in hand, we can perform the spatial randomizations.

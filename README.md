@@ -15,6 +15,12 @@ The development version of `SESraster` can be installed from the [`SESraster rep
 ```
 require(devtools)
 devtools::load_all()
-devtools::install_github("HemingNM/SESraster")
+devtools::install_github("HemingNM/SESraster", build_vignettes = TRUE)
 library(SESraster)
+```
+
+A vignette with examples can be found at the [package's webpage](https://hemingnm.github.io/SESraster/) or loading:
+
+```
+browseVignettes("SESraster")
 ```
