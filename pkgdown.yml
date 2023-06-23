@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   SESraster-vignette: SESraster-vignette.html
-last_built: 2023-06-23T14:35Z
+last_built: 2023-06-23T16:36Z
 urls:
   reference: https://hemingnm.github.io/SESraster/reference
   article: https://hemingnm.github.io/SESraster/articles
