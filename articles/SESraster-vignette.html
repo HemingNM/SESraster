@@ -82,7 +82,7 @@
                         <h4 data-toc-skip class="author">Neander Heming,
 Flávio Mota and Gabriela Alves-Ferreira</h4>
             
-            <h4 data-toc-skip class="date">2023-06-23</h4>
+            <h4 data-toc-skip class="date">2023-06-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/HemingNM/SESraster/blob/HEAD/vignettes/SESraster-vignette.Rmd" class="external-link"><code>vignettes/SESraster-vignette.Rmd</code></a></small>
       <div class="d-none name"><code>SESraster-vignette.Rmd</code></div>
@@ -186,7 +186,9 @@ structure with the function <code>bootspat_naive</code>.</p>
 <code>both</code>. This method combines randomization by site and
 species at the same time. It will shuffle all presences across cells and
 layers, changing site richness and species distribution sizes and
-location at the same time. Notice that NA cells are ignored.</p>
+location at the same time. It is equivalent to the SIM1
+(equiprobable-equiprobable) method of Gotelli <span class="citation">(<strong>gotelli2000?</strong>)</span>. Notice that NA
+cells are ignored.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">srb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootspat_naive.html">bootspat_naive</a></span><span class="op">(</span><span class="va">r10</span>, random <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">srb</span>, legend<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
@@ -200,15 +202,18 @@ location at the same time. Notice that NA cells are ignored.</p>
 </h4>
 <p>We can randomize by <code>species</code>. This second method is
 performed at each layer (species) of the stack by randomizing the
-position of species presences in space. This method is equivalent to the
-flatland model of Laffan &amp; Crisp <span class="citation">(<strong>laffan2003?</strong>)</span> and changes the
+position of species presences in space. If the data fits to the computer
+RAM memory this randomization is equivalent to the SIM2
+(fixed-equiprobable) method of Gotelli <span class="citation">(<strong>gotelli2000?</strong>)</span> and to the
+flatland model of Laffan &amp; Crisp <span class="citation">(<strong>laffan2003?</strong>)</span>. It changes the
 species richness at each cell while retaining the size of the species
 distribution (except if randomization is performed by frequency). When
 running by frequency, presences/absences (1s/0s) are sampled at each
 pixel based on the probability (frequency) that the species is found
-within the study area. For each species, the randomized frequency of
-presences is very similar to the actual frequency but not exactly the
-same.</p>
+within the study area. It is equivalent to the SIM7
+(proportional-equiprobable) method of Gotelli <span class="citation">(<strong>gotelli2000?</strong>)</span>. For each
+species, the randomized frequency of presences is very similar to the
+actual frequency but not exactly the same.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sr1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bootspat_naive.html">bootspat_naive</a></span><span class="op">(</span><span class="va">r10</span>, random <span class="op">=</span> <span class="st">"species"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sr1</span>, legend<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span></code></pre></div>
@@ -252,8 +257,10 @@ are similar to those of the observed distributions.</p>
 the position (presence/absence) of the species within each site (cell)
 of the stack. This method keeps species richness constant at each cell
 but the size of the species distribution might change, as more or less
-pixels can be randomly assigned to each species (raster layer). Notice
-that, although the spatial structure of species richness is held
+pixels can be randomly assigned to each species (raster layer). This
+randomization is equivalent to the SIM3 (equiprobable-fixed) method of
+Gotelli <span class="citation">(<strong>gotelli2000?</strong>)</span>.
+Notice that, although the spatial structure of species richness is held
 constant, the number of pixels that each species occupy is completely
 randomized.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -276,19 +283,23 @@ other hand, randomization by <code>species</code> keeps the number of
 pixels of each species fixed, but the richness is completely
 randomized.</p>
 <p>In the function <code>bootspat_str</code> we implement a spatially
-structured randomization that keeps both, species richness pattern and
-distribution size of each species, fixed. This method is based on the
-second null model of Laffan &amp; Crisp <span class="citation">(<strong>laffan2003?</strong>)</span>, but uses
+structured randomization that keeps the species richness pattern fixed
+and distribution size of each species, proportional. This method is
+based on the second null model of Laffan &amp; Crisp <span class="citation">(<strong>laffan2003?</strong>)</span>, but uses
 probability of sampling presences based on frequency of presences for
-each species. In the same way, notice that although the size of the
-species distribution is retained, it will lack spatial structure.</p>
+each species. Therefore, it is equivalent to the SIM5
+(proportional-fixed) method of Gotelli <span class="citation">(<strong>gotelli2000?</strong>)</span>. Notice that it
+will lack spatial structure in the same way of randomization by
+<code>site</code>, however the size of the species distribution is
+(nearly) retained.</p>
 <p>Randomizations are based on frequencies (given or calculated from the
 output raster (a presence-absence SpatRaster) and, optionally, a
-probability raster stack. Both, frequencies and probability raster
-stack, control the probability that a given species is sampled in each
-cell raster. Frequency control the probability of each species compared
-to all others. Probability raster stack control the probability that
-each species is sampled on a given raster cell.</p>
+probability raster stack. Both, the frequency vector and the probability
+raster stack, control the probability that a given species is sampled in
+each raster cell. The frequency vector controls the probability of
+sampling each species compared to all others. The probability raster
+stack controls the probability that each species is sampled on a given
+raster cell.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># bootstrapping once</span></span>
 <span><span class="va">fr.prob</span> <span class="op">&lt;-</span> <span class="fu">SESraster</span><span class="fu">::</span><span class="fu"><a href="../reference/fr2prob.html">fr2prob</a></span><span class="op">(</span><span class="va">r10</span><span class="op">)</span></span>
@@ -339,9 +350,11 @@ are very similar those of the observed distributions.</p>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Laffan, Shawn W., and Michael D. Crisp. 2003. "Assessing Endemism at
+<p>Gotelli, N. J. (2000). Null Model Analysis of Species Co-Occurrence
+Patterns. <em>Ecology</em>, 81(9), 2606–2621.</p>
+<p>Laffan, Shawn W., and Michael D. Crisp. 2003. “Assessing Endemism at
 Multiple Spatial Scales, with an Example from the Australian Vascular
-Flora." <em>Journal of Biogeography</em> 30 (4): 511–20.</p>
+Flora.” <em>Journal of Biogeography</em> 30(4): 511-520.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
