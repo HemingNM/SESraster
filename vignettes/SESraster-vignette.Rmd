@@ -82,7 +82,7 @@ First, let's randomize species distribution ignoring the spatial structure with 
 
 #### both, by site and species simultaneously
 
-We can randomize the presences/absences (1s/0s) using the method `both`. This method combines randomization by site and species at the same time. It will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. Notice that NA cells are ignored.
+We can randomize the presences/absences (1s/0s) using the method `both`. This method combines randomization by site and species at the same time. It will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. It is equivalent to the SIM1 (equiprobable-equiprobable) method of Gotelli [-@gotelli2000]. Notice that NA cells are ignored.
 
 ```{r, naive-both, fig.height=8, fig.width=6}
 srb <- bootspat_naive(r10, random = "both")
@@ -95,7 +95,7 @@ plot(c(sum(r10), sum(srb)), main=c("observed", "randomized"))
 
 #### by species
 
-We can randomize by `species`. This second method is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method is equivalent to the flatland model of Laffan & Crisp [-@laffan2003] and changes the species richness at each cell while retaining the size of the species distribution (except if randomization is performed by frequency). When running by frequency, presences/absences (1s/0s) are sampled at each pixel based on the probability (frequency) that the species is found within the study area. For each species, the randomized frequency of presences is very similar to the actual frequency but not exactly the same.
+We can randomize by `species`. This second method is performed at each layer (species) of the stack by randomizing the position of species presences in space. If the data fits to the computer RAM memory this randomization is equivalent to the SIM2 (fixed-equiprobable) method of Gotelli [-@gotelli2000] and to the flatland model of Laffan & Crisp [-@laffan2003]. It changes the species richness at each cell while retaining the size of the species distribution (except if randomization is performed by frequency). When running by frequency, presences/absences (1s/0s) are sampled at each pixel based on the probability (frequency) that the species is found within the study area. It is equivalent to the SIM7 (proportional-equiprobable) method of Gotelli [-@gotelli2000]. For each species, the randomized frequency of presences is very similar to the actual frequency but not exactly the same.
 
 ```{r, naive-spp, fig.height=8, fig.width=6}
 sr1 <- bootspat_naive(r10, random = "species")
@@ -105,7 +105,6 @@ plot(sr1, legend=F)
 ```{r, naive-spp-rich, fig.height=4, fig.width=6}
 plot(c(sum(r10), sum(sr1)), main=c("observed", "randomized"))
 ```
-
 
 ```{r, naive-sppb, fig.height=8, fig.width=6}
 sr1b <- bootspat_naive(r10, random = "species", memory = FALSE)
@@ -121,7 +120,7 @@ cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
 
 #### by site
 
-Now, we will randomize by `site`. This method randomizes the position (presence/absence) of the species within each site (cell) of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change, as more or less pixels can be randomly assigned to each species (raster layer). Notice that, although the spatial structure of species richness is held constant, the number of pixels that each species occupy is completely randomized.
+Now, we will randomize by `site`. This method randomizes the position (presence/absence) of the species within each site (cell) of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change, as more or less pixels can be randomly assigned to each species (raster layer). This randomization is equivalent to the SIM3 (equiprobable-fixed) method of Gotelli [-@gotelli2000]. Notice that, although the spatial structure of species richness is held constant, the number of pixels that each species occupy is completely randomized.
 
 ```{r, naive-site, fig.height=8, fig.width=6}
 sr2 <- bootspat_naive(r10, random = "site")
@@ -136,9 +135,9 @@ plot(c(sum(r10), sum(sr2)), main=c("observed", "randomized"))
 
 Notice that randomization by `site` from `bootspat_naive` keeps the species richness fixed (i.e. equal to the input raster), but the size of the species' distribution (i.e. number of pixels of each species) is completely randomized. On the other hand, randomization by `species` keeps the number of pixels of each species fixed, but the richness is completely randomized.
 
-In the function `bootspat_str` we implement a spatially structured randomization that keeps both, species richness pattern and distribution size of each species, fixed. This method is based on the second null model of Laffan & Crisp [-@laffan2003], but uses probability of sampling presences based on frequency of presences for each species. In the same way, notice that although the size of the species distribution is retained, it will lack spatial structure.
+In the function `bootspat_str` we implement a spatially structured randomization that keeps the species richness pattern fixed and distribution size of each species, proportional. This method is based on the second null model of Laffan & Crisp [-@laffan2003], but uses probability of sampling presences based on frequency of presences for each species. Therefore, it is equivalent to the SIM5 (proportional-fixed) method of Gotelli [-@gotelli2000]. Notice that it will lack spatial structure in the same way of randomization by `site`, however the size of the species distribution is (nearly) retained.
 
-Randomizations are based on frequencies (given or calculated from the output raster (a presence-absence SpatRaster) and, optionally, a probability raster stack. Both, frequencies and probability raster stack, control the probability that a given species is sampled in each cell raster. Frequency control the probability of each species compared to all others. Probability raster stack control the probability that each species is sampled on a given raster cell.
+Randomizations are based on frequencies (given or calculated from the output raster (a presence-absence SpatRaster) and, optionally, a probability raster stack. Both, the frequency vector and the probability raster stack, control the probability that a given species is sampled in each raster cell. The frequency vector controls the probability of sampling each species compared to all others. The probability raster stack controls the probability that each species is sampled on a given raster cell.
 
 ```{r}
 # bootstrapping once
@@ -171,5 +170,6 @@ cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
 ```
 
 ## References {#references}
+Gotelli, N. J. (2000). Null Model Analysis of Species Co-Occurrence Patterns. *Ecology*, 81(9), 2606–2621.
 
-Laffan, Shawn W., and Michael D. Crisp. 2003. \"Assessing Endemism at Multiple Spatial Scales, with an Example from the Australian Vascular Flora.\" *Journal of Biogeography* 30 (4): 511--20.
+Laffan, Shawn W., and Michael D. Crisp. 2003. "Assessing Endemism at Multiple Spatial Scales, with an Example from the Australian Vascular Flora." *Journal of Biogeography* 30(4): 511-520.

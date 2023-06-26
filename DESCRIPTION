@@ -14,8 +14,8 @@ Authors@R: c(
 Description: Randomization of presence/absence species distribution raster data 
     with or without including spatial structure for calculating standardized effect
     sizes and testing null hypothesis.
-    The spatially unstructured randomization algorithms are based on fixed-fixed
-    algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>).
+    The randomization algorithms are based on classical algorithms for 
+    matrices (Gotelli 2000, <doi:10.2307/177478>).
     The spatially structured randomization algorithm is based on the preserved richness
     null model (Laffan & Crisp 2003, <doi:10.1046/j.1365-2699.2003.00875.x>).
 License: GPL (>= 3)

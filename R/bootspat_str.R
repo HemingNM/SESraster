@@ -99,6 +99,7 @@ fr2prob <- function(x, rprob=NULL){
 # #' @param filename Character. Filename for output SpatRaster.
 #' @param memory logical. Checks if there is enough available RAM memory. Calculated if NULL
 #' @param ... additional parameters for terra::app
+#' @seealso \code{\link{bootspat_naive}}
 #' @author Neander Marcel Heming
 #'
 #' @examples
