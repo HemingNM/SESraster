@@ -73,6 +73,9 @@ cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
       randomized=sapply(randr10, function(x)freq(x)[2,3]))
 
 }
+\seealso{
+\code{\link{bootspat_str}}
+}
 \author{
 Neander Marcel Heming and Gabriela Alves-Ferreira
 }
