@@ -1,7 +1,7 @@
-# SESraster (development version)
+# SESraster 0.6.2
 
 ## enhancements
-- improved accuracy of algorithm description in DESCRIPTION and vignette
+- improved accuracy of algorithm description in DESCRIPTION, README, and vignette
 - added link to functions in documentation
 
 # SESraster 0.6.1
