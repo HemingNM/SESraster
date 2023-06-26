@@ -82,10 +82,10 @@ fr2prob <- function(x, rprob=NULL){
 #' Randomizes a raster stack with fixed richness.
 #' Randomizations are based on frequencies (given or calculated from x)
 #' and, optionally, a probability raster stack.
-#' Both, frequencies and probability raster stack, control the probability of a
-#' given species is sampled in each cell raster. Frequency control the probability
-#' of each species compared to all others. Probability raster stack control the
-#' probability that each species is sampled in a given raster cell.
+#' Both, frequencies and probability raster stack, control the probability that a
+#' given species is sampled in each cell raster. Frequency controls the probability
+#' of each species being sampled compared to all others. Probability raster stack
+#' controls the probability that each species is sampled in a given raster cell.
 #'
 #' @param x SpatRaster. A presence-absence SpatRaster.
 #' @param rprob SpatRaster. Stack of probability values. Structures the spatial
@@ -94,10 +94,8 @@ fr2prob <- function(x, rprob=NULL){
 #' each cell randomization. Calculated if not provided.
 #' @param fr_prob Either frequency of pixels or probability that a species is
 #' observed across the whole layer.
-#' @inheritParams terra::app
-# #' @param cores
-# #' @param filename Character. Filename for output SpatRaster.
 #' @param memory logical. Checks if there is enough available RAM memory. Calculated if NULL
+#' @inheritParams terra::app
 #' @param ... additional parameters for terra::app
 #' @seealso \code{\link{bootspat_naive}}
 #' @author Neander Marcel Heming
@@ -153,7 +151,7 @@ fr2prob <- function(x, rprob=NULL){
 #'
 #' @return SpatRaster object
 #' @export
-bootspat_str <- function(x, rprob=NULL, rich=NULL, fr_prob=NULL, cores = 1, filename = "", memory = NULL, ...){
+bootspat_str <- function(x, rprob=NULL, rich=NULL, fr_prob=NULL, cores = 1, filename = "", memory = NULL, overwrite = FALSE, ...){
 
   if(is.null(memory)){
     memory <- .fit.memory(x)
@@ -180,7 +178,7 @@ bootspat_str <- function(x, rprob=NULL, rich=NULL, fr_prob=NULL, cores = 1, file
   r <- terra::app(c(rich, rprob),
                   .str.sample,
                   sp=sp, resu=resu, fr_prob=fr_prob,
-  cores = cores, filename = filename, overwrite = TRUE)
+  cores = cores, filename = filename, overwrite = overwrite)
 
   terra::set.names(r, names(x))
 

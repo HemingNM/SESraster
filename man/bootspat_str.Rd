@@ -12,6 +12,7 @@ bootspat_str(
   cores = 1,
   filename = "",
   memory = NULL,
+  overwrite = FALSE,
   ...
 )
 }
@@ -33,6 +34,8 @@ observed across the whole layer.}
 
 \item{memory}{logical. Checks if there is enough available RAM memory. Calculated if NULL}
 
+\item{overwrite}{logical. If \code{TRUE}, \code{filename} is overwritten}
+
 \item{...}{additional parameters for terra::app}
 }
 \value{
@@ -42,10 +45,10 @@ SpatRaster object
 Randomizes a raster stack with fixed richness.
 Randomizations are based on frequencies (given or calculated from x)
 and, optionally, a probability raster stack.
-Both, frequencies and probability raster stack, control the probability of a
-given species is sampled in each cell raster. Frequency control the probability
-of each species compared to all others. Probability raster stack control the
-probability that each species is sampled in a given raster cell.
+Both, frequencies and probability raster stack, control the probability that a
+given species is sampled in each cell raster. Frequency controls the probability
+of each species being sampled compared to all others. Probability raster stack
+controls the probability that each species is sampled in a given raster cell.
 }
 \examples{
 # load random species distributions
