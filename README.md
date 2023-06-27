@@ -1,7 +1,6 @@
 <!-- badges: start -->
+[![CRAN-status](https://www.r-pkg.org/badges/version/SESraster)](https://cran.r-project.org/package=SESraster)
 [![R-CMD-check](https://github.com/HemingNM/SESraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/HemingNM/SESraster/actions/workflows/R-CMD-check.yaml)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/SESraster)](https://cran.r-project.org/package=SESraster)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/SESraster?color=green)](https://cran.r-project.org/package=SESraster)
 [![](http://cranlogs.r-pkg.org/badges/SESraster?color=green)](https://cran.r-project.org/package=SESraster)
 [![Codecov](https://codecov.io/gh/HemingNM/SESraster/branch/main/graph/badge.svg)](https://app.codecov.io/gh/HemingNM/SESraster?branch=main)
