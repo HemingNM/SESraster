@@ -39,7 +39,7 @@ colnames(d) <- c(" ", " ", paste0("", type))
 ```
 
 ```{r table1, echo=FALSE}
-library(kableExtra)
+require(kableExtra)
 
 kable(d, dbooktabs = TRUE, align=c("r", "c", "c", "c"), escape = F, 
       caption = "Nine null model algorithms for species co-occurrence analysis listed in Gotelli (2000).") %>%
