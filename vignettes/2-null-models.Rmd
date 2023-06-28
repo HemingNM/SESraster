@@ -1,10 +1,11 @@
 ---
-title: "SESraster-models"
+title: "Null-model algorithms"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SESraster-models}
+  %\VignetteIndexEntry{Null-model algorithms}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: references.bib
 ---
 
 ```{r, include = FALSE}
@@ -14,15 +15,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-Gotelli (2000) summarizes nine null model algorithms for species co-occurrence analysis based on how sums of species (originally rows) and sites (originally columns) are treated (i.e. fixed, equiprobable, or proportional sums; see Table \@ref(tab:table1)).
-  
-```{r table1, echo=FALSE}
-library(kableExtra)
+-   [Introduction](#intro)
+-   [Algorithms](#algorithms)
+-   [References](#references)
+
+## Introduction {#intro}
+Gotelli (2000) summarizes nine null model algorithms for species co-occurrence analysis based on how sums of species (originally rows) and sites (originally columns) are treated (i.e. fixed, equiprobable, or proportional sums; see Table \@ref(tab:table1), [@gotelli2000]). The data for null model analyses usually consists of a binary presence-absence matrix, in which rows represent species or taxa, columns represent sites or samples, and the entries represent the presence (1) or absence (0) of a particular species in a particular site [@ulrich2012].
+
+```{r table1-data, echo=FALSE}
 type <- c("Equiprobable", "Proportional", "Fixed")
 typeabv <- c("equipr.", "prop.", "fixed")
 typeinit <- c("E", "P", "F")
 # Species - Sites
-d <- data.frame("Rows" = c("Rows (Layer)"),
+d <- data.frame("Rows" = c("Rows (Layer)", rep("", 2)),
                 type=type,
                 paste0("SIM", c(1,7,2), ": ", typeinit, "-", typeinit[1], 
                         "<br>", paste("Species occur.", typeabv, "<br> Site rich.", typeabv[1])) ,
@@ -31,8 +36,13 @@ d <- data.frame("Rows" = c("Rows (Layer)"),
                 paste0("SIM", c(3,5,9), ": ", typeinit, "-", typeinit[3], 
                         "<br>", paste("Species occur.", typeabv, "<br> Site rich.", typeabv[3])) )
 colnames(d) <- c(" ", " ", paste0("", type))
+```
 
-kbl(d, dbooktabs = TRUE, align=c("r", "c", "c", "c"), escape = F, caption = "Nine null model algorithms for species co-occurrence analysis listed in Gotelli (2000).") %>%
+```{r table1, echo=FALSE}
+library(kableExtra)
+
+kable(d, dbooktabs = TRUE, align=c("r", "c", "c", "c"), escape = F, 
+      caption = "Nine null model algorithms for species co-occurrence analysis listed in Gotelli (2000).") %>%
   collapse_rows() %>%
   kable_styling(bootstrap_options = c("bordered")) %>%
   add_header_above(c(" " = 2, "Cols (Cell)" = 3), background = "#F2F2F2") %>%
@@ -44,11 +54,16 @@ kbl(d, dbooktabs = TRUE, align=c("r", "c", "c", "c"), escape = F, caption = "Nin
   column_spec(5, background=c("#B4EEB4"))
 
 ```
-  
-  
-Let's see how each of these algorithms behave with raster data. 
-  
+
+## Algorithms {#algorithms}
+
+Let's see how each of these algorithms behave with raster data.
+
+### under construction TODO
 
 ```{r setup}
 library(SESraster)
 ```
+
+
+## References {#references}

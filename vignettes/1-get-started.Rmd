@@ -27,8 +27,9 @@ knitr::opts_chunk$set(
 
 ## Introduction {#intro}
 
-Species distributions are dynamic and ever-changing, exhibiting variations both across time and space. To study and understand the complex mechanisms underlying species distributions and the structure of biological communities, null models are often used. A null model is a simplified representation of how species distributions would look if specific ecological processes or factors were not operating. The package [`SESraster`](https://github.com/HemingNM/SESraster) covers a current gap by offering functions for randomization of presence/absence raster data with or without including spatial structure on randomized patterns of species distribution.
-
+Null models have been widely used to analyze the patterns observed in nature in the attempt to understand the ecological and evolutionary mechanisms structuring the biological communities. A null model is a simplified representation of how species would be distributed or biological communities be assembled if specific ecological processes were not operating. 
+Until now, algorithms were designed to create null models using matrix data. The package [`SESraster`](https://github.com/HemingNM/SESraster) covers a current gap by implementing randomization algorithms to build null models using presence/absence raster data.  
+  
 ## Installation {#install}
 
 ```{r, eval = FALSE}
