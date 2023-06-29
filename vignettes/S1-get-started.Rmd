@@ -10,7 +10,7 @@ vignette: >
 bibliography: references.bib
 # csl: restoration-ecology.csl
 # biblio-style: apelike
-link-citations: false
+link-citations: true
 ---
 
 ```{r, include = FALSE}
@@ -20,6 +20,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Contents
+
 -   [Introduction](#intro)
 -   [Installation](#install)
 -   [Analysis](#analysis)
@@ -27,9 +29,8 @@ knitr::opts_chunk$set(
 
 ## Introduction {#intro}
 
-Null models have been widely used to analyze the patterns observed in nature in the attempt to understand the ecological and evolutionary mechanisms structuring the biological communities. A null model is a simplified representation of how species would be distributed or biological communities be assembled if specific ecological processes were not operating. 
-Until now, algorithms were designed to create null models using matrix data. The package [`SESraster`](https://github.com/HemingNM/SESraster) covers a current gap by implementing randomization algorithms to build null models using presence/absence raster data.  
-  
+Null models have been widely used to analyze the patterns observed in nature in the attempt to understand the ecological and evolutionary mechanisms structuring the biological communities. A null model is a simplified representation of how species would be distributed or biological communities be assembled if specific ecological processes were not operating. Until now, algorithms were designed to create null models using matrix data. The package [`SESraster`](https://github.com/HemingNM/SESraster) covers a current gap by implementing randomization algorithms to build null models using presence/absence raster data.
+
 ## Installation {#install}
 
 ```{r, eval = FALSE}
@@ -37,7 +38,7 @@ install.packages("SESraster")
 library(SESraster)
 ```
 
-If you find any bug, let us know through [SESraster Issues](https://github.com/HemingNM/SESraster/issues). The development version of `SESraster` can be installed from the [SESraster repository in Github](https://github.com/HemingNM/SESraster):
+The development version of `SESraster` can be installed from the [SESraster repository in Github](https://github.com/HemingNM/SESraster):
 
 ```{r, eval = FALSE}
 require(devtools)
@@ -171,6 +172,3 @@ cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
 ```
 
 ## References {#references}
-Gotelli, N. J. (2000). Null Model Analysis of Species Co-Occurrence Patterns. *Ecology*, 81(9), 2606–2621.
-
-Laffan, Shawn W., and Michael D. Crisp. 2003. "Assessing Endemism at Multiple Spatial Scales, with an Example from the Australian Vascular Flora." *Journal of Biogeography* 30(4): 511-520.
