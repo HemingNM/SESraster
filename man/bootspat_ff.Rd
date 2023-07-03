@@ -91,7 +91,7 @@ library(terra)
 f <- system.file("ex/elev.tif", package="terra")
 r <- rast(f)
 set.seed(510)
-r10 <- rast(lapply(1:10,
+r10 <- rast(lapply(1:8,
                 function(i, r, mn, mx){
                   app(r, function(x, t){
                     sapply(x, function(x, t){

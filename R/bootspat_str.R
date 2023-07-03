@@ -71,6 +71,8 @@ fr2prob <- function(x, rprob=NULL){
 .str.sample <- function(x, sp, resu, fr_prob){
   if(is.na(x[1])) {
     resu[] <- NA
+  } else if(x[1] == 0){
+    resu[] <- 0
   } else {
     resu[sample(sp, size = x[1], prob = x[-1]*fr_prob)] <- 1
   }

@@ -13,5 +13,10 @@ Days since last update: 4
       Message: Invalid URI scheme (use \doi for DOIs in Rd markup)
       
 ## Maintainer comments
-
 * This is a new release.
+
+## bux fixes
+- fixed error when all species were absent from a cell (i.e. all values are zero)
+
+## enhancements
+-  several enhancements, see NEWS.md
