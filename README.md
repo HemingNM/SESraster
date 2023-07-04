@@ -1,16 +1,15 @@
 <!-- badges: start -->
 [![CRAN-status](https://www.r-pkg.org/badges/version/SESraster?color=green)](https://cran.r-project.org/package=SESraster)
-[![R-CMD-check](https://github.com/HemingNM/SESraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/HemingNM/SESraster/actions/workflows/R-CMD-check.yaml)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/SESraster?color=green)](https://cran.r-project.org/package=SESraster)
 [![](http://cranlogs.r-pkg.org/badges/SESraster?color=green)](https://cran.r-project.org/package=SESraster)
-[![codecov](https://codecov.io/gh/HemingNM/SESraster/branch/master/graph/badge.svg?token=YJZHUXU5R7)](https://codecov.io/gh/HemingNM/SESraster)
+[![R-CMD-check](https://github.com/HemingNM/SESraster/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/HemingNM/SESraster/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/HemingNM/SESraster/branch/master/graph/badge.svg?token=YJZHUXU5R7)](https://app.codecov.io/gh/HemingNM/SESraster)
 <!-- badges: end -->
 
 # SESraster <a href="https://hemingnm.github.io/SESraster/"><img src="man/figures/logo.png" align="right" height="139" alt="SESraster website" /></a>
 
 Randomization of presence/absence species distribution raster data with or without including spatial structure for calculating standardized effect sizes and testing null hypothesis.
-The spatially unstructured randomization algorithms are based on classical algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>).
-The spatially structured randomization algorithm is based on the preserved richness null model (Laffan & Crisp 2003, <doi:10.1046/j.1365-2699.2003.00875.x>).  
+The spatially unstructured randomization algorithms are based on classical algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>) but implemented for raster data.
 
 ### Installation
 To install the package, run the following code:

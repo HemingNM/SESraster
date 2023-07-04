@@ -12,32 +12,14 @@ Maintainer: ‘Neander Marcel Heming <neanderh@yahoo.com.br>’
     URL: doi:10.2307/177478
       From: README.md
       Message: Invalid URI scheme (use \doi for DOIs in Rd markup)
-    URL: https://codecov.io/gh/HemingNM/SESraster (moved to https://app.codecov.io/gh/HemingNM/SESraster)
-      From: README.md
-      Status: 200
-      Message: OK
-    URL: https://doi.org/10.1046/j.1365-2699.2003.00875.x
+    URL: https://doi.org/10.2307/1936961
       From: inst/doc/S1-get-started.html
       Status: 403
       Message: Forbidden
-    URL: https://doi.org/10.2307/177478
-      From: inst/doc/S1-get-started.html
-            inst/doc/S2-null-models.html
-      Status: 403
-      Message: Forbidden
-  
-  Found the following (possibly) invalid DOIs:
-  
-    DOI: 10.1046/j.1365-2699.2003.00875.x
-      From: DESCRIPTION
-      Status: Forbidden
-      Message: 403
-    DOI: 10.2307/177478
-      From: DESCRIPTION
-      Status: Forbidden
-      Message: 403
       
 ## Maintainer comments
+Fixed codecov URL
+
 I was not able to solve the above NOTE about possibly invalid URLs from DOIs. I 
 know they are correct, so I am submitting as it is. 
 
