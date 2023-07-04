@@ -7,7 +7,10 @@
     <loc>https://hemingnm.github.io/SESraster/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://hemingnm.github.io/SESraster/articles/SESraster-vignette.html</loc>
+    <loc>https://hemingnm.github.io/SESraster/articles/S1-get-started.html</loc>
+  </url>
+  <url>
+    <loc>https://hemingnm.github.io/SESraster/articles/S2-null-models.html</loc>
   </url>
   <url>
     <loc>https://hemingnm.github.io/SESraster/articles/index.html</loc>
@@ -20,6 +23,9 @@
   </url>
   <url>
     <loc>https://hemingnm.github.io/SESraster/news/index.html</loc>
+  </url>
+  <url>
+    <loc>https://hemingnm.github.io/SESraster/reference/bootspat_ff.html</loc>
   </url>
   <url>
     <loc>https://hemingnm.github.io/SESraster/reference/bootspat_naive.html</loc>

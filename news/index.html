@@ -24,7 +24,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/SESraster-vignette.html">Introduction to SESraster</a>
+    <a class="dropdown-item" href="../articles/S1-get-started.html">Introduction to SESraster</a>
+    <a class="dropdown-item" href="../articles/S2-null-models.html">Null-model algorithms</a>
   </div>
 </li>
 <li class="active nav-item">
@@ -52,12 +53,19 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.2" id="sesraster-062">SESraster 0.6.2<a class="anchor" aria-label="anchor" href="#sesraster-062"></a></h2>
-<div class="section level3">
-<h3 id="enhancements-0-6-2">enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-6-2"></a></h3>
-<ul><li>improved accuracy of algorithm description in DESCRIPTION, README, and vignette</li>
+<ul><li>bux fixes
+<ul><li>fixed error in <code><a href="../reference/dot-str.sample.html">.str.sample()</a></code> to avoid negative probabilities when all species were absent from a cell (i.e. all values are zero)</li>
+</ul></li>
+<li>new function
+<ul><li>added <code><a href="../reference/bootspat_ff.html">bootspat_ff()</a></code> to include Fixed-Fixed algorithm</li>
+</ul></li>
+<li>enhancements
+<ul><li>added new vignette</li>
+<li>added references and improved accuracy of algorithm description in DESCRIPTION, README, and vignettes</li>
+<li>improved accuracy of null model descriptions in vignettes</li>
 <li>added link to functions in documentation</li>
+</ul></li>
 </ul></div>
-</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.1" id="sesraster-061">SESraster 0.6.1<a class="anchor" aria-label="anchor" href="#sesraster-061"></a></h2><p class="text-muted">CRAN release: 2023-06-22</p>
 <p>Released 2023-06-23</p>
