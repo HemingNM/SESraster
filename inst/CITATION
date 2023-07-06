@@ -1,0 +1,14 @@
+citHeader("Please cite both the package and the original article describing the methods in your publications:")
+
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(
+  bibtype = "Misc",
+  title   = "{SESraster}: Raster Randomization for Null Hypothesis Testing",
+  author = c(person("Neander Marcel", "Heming"), person("Flávio M. M.", "Mota"), person("Gabriela", "Alves-Ferreira")),
+  year   = year,
+  note   = note,
+  url    = "https://CRAN.R-project.org/package=SESraster"
+)
+
