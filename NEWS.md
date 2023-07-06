@@ -1,3 +1,17 @@
+# SESraster 0.7.0
+
+* bug fixes
+  - bug fix on attachMSG
+
+* new function
+  - added `SESraster()` to handle aleatorizations
+  - added `algorithm_performance()` to compare randomized rasters with observed
+  rasters
+
+* function changes
+  - changed function name from .fit.memory() to fit.memory() and added argument "n"
+  - Added cross links to functions
+
 # SESraster 0.6.2
 
 * bux fixes
