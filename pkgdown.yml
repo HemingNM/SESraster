@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   S1-get-started: S1-get-started.html
   S2-null-models: S2-null-models.html
-last_built: 2023-07-06T00:15Z
+last_built: 2023-07-06T12:51Z
 urls:
   reference: https://hemingnm.github.io/SESraster/reference
   article: https://hemingnm.github.io/SESraster/articles
