@@ -3,10 +3,11 @@
 * bug fixes
   - bug fix on attachMSG
 
-* new function
+* new functions
   - added `SESraster()` to handle aleatorizations
-  - added `algorithm_performance()` to compare randomized rasters with observed
-  rasters
+  - added `algorithm_metrics()` to compare original and randomized rasters
+  - added `plot_alg_metrics()` to plot site and species difference metrics 
+  between original and randomized rasters
 
 * function changes
   - changed function name from .fit.memory() to fit.memory() and added argument "n"

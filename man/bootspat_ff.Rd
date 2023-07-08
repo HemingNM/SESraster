@@ -122,7 +122,7 @@ Connor, E. F., & Simberloff, D. (1979). The Assembly of Species Communities: Cha
 }
 \seealso{
 \code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
-\code{\link{SESraster}}, \code{\link{algorithm_performance}}
+\code{\link{SESraster}}, \code{\link{algorithm_metrics}}
 }
 \author{
 Neander Marcel Heming

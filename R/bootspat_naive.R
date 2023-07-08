@@ -45,7 +45,7 @@
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster object
 #' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_ff}},
-#' \code{\link{SESraster}}, \code{\link{algorithm_performance}}
+#' \code{\link{SESraster}}, \code{\link{algorithm_metrics}}
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @examples

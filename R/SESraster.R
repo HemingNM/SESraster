@@ -1,13 +1,17 @@
-#' Standardized effect sizes
+#' Standardized effect sizes for SpatRaster objects
 #'
-#' @description Calculates the standardized effect size using a custom function.
+#' @description Calculates the standardized effect sizes using a custom function
+#' and a null model algorithm.
 #'
 #' @param x SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 #' for a set of species.
 #' @param aleats positive integer. A positive integer indicating how many times
 #' the calculation should be repeated.
-#' @param FUN custom function that works with SpatRaster objects. See examples
-#' @param algorithm character. A character indicating the randomization method.
+#' @param FUN The function to be applied. It must work with SpatRaster objects.
+#' See examples.
+#' @param algorithm The function implementing the desired randomization method.
+#' It must work with SpatRaster objects. See examples. Example of functions that
+#' work are: \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.
 #' @param FUN_args List of arguments passed to the FUN
 #' @param alg_args List of arguments passed to the randomization method chosen
 #' in 'algorithm'.
@@ -26,7 +30,7 @@
 #' \link[terra]{focal3D} family of functions.
 #'
 #' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
-#' \code{\link{bootspat_ff}}, \code{\link{algorithm_performance}}
+#' \code{\link{bootspat_ff}}, \code{\link{algorithm_metrics}}
 #'
 #' @author Neander M. Heming and Gabriela Alves-Ferreira
 #' @references Gotelli 2000
@@ -36,55 +40,72 @@
 #' library(terra)
 #' r <- load_ext_data()
 #' appmean <- function(x, ...){
-#' terra::app(x, "mean", ...)
-#' }
-#' ses <- SESraster(r, FUN=appmean, algorithm = "SIM1", alg_args=list(random="species"))
+#'                       terra::app(x, "mean", ...)
+#'                     }
+#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"))
 #' plot(ses)
-#' ses <- SESraster(r, FUN=appmean, algorithm = "SIM1", alg_args=list(random="site"))
+#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"))
 #' plot(ses)
-#' ses <- SESraster(r, FUN=appmean, algorithm = "SIM1",
-#'                   alg_args=list(random="site"), FUN_args=list(na.rm=TRUE))
+#'
+#' ## example of how to use 'FUN_args'
+#' r[7][1] <- NA
+#' plot(r)
+#' sesNA <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
+#'                  FUN_args = list(na.rm = FALSE), alg_args=list(random = "species"))
+#' plot(sesNA)
+#'
+#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
+#'                FUN_args = list(na.rm = TRUE), alg_args=list(random = "species"))
 #' plot(ses)
 #'
 #' @export
 SESraster <- function(x,
-                      FUN=NULL,
-                      algorithm = "SIM1",
+                      FUN = NULL,
+                      algorithm = NULL,
                       FUN_args = NULL, alg_args = NULL,
                       aleats=10,
                       cores = 1, filename = "",
                       overwrite = FALSE, ...){
 
-  if(!any(algorithm %in% paste0("SIM", 1:9))){
-    stop("Please chose a proper algorithm")
-  } else if(algorithm == "SIM1"){
-    algorithm_f <- SESraster::bootspat_naive
-  }
+  FUN <- match.fun(FUN)
+  algorithm <- match.fun(algorithm)
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
-  mi <- fit.memory(x[[1]], n=(aleats+3))
+  mi <- fit.memory(c(x, x[[1]]), n=(aleats+3))
 
   temp.filename <- tempfile()
   temp.raster <- paste0(temp.filename, ".tif") # temporary names to rasters
   temp.a <- paste0(temp.filename, 1:aleats, ".tif") # create a vector with filenames for random rasters
+  temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random FUN rasters
+
+  add_fn <- FALSE
+  if(isFALSE(mi)) {
+    ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
+    add_fn <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
+                 # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
+    # add_m <- (any(grepl("filename", frl_alg)) & !any(grepl("filename", g_aa)))
+    if(add_fn){
+      alg_args[["filename"]] <- ""
+    }
+  }
+  ## add filename item to FUN args
+  FUN_args[["filename"]] <- ""
 
   ## Null model (bootstrap structure)
   rast.rand <- list() # store rasters from loop
 
-  # ## null raster characterization
-  # res <- matrix(nrow = terra::nlyr(x), ncol = aleats)
-  # actual <- setNames(sapply(x, function(x) terra::freq(x)[2,3]), names(x))
-
   for(i in 1:aleats){
-    ### null distribution # TODO - use temporary file
-    pres.site.null <- algorithm_f(x = x, unlist(alg_args))
+    if(add_fn){ ## use temporary file
+      alg_args$filename[] <- temp.a[i]
+    }
+
+    ### null distribution # TODO -
+    pres.site.null <- rlang::exec(algorithm, x, !!!alg_args)
+
 
     # calculate metric
-    rast.rand[[i]] <- FUN(pres.site.null,
-                          filename = ifelse(mi, "", temp.a[i]), FUN_args)
-
-    # # calculate null distribution species incidence
-    # res[,i] <- sapply(pres.site.null, function(x) terra::freq(x)[2,3])
+    FUN_args[["filename"]][] <- ifelse(mi, "", temp.r[i])
+    rast.rand[[i]] <- rlang::exec(FUN, pres.site.null, !!!FUN_args)
   }
 
   rast.rand <- terra::rast(rast.rand) # transform a list into a SpatRaster
@@ -99,10 +120,11 @@ SESraster <- function(x,
                                filename = ifelse(mi, "", paste0(temp.filename, "sd.tif")))
 
   ### Observed value
-  rast.obs <- FUN(x, filename = ifelse(mi, "", temp.raster), FUN_args)
+  FUN_args[["filename"]][] <- ifelse(mi, "", temp.raster)
+  rast.obs <- rlang::exec(FUN, x, !!!FUN_args)
+    # FUN(x, filename = ifelse(mi, "", temp.raster), FUN_args)
 
   ## Calculating the standardized effect size (SES)
-  # ses <-
   out <- terra::app(c(rast.obs, rast.rand.avg, rast.rand.sd),
                     fun=function(x){
                       return(c(Observed = x[1],
@@ -128,69 +150,91 @@ SESraster <- function(x,
 #' @description Compares the richness and occurrence incidence across species
 #' between actual and randomized species distributions
 #'
-#' @param plot logical. Should results be plotted?
 #' @inheritParams SESraster
+# #' @param plot logical. Should results be plotted?
 #'
-#' @return a list with three components.
-#' - randomization_results: a matrix with frequency of species occurrence on
-#' each randomization
+#' @return a list with two components.
 #' - spp_metrics: a matrix with metrics comparing actual and randomized frequency
 #' of species occurrence. Metrics are average, sd, min, and max frequency across
 #' randomizations, sp_reldiff (average difference relative to species frequency),
 #' global_reldiff (average difference relative to the number of available cells),
 #' upper and lower confidence intervals for sp_reldiff and global_reldiff.
+#' - spat_rich_diff: a SpatRaster with summary statistics about differences
+#' between actual and bootstrapped site (cell) richness
 #'
 #'#' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
-#' \code{\link{bootspat_ff}}, \code{\link{SESraster}}
+#' \code{\link{bootspat_ff}}, \code{\link{SESraster}}, \code{\link{plot_alg_metrics}}
 #'
 #' @author Neander M. Heming
 #' @examples
 #' library(SESraster)
 #' library(terra)
 #' r <- load_ext_data()
-#' appmean <- function(x, ...){
-#' terra::app(x, "mean", ...)
-#' }
-#' algorithm_performance(r, FUN=appmean, algorithm = "SIM1", alg_args=list(random="species"))
-#' algorithm_performance(r, FUN=appmean, algorithm = "SIM1", alg_args=list(random="site"))
-#' #' algorithm_performance(r, FUN=appmean, algorithm = "SIM1", alg_args=list(random="both"))
+#' algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"))
+#' algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"))
+#' # algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="both"))
+#'
 #' @export
-algorithm_performance <- function(x,
-                                  algorithm, alg_args = NULL,
-                                  aleats=10, plot=F, ...){
+algorithm_metrics <- function(x,
+                              algorithm = NULL, alg_args = NULL,
+                              aleats = 10, # plot = FALSE,
+                              filename = "", ...){
 
-  ## algorithm selection
-  if(algorithm == "SIM1"){
-    algorithm_f <- SESraster::bootspat_naive
+  ## check algorithm function
+  algorithm <- match.fun(algorithm)
+
+  ## test if rasters fit in RAM memory,  n=aleats*2+1 rasters will be generated in this function
+  mi <- fit.memory(x[[1]], n=(aleats*2+1))
+  ## if doesn't fit in memory,
+  # - add filename into args
+  # - create temporary raster files for aleats, then delete them to clean up HD
+  add_fn <- FALSE
+  if(isFALSE(mi)){
+    temp.a <- paste0(tempfile(), 1:aleats, ".tif") # create a vector with filenames for random rasters
+    temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random richness rasters
+
+    ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
+    add_fn[] <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
+                   # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
+    # add_m <- (any(grepl("filename", frl_alg)) & !any(grepl("filename", g_aa)))
+    if(add_fn){
+      alg_args[["filename"]] <- ""
+      #   alg_args$filename <- ""
+    }
   }
 
   ## null raster characterization
   actual <- stats::setNames(sapply(x, function(x) terra::freq(x)[2,3]), names(x))
-  actual_rich <- terra::app(x, "sum", na.rm=T)
+  actual_rich <- terra::app(x, "sum", na.rm=T, filename = ifelse(mi, "", paste0(tempfile(), "ar.tif")))
   all <- unlist(terra::global(x[[1]], function(x)sum(!is.na(x), na.rm=T)))
 
+  ## store bootstrapped frequencies
   res <- matrix(nrow = terra::nlyr(x), ncol = aleats)
-  rich_diff <- matrix(nrow = aleats, ncol = 2,
-                      dimnames = list(1:aleats, c("N_cells_diff", "Proportion_cells_diff")))
+
+  ## store Null model (bootstrap) rasters
+  null.rich.diff <- list() # store rasters from loop
 
   for(i in 1:aleats){
+    ## add filename.i to algorithm args
+    if(add_fn){
+      alg_args$filename[] <- temp.a[i]
+    }
+
     ### null distribution
-    pres.site.null <- algorithm_f(x = x, unlist(alg_args))
+    pres.site.null <- rlang::exec(algorithm, x, !!!alg_args) # algorithm(x = x, unlist(alg_args))
 
     ## calculate null distribution species incidence
     res[,i] <- sapply(pres.site.null, function(x) terra::freq(x)[2,3])
 
     ## calculate number of pixels with difference from actual richness
-    null.rich.diff <- terra::app(c(actual_rich, pres.site.null),
-                            function(x){
-                              return(sum(x[-1], na.rm = T) - x[1])
-                            })
-    rich_diff[i, 1] <- unlist(terra::global(null.rich.diff, function(x)sum(x!=0, na.rm=T) ))
-    rich_diff[i, 2] <- rich_diff[i, 1]/all
+    null.rich.diff[[i]] <- terra::app(c(actual_rich, pres.site.null),
+                                      function(x){
+                                        return(sum(x[-1], na.rm = T) - x[1])
+                                      }, filename = ifelse(mi, "", temp.r[i]))
   }
 
   ## get randomized values for incidence
-  comp_unstr <- as.data.frame(t(rbind(actual, apply(res, 1, function(x){
+  comp_unstr <- as.data.frame(t(rbind(actual_freq=actual, apply(res, 1, function(x){
     c(rand_avg = mean(x, na.rm=T),
       rand_sd = stats::sd(x, na.rm=T),
       rand_min = min(x, na.rm=T),
@@ -198,25 +242,73 @@ algorithm_performance <- function(x,
   }))))
 
   ## compute relative difference
-  comp_unstr$sp_reldiff <- (comp_unstr[,"rand_avg"] - comp_unstr[,"actual"])/comp_unstr[,"actual"]
-  comp_unstr$global_reldiff <- (comp_unstr[,"rand_avg"] - comp_unstr[,"actual"])/all
-  comp_unstr$sp_reldiff_l <- comp_unstr$sp_reldiff-comp_unstr[,"rand_sd"]/comp_unstr[,"actual"]
-  comp_unstr$sp_reldiff_u <- comp_unstr$sp_reldiff+comp_unstr[,"rand_sd"]/comp_unstr[,"actual"]
+  comp_unstr$sp_reldiff <- (comp_unstr[,"rand_avg"] - comp_unstr[,"actual_freq"])/comp_unstr[,"actual_freq"]
+  comp_unstr$global_reldiff <- (comp_unstr[,"rand_avg"] - comp_unstr[,"actual_freq"])/all
+  comp_unstr$sp_reldiff_l <- comp_unstr$sp_reldiff-comp_unstr[,"rand_sd"]/comp_unstr[,"actual_freq"]
+  comp_unstr$sp_reldiff_u <- comp_unstr$sp_reldiff+comp_unstr[,"rand_sd"]/comp_unstr[,"actual_freq"]
   comp_unstr$global_reldiff_l <- comp_unstr$global_reldiff-comp_unstr[,"rand_sd"]/all
   comp_unstr$global_reldiff_u <- comp_unstr$global_reldiff+comp_unstr[,"rand_sd"]/all
 
-  ## plotting results
-  if(plot){
-    # jpeg("../figs/freq_comparison.jpeg", width = 480*3, height = 480*2*2,
-    #      quality = 100, res=300)
+  ## compute spatial metrics for richness differences
+  # transform the list into a SpatRaster and compute mean and sd
+  spat.rich.diff <- terra::app(terra::rast(null.rich.diff),
+                               function(x, rdiff){
+                                 if(all(is.na(x))){
+                                   rdiff[] <- NA
+                                 } else {
+                                   rdiff[] <- c(mean(x, na.rm=TRUE), stats::sd(x, na.rm=TRUE),
+                                                range(x, na.rm=TRUE))
+                                 }
+                                 return(rdiff)
+                               }, rdiff = stats::setNames(vector("double", 4),
+                                                   paste(c("mean", "sd", "min", "max"), "_diff")),
+                               filename = filename, ...)
+
+  # Clean up files from HD
+  if(isFALSE(mi)){
+    unlink(c(temp.a, temp.r, paste0(tempfile(), "ar.tif")))
+  }
+  return(list(spp_metrics = comp_unstr,
+              spat_rich_diff = spat.rich.diff))
+}
+
+
+#' Plot performance of randomization algorithms
+#'
+#' @description Plots objects returned by \code{\link{algorithm_metrics}}
+#'
+#' @param x list. Object returned by \code{\link{algorithm_metrics}}
+#' @param what What should be plotted, "species" or "site" metrics?
+#' @param ... Additional parameters passed to \code{\link[terra]{plot}}
+#'
+#' @seealso \code{\link{algorithm_metrics}}
+#'
+#' @author Neander M. Heming
+#' @examples
+#' library(SESraster)
+#' library(terra)
+#' r <- load_ext_data()
+#' am1 <- algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"))
+#' am2 <- algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"))
+#' plot_alg_metrics(am1)
+#' plot_alg_metrics(am2)
+#' plot_alg_metrics(am1, "site")
+#'
+#' @export
+plot_alg_metrics <- function(x, what="spp", ...) {
+  if(what == "site"){
+    terra::plot(x[["spat_rich_diff"]], ...)
+  } else {
+    comp_unstr <- x[["spp_metrics"]]
     oldpar <- graphics::par()
     graphics::par(mfrow=c(3,1), mar=c(4,5,1,1))
+
     plot(comp_unstr[,1], comp_unstr[,"sp_reldiff"], pch=19,
          ylim=range(c(comp_unstr[,"sp_reldiff_l"], comp_unstr[,"sp_reldiff_u"])),
          xlab="Actual frequency", ylab="Species relative difference \n in frequency")
     graphics::segments(x0=comp_unstr[,1],
-             y0=comp_unstr[,"sp_reldiff_l"], y1=comp_unstr[,"sp_reldiff_u"],
-             col="gray", lwd=1)
+                       y0=comp_unstr[,"sp_reldiff_l"], y1=comp_unstr[,"sp_reldiff_u"],
+                       col="gray", lwd=1)
     graphics::points(comp_unstr[,1], comp_unstr[,"sp_reldiff_l"], pch="-", col="gray", cex=2.5)
     graphics::points(comp_unstr[,1], comp_unstr[,"sp_reldiff_u"], pch="-", col="gray", cex=2.5)
     graphics::points(comp_unstr[,1], comp_unstr[,"sp_reldiff"], pch=19)
@@ -224,23 +316,21 @@ algorithm_performance <- function(x,
     plot(comp_unstr[,1], comp_unstr[,"global_reldiff"], pch=19, xlab="Actual frequency", ylab="Global relative difference \n in frequency",
          ylim=range(c(comp_unstr[,"global_reldiff_l"], comp_unstr[,"global_reldiff_u"])))
     graphics::segments(x0=comp_unstr[,1],
-             y0=comp_unstr[,"global_reldiff_l"], y1=comp_unstr[,"global_reldiff_u"],
-             col="gray", lwd=1)
+                       y0=comp_unstr[,"global_reldiff_l"], y1=comp_unstr[,"global_reldiff_u"],
+                       col="gray", lwd=1)
     graphics::points(comp_unstr[,1], comp_unstr[,"global_reldiff_l"], pch="-", col="gray", cex=2.5)
     graphics::points(comp_unstr[,1], comp_unstr[,"global_reldiff_u"], pch="-", col="gray", cex=2.5)
     graphics::points(comp_unstr[,1], comp_unstr[,"global_reldiff"], pch=19)
 
     plot(comp_unstr[order(comp_unstr[,1]),1], pch=19, ylab="Frequency", xlab="Species i")
     graphics::segments(x0=seq_len(nrow(comp_unstr)),
-             y0=comp_unstr[order(comp_unstr[,1]),4], y1=comp_unstr[order(comp_unstr[,1]),5],
-             col="red", lwd=2)
+                       y0=comp_unstr[order(comp_unstr[,1]),4], y1=comp_unstr[order(comp_unstr[,1]),5],
+                       col="red", lwd=2)
     graphics::points(comp_unstr[order(comp_unstr[,1]),2], pch="--", col="black", cex=2)
     graphics::points(comp_unstr[order(comp_unstr[,1]),4], pch="-", col="red", cex=2.5)
     graphics::points(comp_unstr[order(comp_unstr[,1]),5], pch="-", col="red", cex=2.5)
     graphics::legend("topleft", legend=c("Actual", "Sampled"), title = "Frequency of occupied pixels", pch=c(19,3), col=c("black", "red"))
 
-    graphics::par(oldpar)
+    suppressWarnings(graphics::par(oldpar))
   }
-
-  return(list(randomization_results=res, spp_metrics=comp_unstr, rich_metrics=rich_diff))
 }

@@ -100,7 +100,7 @@ fr2prob <- function(x, rprob=NULL){
 #' @inheritParams terra::app
 #' @param ... additional parameters for terra::app
 #' @seealso \code{\link{bootspat_naive}}, \code{\link{bootspat_ff}},
-#' \code{\link{SESraster}}, \code{\link{algorithm_performance}}
+#' \code{\link{SESraster}}, \code{\link{algorithm_metrics}}
 #'
 #' @author Neander Marcel Heming
 #'

@@ -2,12 +2,12 @@
 % Please edit documentation in R/SESraster.R
 \name{SESraster}
 \alias{SESraster}
-\title{Standardized effect sizes}
+\title{Standardized effect sizes for SpatRaster objects}
 \usage{
 SESraster(
   x,
   FUN = NULL,
-  algorithm = "SIM1",
+  algorithm = NULL,
   FUN_args = NULL,
   alg_args = NULL,
   aleats = 10,
@@ -21,9 +21,12 @@ SESraster(
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 for a set of species.}
 
-\item{FUN}{custom function that works with SpatRaster objects. See examples}
+\item{FUN}{The function to be applied. It must work with SpatRaster objects.
+See examples.}
 
-\item{algorithm}{character. A character indicating the randomization method.}
+\item{algorithm}{The function implementing the desired randomization method.
+It must work with SpatRaster objects. See examples. Example of functions that
+work are: \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.}
 
 \item{FUN_args}{List of arguments passed to the FUN}
 
@@ -48,7 +51,8 @@ simulations calculated over n=aleats times, the standard deviation of the
 simulations, and the standardized effect size (SES) for the metric defined in FUN.
 }
 \description{
-Calculates the standardized effect size using a custom function.
+Calculates the standardized effect sizes using a custom function
+and a null model algorithm.
 }
 \details{
 Perform n=aleats spatial randomizations based on the randomization
@@ -62,14 +66,22 @@ library(SESraster)
 library(terra)
 r <- load_ext_data()
 appmean <- function(x, ...){
-terra::app(x, "mean", ...)
-}
-ses <- SESraster(r, FUN=appmean, algorithm = "SIM1", alg_args=list(random="species"))
+                      terra::app(x, "mean", ...)
+                    }
+ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"))
 plot(ses)
-ses <- SESraster(r, FUN=appmean, algorithm = "SIM1", alg_args=list(random="site"))
+ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"))
 plot(ses)
-ses <- SESraster(r, FUN=appmean, algorithm = "SIM1",
-                  alg_args=list(random="site"), FUN_args=list(na.rm=TRUE))
+
+## example of how to use 'FUN_args'
+r[7][1] <- NA
+plot(r)
+sesNA <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
+                 FUN_args = list(na.rm = FALSE), alg_args=list(random = "species"))
+plot(sesNA)
+
+ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
+               FUN_args = list(na.rm = TRUE), alg_args=list(random = "species"))
 plot(ses)
 
 }
@@ -78,7 +90,7 @@ Gotelli 2000
 }
 \seealso{
 \code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
-\code{\link{bootspat_ff}}, \code{\link{algorithm_performance}}
+\code{\link{bootspat_ff}}, \code{\link{algorithm_metrics}}
 }
 \author{
 Neander M. Heming and Gabriela Alves-Ferreira

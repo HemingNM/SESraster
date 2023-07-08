@@ -9,21 +9,20 @@
 # SESraster <a href="https://hemingnm.github.io/SESraster/"><img src="man/figures/logo.png" align="right" height="139" alt="SESraster website" /></a>
 
 Randomization of presence/absence species distribution raster data with or without including spatial structure for calculating standardized effect sizes and testing null hypothesis.
-The spatially unstructured randomization algorithms are based on classical algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>) but implemented for raster data.
-
+The randomization algorithms are based on classical algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>) implemented for raster data.  
+  
 ### Installation
-To install the package, run the following code:
+To install the package, run:
 ```
 install.packages("SESraster")
 ```
-The development version of `SESraster` can be installed from the [`SESraster repository`](https://github.com/HemingNM/SESraster) in Github:
+The development version can be installed from the [`SESraster repository`](https://github.com/HemingNM/SESraster) in Github:
 ```
 require(devtools)
-devtools::load_all()
-devtools::install_github("HemingNM/SESraster", build_vignettes = TRUE)
+load_all()
+install_github("HemingNM/SESraster", build_vignettes = TRUE)
 library(SESraster)
 ```
-
 
 ### Examples
 Vignettes can be found at the [package's webpage](https://hemingnm.github.io/SESraster/) or loading:
@@ -31,6 +30,12 @@ Vignettes can be found at the [package's webpage](https://hemingnm.github.io/SES
 browseVignettes("SESraster")
 ```
 
+### Citation
+If this package is useful to you, please cite it in your publications. 
+Find more information using:
+```
+citation("SESraster")
+```
 
 ### Issues
 If you have any question or find any bug, let us know through the topic ["Issues"](https://github.com/HemingNM/SESraster/issues).
