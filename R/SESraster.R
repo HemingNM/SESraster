@@ -73,17 +73,14 @@ SESraster <- function(x,
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
   mi <- fit.memory(c(x, x[[1]]), n=(aleats+3))
 
-  temp.filename <- tempfile()
-  temp.raster <- paste0(temp.filename, ".tif") # temporary names to rasters
-  temp.a <- paste0(temp.filename, 1:aleats, ".tif") # create a vector with filenames for random rasters
-  temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random FUN rasters
-
   add_fn <- FALSE
   if(isFALSE(mi)) {
     ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
     add_fn <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
                  # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
     # add_m <- (any(grepl("filename", frl_alg)) & !any(grepl("filename", g_aa)))
+
+    ## if needs to create a file, add temporary empty element to be filled on aleats loop
     if(add_fn){
       alg_args[["filename"]] <- ""
     }
@@ -94,12 +91,18 @@ SESraster <- function(x,
   ## Null model (bootstrap structure)
   rast.rand <- list() # store rasters from loop
 
+  # create file names for temporary raster files for aleats, then delete them to clean up HD
+  temp.filename <- tempfile()
+  temp.raster <- paste0(temp.filename, ".tif") # temporary names to rasters
+  temp.a <- paste0(temp.filename, 1:aleats, ".tif") # create a vector with filenames for random rasters
+  temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random FUN rasters
+
   for(i in 1:aleats){
     if(add_fn){ ## use temporary file
       alg_args$filename[] <- temp.a[i]
     }
 
-    ### null distribution # TODO -
+    ### null distribution
     pres.site.null <- rlang::exec(algorithm, x, !!!alg_args)
 
 
@@ -122,7 +125,6 @@ SESraster <- function(x,
   ### Observed value
   FUN_args[["filename"]][] <- ifelse(mi, "", temp.raster)
   rast.obs <- rlang::exec(FUN, x, !!!FUN_args)
-    # FUN(x, filename = ifelse(mi, "", temp.raster), FUN_args)
 
   ## Calculating the standardized effect size (SES)
   out <- terra::app(c(rast.obs, rast.rand.avg, rast.rand.sd),
@@ -185,21 +187,19 @@ algorithm_metrics <- function(x,
 
   ## test if rasters fit in RAM memory,  n=aleats*2+1 rasters will be generated in this function
   mi <- fit.memory(x[[1]], n=(aleats*2+1))
+
   ## if doesn't fit in memory,
   # - add filename into args
-  # - create temporary raster files for aleats, then delete them to clean up HD
   add_fn <- FALSE
   if(isFALSE(mi)){
-    temp.a <- paste0(tempfile(), 1:aleats, ".tif") # create a vector with filenames for random rasters
-    temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random richness rasters
-
     ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
     add_fn[] <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
                    # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
     # add_m <- (any(grepl("filename", frl_alg)) & !any(grepl("filename", g_aa)))
+
+    ## if needs to create a file, add temporary empty element to be filled on aleats loop
     if(add_fn){
       alg_args[["filename"]] <- ""
-      #   alg_args$filename <- ""
     }
   }
 
@@ -213,6 +213,10 @@ algorithm_metrics <- function(x,
 
   ## store Null model (bootstrap) rasters
   null.rich.diff <- list() # store rasters from loop
+
+  # create file names for temporary raster files for aleats, then delete them to clean up HD
+  temp.a <- paste0(tempfile(), 1:aleats, ".tif") # create a vector with filenames for random rasters
+  temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random richness rasters
 
   for(i in 1:aleats){
     ## add filename.i to algorithm args
@@ -234,20 +238,23 @@ algorithm_metrics <- function(x,
   }
 
   ## get randomized values for incidence
-  comp_unstr <- as.data.frame(t(rbind(actual_freq=actual, apply(res, 1, function(x){
-    c(rand_avg = mean(x, na.rm=T),
-      rand_sd = stats::sd(x, na.rm=T),
-      rand_min = min(x, na.rm=T),
-      rand_max = max(x, na.rm=T))
-  }))))
-
   ## compute relative difference
-  comp_unstr$sp_reldiff <- (comp_unstr[,"rand_avg"] - comp_unstr[,"actual_freq"])/comp_unstr[,"actual_freq"]
-  comp_unstr$global_reldiff <- (comp_unstr[,"rand_avg"] - comp_unstr[,"actual_freq"])/all
-  comp_unstr$sp_reldiff_l <- comp_unstr$sp_reldiff-comp_unstr[,"rand_sd"]/comp_unstr[,"actual_freq"]
-  comp_unstr$sp_reldiff_u <- comp_unstr$sp_reldiff+comp_unstr[,"rand_sd"]/comp_unstr[,"actual_freq"]
-  comp_unstr$global_reldiff_l <- comp_unstr$global_reldiff-comp_unstr[,"rand_sd"]/all
-  comp_unstr$global_reldiff_u <- comp_unstr$global_reldiff+comp_unstr[,"rand_sd"]/all
+  metrics <- as.data.frame(t(apply(cbind(actual, res), 1,
+                                   function(x, all){
+                                     sm <- c(x[1], # actual values
+                                             rand_avg=mean(x[-1], na.rm=T),
+                                             rand_sd=sd(x[-1], na.rm=T),
+                                             rand_min=min(x[-1], na.rm=T),
+                                             rand_max=max(x[-1], na.rm=T))
+                                     sm_d <- c(stats::setNames( (sm[2] - x[1])/x[1], "sp_reldiff"),
+                                               stats::setNames( (sm[2] - x[1])/all, "global_reldiff") )
+                                     sm_ci <- c(stats::setNames( sm_d[1] - sm[3]/x[1], "sp_reldiff_l"),
+                                                stats::setNames( sm_d[1] + sm[3]/x[1], "sp_reldiff_u"),
+                                                stats::setNames( sm_d[2] - sm[3]/all, "global_reldiff_l"),
+                                                stats::setNames( sm_d[2] + sm[3]/all, "global_reldiff_u") )
+                                     return(c(sm, sm_d, sm_ci))
+                                   }, all=all)
+  ))
 
   ## compute spatial metrics for richness differences
   # transform the list into a SpatRaster and compute mean and sd
@@ -265,10 +272,9 @@ algorithm_metrics <- function(x,
                                filename = filename, ...)
 
   # Clean up files from HD
-  if(isFALSE(mi)){
-    unlink(c(temp.a, temp.r, paste0(tempfile(), "ar.tif")))
-  }
-  return(list(spp_metrics = comp_unstr,
+  unlink(c(temp.a, temp.r, paste0(tempfile(), "ar.tif")))
+
+  return(list(spp_metrics = metrics,
               spat_rich_diff = spat.rich.diff))
 }
 
@@ -299,36 +305,36 @@ plot_alg_metrics <- function(x, what="spp", ...) {
   if(what == "site"){
     terra::plot(x[["spat_rich_diff"]], ...)
   } else {
-    comp_unstr <- x[["spp_metrics"]]
+    metrics <- x[["spp_metrics"]]
     oldpar <- graphics::par()
     graphics::par(mfrow=c(3,1), mar=c(4,5,1,1))
 
-    plot(comp_unstr[,1], comp_unstr[,"sp_reldiff"], pch=19,
-         ylim=range(c(comp_unstr[,"sp_reldiff_l"], comp_unstr[,"sp_reldiff_u"])),
+    plot(metrics[,1], metrics[,"sp_reldiff"], pch=19,
+         ylim=range(c(metrics[,"sp_reldiff_l"], metrics[,"sp_reldiff_u"])),
          xlab="Actual frequency", ylab="Species relative difference \n in frequency")
-    graphics::segments(x0=comp_unstr[,1],
-                       y0=comp_unstr[,"sp_reldiff_l"], y1=comp_unstr[,"sp_reldiff_u"],
+    graphics::segments(x0=metrics[,1],
+                       y0=metrics[,"sp_reldiff_l"], y1=metrics[,"sp_reldiff_u"],
                        col="gray", lwd=1)
-    graphics::points(comp_unstr[,1], comp_unstr[,"sp_reldiff_l"], pch="-", col="gray", cex=2.5)
-    graphics::points(comp_unstr[,1], comp_unstr[,"sp_reldiff_u"], pch="-", col="gray", cex=2.5)
-    graphics::points(comp_unstr[,1], comp_unstr[,"sp_reldiff"], pch=19)
+    graphics::points(metrics[,1], metrics[,"sp_reldiff_l"], pch="-", col="gray", cex=2.5)
+    graphics::points(metrics[,1], metrics[,"sp_reldiff_u"], pch="-", col="gray", cex=2.5)
+    graphics::points(metrics[,1], metrics[,"sp_reldiff"], pch=19)
 
-    plot(comp_unstr[,1], comp_unstr[,"global_reldiff"], pch=19, xlab="Actual frequency", ylab="Global relative difference \n in frequency",
-         ylim=range(c(comp_unstr[,"global_reldiff_l"], comp_unstr[,"global_reldiff_u"])))
-    graphics::segments(x0=comp_unstr[,1],
-                       y0=comp_unstr[,"global_reldiff_l"], y1=comp_unstr[,"global_reldiff_u"],
+    plot(metrics[,1], metrics[,"global_reldiff"], pch=19, xlab="Actual frequency", ylab="Global relative difference \n in frequency",
+         ylim=range(c(metrics[,"global_reldiff_l"], metrics[,"global_reldiff_u"])))
+    graphics::segments(x0=metrics[,1],
+                       y0=metrics[,"global_reldiff_l"], y1=metrics[,"global_reldiff_u"],
                        col="gray", lwd=1)
-    graphics::points(comp_unstr[,1], comp_unstr[,"global_reldiff_l"], pch="-", col="gray", cex=2.5)
-    graphics::points(comp_unstr[,1], comp_unstr[,"global_reldiff_u"], pch="-", col="gray", cex=2.5)
-    graphics::points(comp_unstr[,1], comp_unstr[,"global_reldiff"], pch=19)
+    graphics::points(metrics[,1], metrics[,"global_reldiff_l"], pch="-", col="gray", cex=2.5)
+    graphics::points(metrics[,1], metrics[,"global_reldiff_u"], pch="-", col="gray", cex=2.5)
+    graphics::points(metrics[,1], metrics[,"global_reldiff"], pch=19)
 
-    plot(comp_unstr[order(comp_unstr[,1]),1], pch=19, ylab="Frequency", xlab="Species i")
-    graphics::segments(x0=seq_len(nrow(comp_unstr)),
-                       y0=comp_unstr[order(comp_unstr[,1]),4], y1=comp_unstr[order(comp_unstr[,1]),5],
+    plot(metrics[order(metrics[,1]),1], pch=19, ylab="Frequency", xlab="Species i")
+    graphics::segments(x0=seq_len(nrow(metrics)),
+                       y0=metrics[order(metrics[,1]),4], y1=metrics[order(metrics[,1]),5],
                        col="red", lwd=2)
-    graphics::points(comp_unstr[order(comp_unstr[,1]),2], pch="--", col="black", cex=2)
-    graphics::points(comp_unstr[order(comp_unstr[,1]),4], pch="-", col="red", cex=2.5)
-    graphics::points(comp_unstr[order(comp_unstr[,1]),5], pch="-", col="red", cex=2.5)
+    graphics::points(metrics[order(metrics[,1]),2], pch="--", col="black", cex=2)
+    graphics::points(metrics[order(metrics[,1]),4], pch="-", col="red", cex=2.5)
+    graphics::points(metrics[order(metrics[,1]),5], pch="-", col="red", cex=2.5)
     graphics::legend("topleft", legend=c("Actual", "Sampled"), title = "Frequency of occupied pixels", pch=c(19,3), col=c("black", "red"))
 
     suppressWarnings(graphics::par(oldpar))
