@@ -14,8 +14,10 @@
 #' work are: \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.
 #' @param FUN_args List of arguments passed to the FUN
 #' @param alg_args List of arguments passed to the randomization method chosen
-#' in 'algorithm'.
-#' See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}
+#' in 'algorithm'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
+#' \code{\link{bootspat_ff}}
+#' @param force_wr_aleat_file logical. Force writing bootstrapped rasters, even if
+#' files fit in memory. Mostly used for internal test units.
 #' @inheritParams terra::app
 #' @param ... additional arguments passed to 'terra::app()' function.
 #'
@@ -42,33 +44,43 @@
 #' appmean <- function(x, ...){
 #'                       terra::app(x, "mean", ...)
 #'                     }
-#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"))
+#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"),
+#'                  aleats = 5)
 #' plot(ses)
-#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"))
+#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"),
+#'                  aleats = 5)
 #' plot(ses)
 #'
 #' ## example of how to use 'FUN_args'
 #' r[7][1] <- NA
 #' plot(r)
 #' sesNA <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-#'                  FUN_args = list(na.rm = FALSE), alg_args=list(random = "species"))
+#'                  FUN_args = list(na.rm = FALSE), alg_args=list(random = "species"),
+#'                  aleats = 5)
 #' plot(sesNA)
 #'
 #' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-#'                FUN_args = list(na.rm = TRUE), alg_args=list(random = "species"))
+#'                FUN_args = list(na.rm = TRUE), alg_args=list(random = "species"),
+#'                  aleats = 5)
 #' plot(ses)
 #'
 #' @export
 SESraster <- function(x,
-                      FUN = NULL,
-                      algorithm = NULL,
-                      FUN_args = NULL, alg_args = NULL,
+                      FUN = NULL, FUN_args = NULL,
+                      algorithm = NULL, alg_args = NULL,
                       aleats=10,
                       cores = 1, filename = "",
-                      overwrite = FALSE, ...){
+                      overwrite = FALSE,
+                      force_wr_aleat_file = FALSE, ...){
 
   FUN <- match.fun(FUN)
   algorithm <- match.fun(algorithm)
+
+  # create file names for temporary raster files for aleats, then delete them to clean up HD
+  temp.filename <- tempfile()
+  temp.raster <- paste0(temp.filename, ".tif") # temporary names to rasters
+  temp.a <- paste0(temp.filename, "a", ".tif") # create a vector with filenames for random rasters
+  temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random FUN rasters
 
   # x rasters will be generated in this function, let's see if there is enough memory in the user's pc
   mi <- fit.memory(c(x, x[[1]]), n=(aleats+3))
@@ -76,35 +88,29 @@ SESraster <- function(x,
   add_fn <- FALSE
   if(isFALSE(mi)) {
     ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
-    add_fn <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
+    add_fn[] <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
                  # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
-    # add_m <- (any(grepl("filename", frl_alg)) & !any(grepl("filename", g_aa)))
-
-    ## if needs to create a file, add temporary empty element to be filled on aleats loop
-    if(add_fn){
-      alg_args[["filename"]] <- ""
-    }
   }
+
+  ## if needs to create a file, add temporary empty element to be filled on aleats loop
+  if(add_fn | force_wr_aleat_file){
+    alg_args[["filename"]] <- temp.a # ""
+    alg_args[["overwrite"]] <- TRUE # ""
+  }
+
   ## add filename item to FUN args
   FUN_args[["filename"]] <- ""
 
   ## Null model (bootstrap structure)
   rast.rand <- list() # store rasters from loop
 
-  # create file names for temporary raster files for aleats, then delete them to clean up HD
-  temp.filename <- tempfile()
-  temp.raster <- paste0(temp.filename, ".tif") # temporary names to rasters
-  temp.a <- paste0(temp.filename, 1:aleats, ".tif") # create a vector with filenames for random rasters
-  temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random FUN rasters
-
   for(i in 1:aleats){
-    if(add_fn){ ## use temporary file
-      alg_args$filename[] <- temp.a[i]
-    }
+    # if(add_fn){ ## use temporary file
+    #   alg_args$filename[] <- temp.a[i]
+    # }
 
     ### null distribution
     pres.site.null <- rlang::exec(algorithm, x, !!!alg_args)
-
 
     # calculate metric
     FUN_args[["filename"]][] <- ifelse(mi, "", temp.r[i])
@@ -153,18 +159,19 @@ SESraster <- function(x,
 #' between actual and randomized species distributions
 #'
 #' @inheritParams SESraster
-# #' @param plot logical. Should results be plotted?
 #'
-#' @return a list with two components.
-#' - spp_metrics: a matrix with metrics comparing actual and randomized frequency
-#' of species occurrence. Metrics are average, sd, min, and max frequency across
-#' randomizations, sp_reldiff (average difference relative to species frequency),
-#' global_reldiff (average difference relative to the number of available cells),
-#' upper and lower confidence intervals for sp_reldiff and global_reldiff.
-#' - spat_rich_diff: a SpatRaster with summary statistics about differences
-#' between actual and bootstrapped site (cell) richness
+#' @return a list with two components:
+#' \itemize{
+##'    \item{spp_metrics: a matrix with metrics comparing actual and randomized frequency
+##'    of species occurrence. Metrics are average, sd, min, and max frequency across
+##'    randomizations, sp_reldiff (average difference relative to species frequency),
+##'    global_reldiff (average difference relative to the number of available cells),
+##'    upper and lower confidence intervals for sp_reldiff and global_reldiff.}
+##'    \item{spat_rich_diff: a SpatRaster with summary statistics about differences
+##'    between actual and bootstrapped site (cell) richness}
+##'}
 #'
-#'#' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
+#' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
 #' \code{\link{bootspat_ff}}, \code{\link{SESraster}}, \code{\link{plot_alg_metrics}}
 #'
 #' @author Neander M. Heming
@@ -172,18 +179,23 @@ SESraster <- function(x,
 #' library(SESraster)
 #' library(terra)
 #' r <- load_ext_data()
-#' algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"))
-#' algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"))
+#' algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"), aleats = 5)
+#' algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"), aleats = 5)
 #' # algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="both"))
 #'
 #' @export
 algorithm_metrics <- function(x,
                               algorithm = NULL, alg_args = NULL,
                               aleats = 10, # plot = FALSE,
-                              filename = "", ...){
+                              filename = "",
+                              force_wr_aleat_file = FALSE, ...){
 
   ## check algorithm function
   algorithm <- match.fun(algorithm)
+
+  # create file names for temporary raster files for aleats, then delete them to clean up HD
+  temp.a <- paste0(tempfile(), "a", ".tif") # create a vector with filenames for random rasters
+  temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random richness rasters
 
   ## test if rasters fit in RAM memory,  n=aleats*2+1 rasters will be generated in this function
   mi <- fit.memory(x[[1]], n=(aleats*2+1))
@@ -195,12 +207,12 @@ algorithm_metrics <- function(x,
     ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
     add_fn[] <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
                    # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
-    # add_m <- (any(grepl("filename", frl_alg)) & !any(grepl("filename", g_aa)))
+  }
 
-    ## if needs to create a file, add temporary empty element to be filled on aleats loop
-    if(add_fn){
-      alg_args[["filename"]] <- ""
-    }
+  ## if needs to create a file, add temporary empty element to be filled on aleats loop
+  if(add_fn | force_wr_aleat_file){
+    alg_args[["filename"]] <- temp.a # ""
+    alg_args[["overwrite"]] <- TRUE # ""
   }
 
   ## null raster characterization
@@ -214,18 +226,14 @@ algorithm_metrics <- function(x,
   ## store Null model (bootstrap) rasters
   null.rich.diff <- list() # store rasters from loop
 
-  # create file names for temporary raster files for aleats, then delete them to clean up HD
-  temp.a <- paste0(tempfile(), 1:aleats, ".tif") # create a vector with filenames for random rasters
-  temp.r <- paste0(tempfile(), "r", 1:aleats, ".tif") # create a vector with filenames for random richness rasters
-
   for(i in 1:aleats){
     ## add filename.i to algorithm args
-    if(add_fn){
-      alg_args$filename[] <- temp.a[i]
-    }
+    # if(add_fn){
+    #   alg_args$filename[] <- temp.a[i]
+    # }
 
     ### null distribution
-    pres.site.null <- rlang::exec(algorithm, x, !!!alg_args) # algorithm(x = x, unlist(alg_args))
+    pres.site.null <- rlang::exec(algorithm, x, !!!alg_args)
 
     ## calculate null distribution species incidence
     res[,i] <- sapply(pres.site.null, function(x) terra::freq(x)[2,3])
@@ -242,10 +250,10 @@ algorithm_metrics <- function(x,
   metrics <- as.data.frame(t(apply(cbind(actual, res), 1,
                                    function(x, all){
                                      sm <- c(x[1], # actual values
-                                             rand_avg=mean(x[-1], na.rm=T),
-                                             rand_sd=sd(x[-1], na.rm=T),
-                                             rand_min=min(x[-1], na.rm=T),
-                                             rand_max=max(x[-1], na.rm=T))
+                                             rand_avg = mean(x[-1], na.rm=T),
+                                             rand_sd  = stats::sd(x[-1], na.rm=T),
+                                             rand_min = min(x[-1], na.rm=T),
+                                             rand_max = max(x[-1], na.rm=T))
                                      sm_d <- c(stats::setNames( (sm[2] - x[1])/x[1], "sp_reldiff"),
                                                stats::setNames( (sm[2] - x[1])/all, "global_reldiff") )
                                      sm_ci <- c(stats::setNames( sm_d[1] - sm[3]/x[1], "sp_reldiff_l"),
@@ -268,7 +276,7 @@ algorithm_metrics <- function(x,
                                  }
                                  return(rdiff)
                                }, rdiff = stats::setNames(vector("double", 4),
-                                                   paste(c("mean", "sd", "min", "max"), "_diff")),
+                                                   paste0(c("mean", "sd", "min", "max"), "_diff")),
                                filename = filename, ...)
 
   # Clean up files from HD

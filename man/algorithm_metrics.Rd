@@ -10,6 +10,7 @@ algorithm_metrics(
   alg_args = NULL,
   aleats = 10,
   filename = "",
+  force_wr_aleat_file = FALSE,
   ...
 )
 }
@@ -22,30 +23,30 @@ It must work with SpatRaster objects. See examples. Example of functions that
 work are: \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.}
 
 \item{alg_args}{List of arguments passed to the randomization method chosen
-in 'algorithm'.
-See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}}
+in 'algorithm'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
+\code{\link{bootspat_ff}}}
 
 \item{aleats}{positive integer. A positive integer indicating how many times
 the calculation should be repeated.}
 
 \item{filename}{character. Output filename}
 
+\item{force_wr_aleat_file}{logical. Force writing bootstrapped rasters, even if
+files fit in memory. Mostly used for internal test units.}
+
 \item{...}{additional arguments passed to 'terra::app()' function.}
 }
 \value{
-a list with two components.
+a list with two components:
 \itemize{
-\item spp_metrics: a matrix with metrics comparing actual and randomized frequency
+\item{spp_metrics: a matrix with metrics comparing actual and randomized frequency
 of species occurrence. Metrics are average, sd, min, and max frequency across
 randomizations, sp_reldiff (average difference relative to species frequency),
 global_reldiff (average difference relative to the number of available cells),
-upper and lower confidence intervals for sp_reldiff and global_reldiff.
-\item spat_rich_diff: a SpatRaster with summary statistics about differences
-between actual and bootstrapped site (cell) richness
+upper and lower confidence intervals for sp_reldiff and global_reldiff.}
+\item{spat_rich_diff: a SpatRaster with summary statistics about differences
+between actual and bootstrapped site (cell) richness}
 }
-
-#' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
-\code{\link{bootspat_ff}}, \code{\link{SESraster}}, \code{\link{plot_alg_metrics}}
 }
 \description{
 Compares the richness and occurrence incidence across species
@@ -55,10 +56,14 @@ between actual and randomized species distributions
 library(SESraster)
 library(terra)
 r <- load_ext_data()
-algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"))
-algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"))
+algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"), aleats = 5)
+algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"), aleats = 5)
 # algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="both"))
 
+}
+\seealso{
+\code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
+\code{\link{bootspat_ff}}, \code{\link{SESraster}}, \code{\link{plot_alg_metrics}}
 }
 \author{
 Neander M. Heming

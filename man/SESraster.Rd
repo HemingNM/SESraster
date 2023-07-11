@@ -7,13 +7,14 @@
 SESraster(
   x,
   FUN = NULL,
-  algorithm = NULL,
   FUN_args = NULL,
+  algorithm = NULL,
   alg_args = NULL,
   aleats = 10,
   cores = 1,
   filename = "",
   overwrite = FALSE,
+  force_wr_aleat_file = FALSE,
   ...
 )
 }
@@ -24,15 +25,15 @@ for a set of species.}
 \item{FUN}{The function to be applied. It must work with SpatRaster objects.
 See examples.}
 
+\item{FUN_args}{List of arguments passed to the FUN}
+
 \item{algorithm}{The function implementing the desired randomization method.
 It must work with SpatRaster objects. See examples. Example of functions that
 work are: \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.}
 
-\item{FUN_args}{List of arguments passed to the FUN}
-
 \item{alg_args}{List of arguments passed to the randomization method chosen
-in 'algorithm'.
-See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}}
+in 'algorithm'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
+\code{\link{bootspat_ff}}}
 
 \item{aleats}{positive integer. A positive integer indicating how many times
 the calculation should be repeated.}
@@ -42,6 +43,9 @@ the calculation should be repeated.}
 \item{filename}{character. Output filename}
 
 \item{overwrite}{logical. If \code{TRUE}, \code{filename} is overwritten}
+
+\item{force_wr_aleat_file}{logical. Force writing bootstrapped rasters, even if
+files fit in memory. Mostly used for internal test units.}
 
 \item{...}{additional arguments passed to 'terra::app()' function.}
 }
@@ -68,20 +72,24 @@ r <- load_ext_data()
 appmean <- function(x, ...){
                       terra::app(x, "mean", ...)
                     }
-ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"))
+ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"),
+                 aleats = 5)
 plot(ses)
-ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"))
+ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"),
+                 aleats = 5)
 plot(ses)
 
 ## example of how to use 'FUN_args'
 r[7][1] <- NA
 plot(r)
 sesNA <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-                 FUN_args = list(na.rm = FALSE), alg_args=list(random = "species"))
+                 FUN_args = list(na.rm = FALSE), alg_args=list(random = "species"),
+                 aleats = 5)
 plot(sesNA)
 
 ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-               FUN_args = list(na.rm = TRUE), alg_args=list(random = "species"))
+               FUN_args = list(na.rm = TRUE), alg_args=list(random = "species"),
+                 aleats = 5)
 plot(ses)
 
 }
