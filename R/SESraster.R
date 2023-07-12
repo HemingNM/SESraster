@@ -146,7 +146,8 @@ SESraster <- function(x,
                                                            Null_Mean = x[2],
                                                            Null_SD = x[3],
                                                            SES = (x[1]-x[2])/x[3]))
-                                                }, cores = cores, #filename = filename,
+                                                }, cores = cores,
+                                                filename = ifelse(mi, "", paste0(temp.filename, l, "out.tif")),
                                                 overwrite = overwrite, ...)
 
                               return(out)
@@ -156,7 +157,7 @@ SESraster <- function(x,
                             overwrite = overwrite, ...))
 
   if(filename != ""){
-    out <- writeRaster(out, filename, overwrite = overwrite)
+    out <- writeRaster(out, filename, overwrite = overwrite, ...)
   }
 
   ## HD Cleanup
@@ -164,6 +165,7 @@ SESraster <- function(x,
   unlink(temp.raster) # delete the file that will not be used
   unlink(paste0(temp.filename, "avg.tif"))
   unlink(paste0(temp.filename, "sd.tif"))
+  unlink(paste0(temp.filename, seq_len(nrow(rcomb)), "out.tif"))
 
   return(out)
 }
