@@ -68,7 +68,7 @@
 SESraster <- function(x,
                       FUN = NULL, FUN_args = NULL,
                       algorithm = NULL, alg_args = NULL,
-                      aleats=10,
+                      aleats = 10,
                       cores = 1, filename = "",
                       overwrite = FALSE,
                       force_wr_aleat_file = FALSE, ...){
@@ -89,7 +89,7 @@ SESraster <- function(x,
   if(isFALSE(mi)) {
     ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
     add_fn[] <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
-                 # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
+    # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
   }
 
   ## if needs to create a file, add temporary empty element to be filled on aleats loop
@@ -117,30 +117,47 @@ SESraster <- function(x,
     rast.rand[[i]] <- rlang::exec(FUN, pres.site.null, !!!FUN_args)
   }
 
-  rast.rand <- terra::rast(rast.rand) # transform a list into a SpatRaster
-
-  ### Randomized mean value
-  rast.rand.avg <- terra::mean(rast.rand, na.rm = TRUE, #cores = cores,
-                               overwrite = overwrite,
-                               filename = ifelse(mi, "", paste0(temp.filename, "avg.tif")))
-  ### Randomized stdev value
-  rast.rand.sd <- terra::stdev(rast.rand, na.rm = TRUE, #cores = cores,
-                               overwrite = overwrite,
-                               filename = ifelse(mi, "", paste0(temp.filename, "sd.tif")))
+  rcomb <- matrix(1:(aleats*terra::nlyr(rast.rand[[i]])), ncol = aleats)
 
   ### Observed value
   FUN_args[["filename"]][] <- ifelse(mi, "", temp.raster)
   rast.obs <- rlang::exec(FUN, x, !!!FUN_args)
 
-  ## Calculating the standardized effect size (SES)
-  out <- terra::app(c(rast.obs, rast.rand.avg, rast.rand.sd),
-                    fun=function(x){
-                      return(c(Observed = x[1],
-                               Null_Mean = x[2],
-                               Null_SD = x[3],
-                               SES = (x[1]-x[2])/x[3]))
-                    }, cores = cores, filename = filename,
-                    overwrite = overwrite, ...)
+  rast.rand <- terra::rast(rast.rand) # transform a list into a SpatRaster
+
+  ## SES for multiple layers
+  out <- terra::rast(lapply(seq_len(nrow(rcomb)),
+                            function(l, ro, rr, rcomb,
+                                     mi, cores, filename, overwrite, ...){
+                              ### Randomized mean value
+                              rast.rand.avg <- terra::mean(rr[[rcomb[l,]]] , na.rm = TRUE, #cores = cores,
+                                                           overwrite = TRUE,
+                                                           filename = ifelse(mi, "", paste0(temp.filename, "avg.tif")))
+
+                              ### Randomized stdev value
+                              rast.rand.sd <- terra::stdev(rr[[rcomb[l,]]], na.rm = TRUE, #cores = cores,
+                                                           overwrite = TRUE,
+                                                           filename = ifelse(mi, "", paste0(temp.filename, "sd.tif")))
+
+                              ## Calculating the standardized effect size (SES)
+                              out <- terra::app(c(ro[[rcomb[l,1]]], rast.rand.avg, rast.rand.sd),
+                                                fun=function(x){
+                                                  return(c(Observed = x[1],
+                                                           Null_Mean = x[2],
+                                                           Null_SD = x[3],
+                                                           SES = (x[1]-x[2])/x[3]))
+                                                }, cores = cores, #filename = filename,
+                                                overwrite = overwrite, ...)
+
+                              return(out)
+                            }, ro=rast.obs, rr=rast.rand, rcomb=rcomb,
+                            mi = mi,
+                            cores = cores, # filename = filename,
+                            overwrite = overwrite, ...))
+
+  if(filename != ""){
+    out <- writeRaster(out, filename, overwrite = overwrite)
+  }
 
   ## HD Cleanup
   unlink(temp.a) # delete the file that will not be used
