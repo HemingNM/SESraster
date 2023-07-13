@@ -9,13 +9,20 @@
 #' the calculation should be repeated.
 #' @param FUN The function to be applied. It must work with SpatRaster objects.
 #' See examples.
-#' @param algorithm The function implementing the desired randomization method.
-#' It must work with SpatRaster objects. See examples. Example of functions that
-#' work are: \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.
-#' @param FUN_args List of arguments passed to the FUN
-#' @param alg_args List of arguments passed to the randomization method chosen
-#' in 'algorithm'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
+#' @param FUN_args Named list of arguments passed to the FUN
+#' @param spat_alg A function with the algorithm implementing the desired
+#' randomization method. It must work with SpatRaster objects. See examples.
+#' Example of functions that work are: \code{\link{bootspat_naive}},
+#' \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.
+#'
+#' @param spat_alg_args List of arguments passed to the randomization method
+#' chosen in 'spat_alg'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
 #' \code{\link{bootspat_ff}}
+#' @param vec_alg function to randomize any non spatial argument to be passed
+#' to 'FUN'.
+#' @param vec_sample Named list of length 1 with the argument (e.g. a vector)
+#' to be randomized
+#' @param vec_alg_args Named list of arguments passed to the function in 'vec_alg'
 #' @param force_wr_aleat_file logical. Force writing bootstrapped rasters, even if
 #' files fit in memory. Mostly used for internal test units.
 #' @inheritParams terra::app
@@ -26,7 +33,7 @@
 #'  simulations, and the standardized effect size (SES) for the metric defined in FUN.
 #'
 #' @details Perform n=aleats spatial randomizations based on the randomization
-#' method defined in 'algorithm' argument and calculates the metric
+#' method defined in 'spat_alg' argument and calculates the metric
 #' defined in 'FUN' argument. The function (FUN) to calculate the desired metric
 #' must work with any of \link[terra]{app}, \link[terra]{focal},
 #' \link[terra]{focal3D} family of functions.
@@ -44,37 +51,55 @@
 #' appmean <- function(x, ...){
 #'                       terra::app(x, "mean", ...)
 #'                     }
-#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"),
+#' ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
 #'                  aleats = 5)
 #' plot(ses)
-#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"),
+#' ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
 #'                  aleats = 5)
 #' plot(ses)
 #'
 #' ## example of how to use 'FUN_args'
 #' r[7][1] <- NA
 #' plot(r)
-#' sesNA <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-#'                  FUN_args = list(na.rm = FALSE), alg_args=list(random = "species"),
+#' sesNA <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
+#'                  FUN_args = list(na.rm = FALSE), spat_alg_args=list(random = "species"),
 #'                  aleats = 5)
 #' plot(sesNA)
 #'
-#' ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-#'                FUN_args = list(na.rm = TRUE), alg_args=list(random = "species"),
+#' ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
+#'                FUN_args = list(na.rm = TRUE), spat_alg_args=list(random = "species"),
 #'                  aleats = 5)
+#' plot(ses)
+#'
+#' ## example with 'vec_alg'
+#' appsv <- function(x, lyrv, na.rm=T, ...){
+#'                       sumw <- function(x, lyrv, na.rm, ...){
+#'                               sum(x*lyrv, na.rm=na.rm, ...)
+#'                       }
+#'                       terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
+#'                     }
+#' ses <- SESraster(r, FUN=appsv,
+#'                     vec_alg = "sample", vec_sample = list(lyrv= seq_len(nlyr(r))),
+#'                     vec_alg_args = list(replace=TRUE),
+#'                     aleats = 5)
 #' plot(ses)
 #'
 #' @export
 SESraster <- function(x,
-                      FUN = NULL, FUN_args = NULL,
-                      algorithm = NULL, alg_args = NULL,
+                      FUN = NULL, FUN_args = list(),
+                      spat_alg = NULL, spat_alg_args = list(),
+                      vec_alg = NULL, vec_sample = NULL, vec_alg_args = list(),
                       aleats = 10,
                       cores = 1, filename = "",
                       overwrite = FALSE,
                       force_wr_aleat_file = FALSE, ...){
 
+  ## Find the corresponding functions
   FUN <- match.fun(FUN)
-  algorithm <- match.fun(algorithm)
+  if(is.null(spat_alg)){
+    spat_alg <- function(x)x
+  }
+  spat_alg <- match.fun(spat_alg)
 
   # create file names for temporary raster files for aleats, then delete them to clean up HD
   temp.filename <- tempfile()
@@ -87,41 +112,65 @@ SESraster <- function(x,
 
   add_fn <- FALSE
   if(isFALSE(mi)) {
-    ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
-    add_fn[] <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
-    # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
+    ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into spat_alg_args
+    add_fn[] <- any(grepl("filename", methods::formalArgs(args(spat_alg)))) #& # check if spat_alg has 'filename' arg
+    # !any(grepl("filename", names(spat_alg_args))) # check if 'filename' is in supplied arguments for spat_alg
   }
 
   ## if needs to create a file, add temporary empty element to be filled on aleats loop
   if(add_fn | force_wr_aleat_file){
-    alg_args[["filename"]] <- temp.a # ""
-    alg_args[["overwrite"]] <- TRUE # ""
+    spat_alg_args[["filename"]] <- temp.a # ""
+    spat_alg_args[["overwrite"]] <- TRUE # ""
   }
 
   ## add filename item to FUN args
-  FUN_args[["filename"]] <- ""
+  FUN_args[["filename"]] <- ifelse(mi, "", temp.raster)
+
+
+  if(!is.null(vec_sample)){
+    if(!inherits(vec_sample, "list")){
+      stop("vec_sample needs to be of class 'list'")
+    }
+    if(length(vec_sample)>1) {
+      warning("Only the first element of 'vec_sample' will be used")
+    }
+
+    ## Find the corresponding function
+    vec_alg <- match.fun(vec_alg)
+
+    ## get name of vector to sample and add to FUN_args
+    FUNarg_sample <- names(vec_sample)[1]
+    FUN_args[[FUNarg_sample]] <- vec_sample[[FUNarg_sample]]
+
+    ##
+    # FUN_args[[FUNarg_sample]] <- rlang::exec(vec_alg, vec_sample[[FUNarg_sample]], !!!vec_alg_args)
+
+  }
+
+  ### Observed value
+  rast.obs <- rlang::exec(FUN, x, !!!FUN_args)
 
   ## Null model (bootstrap structure)
   rast.rand <- list() # store rasters from loop
 
   for(i in 1:aleats){
-    # if(add_fn){ ## use temporary file
-    #   alg_args$filename[] <- temp.a[i]
-    # }
 
     ### null distribution
-    pres.site.null <- rlang::exec(algorithm, x, !!!alg_args)
+    pres.site.null <- rlang::exec(spat_alg, x, !!!spat_alg_args)
 
-    # calculate metric
-    FUN_args[["filename"]][] <- ifelse(mi, "", temp.r[i])
+    ## prep args to compute metric
+    if(!is.null(vec_sample)){
+      FUN_args[[FUNarg_sample]] <- rlang::exec(vec_alg, vec_sample[[FUNarg_sample]], !!!vec_alg_args)
+    }
+    # FUN_args[["filename"]][] <- ifelse(mi, "", temp.r[i])
+
+    ### calculate metric
     rast.rand[[i]] <- rlang::exec(FUN, pres.site.null, !!!FUN_args)
+
   }
 
-  rcomb <- matrix(1:(aleats*terra::nlyr(rast.rand[[i]])), ncol = aleats)
-
-  ### Observed value
-  FUN_args[["filename"]][] <- ifelse(mi, "", temp.raster)
-  rast.obs <- rlang::exec(FUN, x, !!!FUN_args)
+  ### SES
+  rcomb <- matrix(seq_len(aleats*terra::nlyr(rast.obs)), ncol = aleats)
 
   rast.rand <- terra::rast(rast.rand) # transform a list into a SpatRaster
 
@@ -198,19 +247,19 @@ SESraster <- function(x,
 #' library(SESraster)
 #' library(terra)
 #' r <- load_ext_data()
-#' algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"), aleats = 5)
-#' algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"), aleats = 5)
-#' # algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="both"))
+#' algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"), aleats = 5)
+#' algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"), aleats = 5)
+#' # algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="both"))
 #'
 #' @export
 algorithm_metrics <- function(x,
-                              algorithm = NULL, alg_args = NULL,
+                              spat_alg = NULL, spat_alg_args = NULL,
                               aleats = 10, # plot = FALSE,
                               filename = "",
                               force_wr_aleat_file = FALSE, ...){
 
-  ## check algorithm function
-  algorithm <- match.fun(algorithm)
+  ## check spat_alg function
+  spat_alg <- match.fun(spat_alg)
 
   # create file names for temporary raster files for aleats, then delete them to clean up HD
   temp.a <- paste0(tempfile(), "a", ".tif") # create a vector with filenames for random rasters
@@ -223,15 +272,15 @@ algorithm_metrics <- function(x,
   # - add filename into args
   add_fn <- FALSE
   if(isFALSE(mi)){
-    ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into alg_args
-    add_fn[] <- any(grepl("filename", methods::formalArgs(args(algorithm)))) #& # check if algorithm has 'filename' arg
-                   # !any(grepl("filename", names(alg_args))) # check if 'filename' is in supplied arguments for algorithm
+    ## get argument names and include "filename = ifelse(mi, "", temp.a[i])" into spat_alg_args
+    add_fn[] <- any(grepl("filename", methods::formalArgs(args(spat_alg)))) #& # check if spat_alg has 'filename' arg
+                   # !any(grepl("filename", names(spat_alg_args))) # check if 'filename' is in supplied arguments for spat_alg
   }
 
   ## if needs to create a file, add temporary empty element to be filled on aleats loop
   if(add_fn | force_wr_aleat_file){
-    alg_args[["filename"]] <- temp.a # ""
-    alg_args[["overwrite"]] <- TRUE # ""
+    spat_alg_args[["filename"]] <- temp.a # ""
+    spat_alg_args[["overwrite"]] <- TRUE # ""
   }
 
   ## null raster characterization
@@ -246,13 +295,13 @@ algorithm_metrics <- function(x,
   null.rich.diff <- list() # store rasters from loop
 
   for(i in 1:aleats){
-    ## add filename.i to algorithm args
+    ## add filename.i to spat_alg args
     # if(add_fn){
-    #   alg_args$filename[] <- temp.a[i]
+    #   spat_alg_args$filename[] <- temp.a[i]
     # }
 
     ### null distribution
-    pres.site.null <- rlang::exec(algorithm, x, !!!alg_args)
+    pres.site.null <- rlang::exec(spat_alg, x, !!!spat_alg_args)
 
     ## calculate null distribution species incidence
     res[,i] <- sapply(pres.site.null, function(x) terra::freq(x)[2,3])
@@ -321,8 +370,8 @@ algorithm_metrics <- function(x,
 #' library(SESraster)
 #' library(terra)
 #' r <- load_ext_data()
-#' am1 <- algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"))
-#' am2 <- algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"))
+#' am1 <- algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"))
+#' am2 <- algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"))
 #' plot_alg_metrics(am1)
 #' plot_alg_metrics(am2)
 #' plot_alg_metrics(am1, "site")

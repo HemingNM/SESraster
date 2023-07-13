@@ -7,9 +7,12 @@
 SESraster(
   x,
   FUN = NULL,
-  FUN_args = NULL,
-  algorithm = NULL,
-  alg_args = NULL,
+  FUN_args = list(),
+  spat_alg = NULL,
+  spat_alg_args = list(),
+  vec_alg = NULL,
+  vec_sample = NULL,
+  vec_alg_args = list(),
   aleats = 10,
   cores = 1,
   filename = "",
@@ -25,15 +28,24 @@ for a set of species.}
 \item{FUN}{The function to be applied. It must work with SpatRaster objects.
 See examples.}
 
-\item{FUN_args}{List of arguments passed to the FUN}
+\item{FUN_args}{Named list of arguments passed to the FUN}
 
-\item{algorithm}{The function implementing the desired randomization method.
-It must work with SpatRaster objects. See examples. Example of functions that
-work are: \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.}
+\item{spat_alg}{A function with the algorithm implementing the desired
+randomization method. It must work with SpatRaster objects. See examples.
+Example of functions that work are: \code{\link{bootspat_naive}},
+\code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.}
 
-\item{alg_args}{List of arguments passed to the randomization method chosen
-in 'algorithm'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
+\item{spat_alg_args}{List of arguments passed to the randomization method
+chosen in 'spat_alg'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
 \code{\link{bootspat_ff}}}
+
+\item{vec_alg}{function to randomize any non spatial argument to be passed
+to 'FUN'.}
+
+\item{vec_sample}{Named list of length 1 with the argument (e.g. a vector)
+to be randomized}
+
+\item{vec_alg_args}{Named list of arguments passed to the function in 'vec_alg'}
 
 \item{aleats}{positive integer. A positive integer indicating how many times
 the calculation should be repeated.}
@@ -60,7 +72,7 @@ and a null model algorithm.
 }
 \details{
 Perform n=aleats spatial randomizations based on the randomization
-method defined in 'algorithm' argument and calculates the metric
+method defined in 'spat_alg' argument and calculates the metric
 defined in 'FUN' argument. The function (FUN) to calculate the desired metric
 must work with any of \link[terra]{app}, \link[terra]{focal},
 \link[terra]{focal3D} family of functions.
@@ -72,24 +84,37 @@ r <- load_ext_data()
 appmean <- function(x, ...){
                       terra::app(x, "mean", ...)
                     }
-ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"),
+ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
                  aleats = 5)
 plot(ses)
-ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"),
+ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
                  aleats = 5)
 plot(ses)
 
 ## example of how to use 'FUN_args'
 r[7][1] <- NA
 plot(r)
-sesNA <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-                 FUN_args = list(na.rm = FALSE), alg_args=list(random = "species"),
+sesNA <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
+                 FUN_args = list(na.rm = FALSE), spat_alg_args=list(random = "species"),
                  aleats = 5)
 plot(sesNA)
 
-ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-               FUN_args = list(na.rm = TRUE), alg_args=list(random = "species"),
+ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
+               FUN_args = list(na.rm = TRUE), spat_alg_args=list(random = "species"),
                  aleats = 5)
+plot(ses)
+
+## example with 'vec_alg'
+appsv <- function(x, lyrv, na.rm=T, ...){
+                      sumw <- function(x, lyrv, na.rm, ...){
+                              sum(x*lyrv, na.rm=na.rm, ...)
+                      }
+                      terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
+                    }
+ses <- SESraster(r, FUN=appsv,
+                    vec_alg = "sample", vec_sample = list(lyrv= seq_len(nlyr(r))),
+                    vec_alg_args = list(replace=TRUE),
+                    aleats = 5)
 plot(ses)
 
 }

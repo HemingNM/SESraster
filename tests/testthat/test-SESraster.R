@@ -8,7 +8,7 @@ test_that("SES works", {
 
   set.seed(10)
   # test ses by species
-  ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="species"),
+  ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
                    aleats = aleats)
   nms <- c("Observed.mean", "Null_Mean.mean", "Null_SD.std", "SES.mean")
 
@@ -23,7 +23,7 @@ test_that("SES works", {
   expect_equal(round(sd(terra::values(ses[[2]]), na.rm = TRUE), 3), as.double(0.081)) # test spat variation
 
   ## test ses by site
-  ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive", alg_args=list(random="site"),
+  ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
                    aleats = aleats)
   nms <- c("Observed.mean", "Null_Mean.mean", "Null_SD.std", "SES.mean")
 
@@ -37,8 +37,8 @@ test_that("SES works", {
 
   expect_equal(as.vector(terra::values(ses[[1]])), as.vector(terra::values(ses[[2]]))) # test spat variation
 
-  ses <- SESraster(r, FUN=appmean, algorithm = "bootspat_naive",
-                   alg_args=list(random="species"),
+  ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
+                   spat_alg_args=list(random="species"),
                    aleats = aleats,
                    force_wr_aleat_file = TRUE)
 
@@ -48,6 +48,28 @@ test_that("SES works", {
 
   expect_equal(unlist(ses[1]), setNames(as.double(rep(NA, terra::nlyr(ses))), nms))
 
+  ## example with 'vec_alg'
+  appsv <- function(x, lyrv, na.rm=T, ...){
+                        sumw <- function(x, lyrv, na.rm, ...){
+                                sum(x*lyrv, na.rm=na.rm, ...)
+                        }
+                        terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
+  }
+  n2 <- names(appsv(r, seq_len(terra::nlyr(r))))
+  ses <- SESraster(r, FUN=appsv,
+                      vec_alg = "sample", vec_sample = list(lyrv= seq_len(terra::nlyr(r))),
+                      vec_alg_args = list(replace=TRUE),
+                      aleats = aleats)
+  names(ses)
+  nms <- paste0(c("Observed.", "Null_Mean.mean", "Null_SD.std" ,"SES."),
+                c(n2, "", "", n2))
+  expect_equal(unlist(ses[1]), setNames(c(0, 0, 0, NA), nms))
+
+  expect_equal(unlist(ses[2]), setNames(c(0, 0, 0, NA), nms))
+
+  expect_equal(unlist(ses[3]), setNames(c(19, 17.2, 2.6381812, 0.6822882), nms))
+
+  expect_equal(round(sd(terra::values(ses[[2]]), na.rm = TRUE), 3), as.double(5.111)) # test spat variation
 })
 
 
@@ -55,9 +77,9 @@ test_that("algorithm_metrics works", {
   r <- load_ext_data()
   aleats <- 5
   set.seed(10)
-  ambspp <- algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"),
+  ambspp <- algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
                               aleats = aleats)
-  ambsite <- algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"),
+  ambsite <- algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
                                aleats = aleats)
 
   nms <- c("mean_diff", "sd_diff", "min_diff", "max_diff")
@@ -91,7 +113,7 @@ test_that("algorithm_metrics works", {
   expect_equal(round(mean(terra::values(ambspp$spat_rich_diff[[2]]), na.rm = TRUE), 3), as.double(1.144)) # test spat variation
   expect_equal(round(mean(terra::values(ambspp$spat_rich_diff[[1]]), na.rm = TRUE), 3), as.double(0)) # test spat variation
 
-  ambff <- algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"),
+  ambff <- algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
                               aleats = aleats,
                               force_wr_aleat_file = TRUE)
 
@@ -108,7 +130,7 @@ test_that("algorithm_metrics works", {
   r <- load_ext_data()
   aleats <- 5
   set.seed(10)
-  ambspp <- algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"),
+  ambspp <- algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
                               aleats = aleats)
 
   img <- function() {

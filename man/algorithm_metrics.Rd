@@ -6,8 +6,8 @@
 \usage{
 algorithm_metrics(
   x,
-  algorithm = NULL,
-  alg_args = NULL,
+  spat_alg = NULL,
+  spat_alg_args = NULL,
   aleats = 10,
   filename = "",
   force_wr_aleat_file = FALSE,
@@ -18,12 +18,13 @@ algorithm_metrics(
 \item{x}{SpatRaster. A SpatRaster containing presence-absence data (0 or 1)
 for a set of species.}
 
-\item{algorithm}{The function implementing the desired randomization method.
-It must work with SpatRaster objects. See examples. Example of functions that
-work are: \code{\link{bootspat_naive}}, \code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.}
+\item{spat_alg}{A function with the algorithm implementing the desired
+randomization method. It must work with SpatRaster objects. See examples.
+Example of functions that work are: \code{\link{bootspat_naive}},
+\code{\link{bootspat_str}}, \code{\link{bootspat_ff}}.}
 
-\item{alg_args}{List of arguments passed to the randomization method chosen
-in 'algorithm'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
+\item{spat_alg_args}{List of arguments passed to the randomization method
+chosen in 'spat_alg'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
 \code{\link{bootspat_ff}}}
 
 \item{aleats}{positive integer. A positive integer indicating how many times
@@ -56,9 +57,9 @@ between actual and randomized species distributions
 library(SESraster)
 library(terra)
 r <- load_ext_data()
-algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="species"), aleats = 5)
-algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="site"), aleats = 5)
-# algorithm_metrics(r, algorithm = "bootspat_naive", alg_args=list(random="both"))
+algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"), aleats = 5)
+algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"), aleats = 5)
+# algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="both"))
 
 }
 \seealso{
