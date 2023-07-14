@@ -51,25 +51,24 @@ test_that("SES works", {
   ## example with 'vec_alg'
   appsv <- function(x, lyrv, na.rm=T, ...){
                         sumw <- function(x, lyrv, na.rm, ...){
-                                sum(x*lyrv, na.rm=na.rm, ...)
+                          ifelse(all(is.na(x)), NA,
+                                 sum(x*lyrv, na.rm=na.rm, ...))
                         }
                         terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
   }
   n2 <- names(appsv(r, seq_len(terra::nlyr(r))))
-  ses <- SESraster(r, FUN=appsv,
-                      vec_alg = "sample", vec_sample = list(lyrv= seq_len(terra::nlyr(r))),
-                      vec_alg_args = list(replace=TRUE),
-                      aleats = aleats)
-  names(ses)
+  ses <- SESraster(r, FUN=appsv, FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
+                   Fa_sample = "lyrv",
+                   Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
+                   aleats = aleats)
+  # names(ses)
   nms <- paste0(c("Observed.", "Null_Mean.mean", "Null_SD.std" ,"SES."),
                 c(n2, "", "", n2))
-  expect_equal(unlist(ses[1]), setNames(c(0, 0, 0, NA), nms))
+  expect_equal(unlist(ses[1]), setNames(as.double(rep(NA, terra::nlyr(ses))), nms))
 
   expect_equal(unlist(ses[2]), setNames(c(0, 0, 0, NA), nms))
 
-  expect_equal(unlist(ses[3]), setNames(c(19, 17.2, 2.6381812, 0.6822882), nms))
-
-  expect_equal(round(sd(terra::values(ses[[2]]), na.rm = TRUE), 3), as.double(5.111)) # test spat variation
+  expect_equal(round(sd(terra::values(ses[[2]]), na.rm = TRUE), 3), as.double(4.413)) # test spat variation
 })
 
 

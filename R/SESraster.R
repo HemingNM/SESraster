@@ -18,11 +18,11 @@
 #' @param spat_alg_args List of arguments passed to the randomization method
 #' chosen in 'spat_alg'. See \code{\link{bootspat_naive}}, \code{\link{bootspat_str}},
 #' \code{\link{bootspat_ff}}
-#' @param vec_alg function to randomize any non spatial argument to be passed
-#' to 'FUN'.
-#' @param vec_sample Named list of length 1 with the argument (e.g. a vector)
+#' @param Fa_sample Named list of length 1 with a FUN argument (e.g. a vector)
 #' to be randomized
-#' @param vec_alg_args Named list of arguments passed to the function in 'vec_alg'
+#' @param Fa_alg function to randomize any non spatial argument to be passed
+#' to 'FUN'.
+#' @param Fa_alg_args Named list of arguments passed to the function in 'Fa_alg'
 #' @param force_wr_aleat_file logical. Force writing bootstrapped rasters, even if
 #' files fit in memory. Mostly used for internal test units.
 #' @inheritParams terra::app
@@ -71,16 +71,25 @@
 #'                  aleats = 5)
 #' plot(ses)
 #'
-#' ## example with 'vec_alg'
-#' appsv <- function(x, lyrv, na.rm=T, ...){
+#' ## example with 'Fa_alg'
+#' appsv <- function(x, lyrv, na.rm = FALSE, ...){
 #'                       sumw <- function(x, lyrv, na.rm, ...){
-#'                               sum(x*lyrv, na.rm=na.rm, ...)
+#'                             ifelse(all(is.na(x)), NA,
+#'                                     sum(x*lyrv, na.rm=na.rm, ...))
 #'                       }
 #'                       terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
 #'                     }
 #' ses <- SESraster(r, FUN=appsv,
-#'                     vec_alg = "sample", vec_sample = list(lyrv= seq_len(nlyr(r))),
-#'                     vec_alg_args = list(replace=TRUE),
+#'                  FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
+#'                     Fa_sample = "lyrv",
+#'                     Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+#'                     aleats = 5)
+#' plot(ses)
+#'
+#' ses <- SESraster(r, FUN=appsv,
+#'                  FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
+#'                     Fa_sample = "lyrv",
+#'                     Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
 #'                     aleats = 5)
 #' plot(ses)
 #'
@@ -88,7 +97,7 @@
 SESraster <- function(x,
                       FUN = NULL, FUN_args = list(),
                       spat_alg = NULL, spat_alg_args = list(),
-                      vec_alg = NULL, vec_sample = NULL, vec_alg_args = list(),
+                      Fa_sample = NULL, Fa_alg = NULL, Fa_alg_args = list(),
                       aleats = 10,
                       cores = 1, filename = "",
                       overwrite = FALSE,
@@ -126,24 +135,21 @@ SESraster <- function(x,
   ## add filename item to FUN args
   FUN_args[["filename"]] <- ifelse(mi, "", temp.raster)
 
-
-  if(!is.null(vec_sample)){
-    if(!inherits(vec_sample, "list")){
-      stop("vec_sample needs to be of class 'list'")
+  ## argument used by FUN that will be randomized
+  if(!is.null(Fa_sample)){
+    if(!inherits(Fa_sample, "character")){
+      stop("Fa_sample needs to be of class 'character'")
     }
-    if(length(vec_sample)>1) {
-      warning("Only the first element of 'vec_sample' will be used")
+    if(length(Fa_sample)>1) {
+      Fa_sample <- Fa_sample[1]
+      warning("Only the first element of 'Fa_sample' will be used")
+    }
+    if(!Fa_sample %in% names(FUN_args)){
+      stop(paste(Fa_sample, "not found in 'FUN_args'"))
     }
 
     ## Find the corresponding function
-    vec_alg <- match.fun(vec_alg)
-
-    ## get name of vector to sample and add to FUN_args
-    FUNarg_sample <- names(vec_sample)[1]
-    FUN_args[[FUNarg_sample]] <- vec_sample[[FUNarg_sample]]
-
-    ##
-    # FUN_args[[FUNarg_sample]] <- rlang::exec(vec_alg, vec_sample[[FUNarg_sample]], !!!vec_alg_args)
+    Fa_alg <- match.fun(Fa_alg)
 
   }
 
@@ -158,11 +164,10 @@ SESraster <- function(x,
     ### null distribution
     pres.site.null <- rlang::exec(spat_alg, x, !!!spat_alg_args)
 
-    ## prep args to compute metric
-    if(!is.null(vec_sample)){
-      FUN_args[[FUNarg_sample]] <- rlang::exec(vec_alg, vec_sample[[FUNarg_sample]], !!!vec_alg_args)
+    ## Randomize one FUN_arg to compute metric
+    if(!is.null(Fa_sample)){
+      FUN_args[[Fa_sample]] <- rlang::exec(Fa_alg, FUN_args[[Fa_sample]], !!!Fa_alg_args)
     }
-    # FUN_args[["filename"]][] <- ifelse(mi, "", temp.r[i])
 
     ### calculate metric
     rast.rand[[i]] <- rlang::exec(FUN, pres.site.null, !!!FUN_args)
