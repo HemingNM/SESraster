@@ -42,7 +42,7 @@ library(SESraster)
 An overview of the [null model algorithms](vignette(%22v1-null-models%22,%20package=%22SESraster%22)) 
 for species co-occurrence analysis summarized in (Gotelli 2000, <doi:10.2307/177478>).
 
-#### Get started 
+#### Get started with spatial null model algorithms
 For installation instructions and to see how the null model algorithms
 implemented in SESraster work, just [get started](vignette(%22v2-get-started%22,%20package=%22SESraster%22)).
 
