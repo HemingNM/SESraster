@@ -13,6 +13,10 @@
   - changed function name from .fit.memory() to fit.memory() and added argument "n"
   - Added cross links to functions
 
+* vignette
+  - added vignette to exemplify how `SESraster()` works
+  - changed order of vignettes
+  
 # SESraster 0.6.2
 
 * bux fixes
@@ -34,5 +38,6 @@ species were absent from a cell (i.e. all values are zero)
 Released 2023-06-23
 
 * Initial CRAN submission.
+
 
 
