@@ -22,10 +22,18 @@ knitr::opts_chunk$set(
 
 ## Contents
 
--   [Introduction](#intro)
--   [Installation](#install)
--   [Analysis](#analysis)
--   [References](#references)
+*   [Introduction](#intro)
+*   [Installation](#install)
+*   [Analysis](#analysis)
+    + [Random species generation](#randsp)
+    + [Spatially Unstructured Randomization](#spat-unstr)
+      + [Equiprobable-Equiprobable](#ee)
+      + [Fixed-Equiprobable](#fe)
+      + [Equiprobable-Fixed](#ef)
+    + [Spatially Structured Randomization](#spat-str)
+      + [Fixed-Proportional](#fp)
+      + [Fixed-Fixed](#ff)
+*   [References](#references)
 
 ## Introduction {#intro}
 
@@ -52,7 +60,7 @@ The `SESraster` package implements functions to randomize presence/absence speci
 
 Let's see some examples.
 
-### Random species generation
+### Random species generation {#randsp}
 
 Now, let's see some of the package features. First, we will create some random species distributions using the package `terra`.
 
@@ -63,7 +71,7 @@ library(terra)
 f <- system.file("ex/elev.tif", package="terra")
 r <- rast(f)
 set.seed(510)
-r10 <- rast(lapply(1:18,
+r <- rast(lapply(1:18,
                 function(i, r, mn, mx){
                   app(r, function(x, t){
                     sapply(x, function(x, t){
@@ -72,72 +80,72 @@ r10 <- rast(lapply(1:18,
                   }, t=sample(seq(mn, mx), 2))
                 }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10))
 
-names(r10) <- paste("sp", 1:nlyr(r10))
-plot(r10)
+names(r) <- paste("sp", 1:nlyr(r))
+plot(r)
 ```
 
 With the distributions in hand, we can perform the spatial randomizations.
 
-### Spatially Unstructured Randomization
+### Spatially Unstructured Randomization {#spat-unstr}
 
 First, let's randomize species distribution ignoring the spatial structure with the function `bootspat_naive`.
 
-#### both, by site and species simultaneously: Equiprobable-Equiprobable
+#### both, by site and species simultaneously: Equiprobable-Equiprobable {#ee}
 
 We can randomize the presences/absences (1s/0s) using the method `both`. This method combines randomization by site and species at the same time. It will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. It is equivalent to the SIM1 (equiprobable-equiprobable) method of Gotelli [-@gotelli2000]. Notice that NA cells are ignored.
 
 ```{r, naive-both, fig.height=8, fig.width=6}
-srb <- bootspat_naive(r10, random = "both")
+srb <- bootspat_naive(r, random = "both")
 plot(srb, legend=F)
 ```
 
 ```{r, naive-both-rich, fig.height=4, fig.width=6}
-plot(c(sum(r10), sum(srb)), main=c("observed", "randomized"))
+plot(c(sum(r), sum(srb)), main=c("observed", "randomized"))
 ```
 
-#### by species: Fixed-Equiprobable
+#### by species: Fixed-Equiprobable {#fe}
 
 We can randomize by `species`. This second method is performed at each layer (species) of the stack by randomizing the position of species presences in space. If the data fits to the computer RAM memory this randomization is equivalent to the SIM2 (fixed-equiprobable) method of Gotelli [-@gotelli2000] and to the flatland model of Laffan & Crisp [-@laffan2003]. It changes the species richness at each cell while retaining the size of the species distribution (except if randomization is performed by frequency). When running by frequency, presences/absences (1s/0s) are sampled at each pixel based on the probability (frequency) that the species is found within the study area. It is equivalent to the SIM7 (proportional-equiprobable) method of Gotelli [-@gotelli2000]. For each species, the randomized frequency of presences is very similar to the actual frequency but not exactly the same.
 
 ```{r, naive-spp, fig.height=8, fig.width=6}
-sr1 <- bootspat_naive(r10, random = "species")
+sr1 <- bootspat_naive(r, random = "species")
 plot(sr1, legend=F)
 ```
 
 ```{r, naive-spp-rich, fig.height=4, fig.width=6}
-plot(c(sum(r10), sum(sr1)), main=c("observed", "randomized"))
+plot(c(sum(r), sum(sr1)), main=c("observed", "randomized"))
 ```
 
 ```{r, naive-sppb, fig.height=8, fig.width=6}
-sr1b <- bootspat_naive(r10, random = "species", memory = FALSE)
+sr1b <- bootspat_naive(r, random = "species", memory = FALSE)
 ```
 
 Check that the number of occupied pixels of randomized distributions are similar to those of the observed distributions.
 
 ```{r, table-freq-naive}
-cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+cbind(observed=sapply(r, function(x)freq(x)[2,3]),
       randomized=sapply(sr1, function(x)freq(x)[2,3]),
       randomized_freq=sapply(sr1b, function(x)freq(x)[2,3]))
 ```
 
-#### by site: Equiprobable-Fixed
+#### by site: Equiprobable-Fixed {#ef}
 
 Now, we will randomize by `site`. This method randomizes the position (presence/absence) of the species within each site (cell) of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change, as more or less pixels can be randomly assigned to each species (raster layer). This randomization is equivalent to the SIM3 (equiprobable-fixed) method of Gotelli [-@gotelli2000]. Notice that, although the spatial structure of species richness is held constant, the number of pixels that each species occupy is completely randomized.
 
 ```{r, naive-site, fig.height=8, fig.width=6}
-sr2 <- bootspat_naive(r10, random = "site")
+sr2 <- bootspat_naive(r, random = "site")
 plot(sr2, legend=F)
 ```
 
 ```{r, naive-site-rich, fig.height=4, fig.width=6}
-plot(c(sum(r10), sum(sr2)), main=c("observed", "randomized"))
+plot(c(sum(r), sum(sr2)), main=c("observed", "randomized"))
 ```
 
-### Spatially Structured Randomization
+### Spatially Structured Randomization {#spat-str}
 
 Notice that randomization by `site` from `bootspat_naive()` keeps the species richness fixed (i.e. equal to the input raster), but the size of the species' distribution (i.e. number of pixels of each species) is completely randomized. On the other hand, randomization by `species` keeps the number of pixels of each species fixed, but the richness is completely randomized. The functions `bootspat_str()` and `bootspat_ff()` add some constraints to the randomization. See below:
 
-#### function `bootspat_str()`: Fixed-Proportional
+#### function `bootspat_str()`: Fixed-Proportional {#fp}
 
 In the function `bootspat_str()` we implement a spatially structured randomization that keeps the species richness pattern fixed and distribution size of each species, proportional. This method is based on the second null model of Laffan & Crisp [-@laffan2003], but uses probability of sampling presences based on frequency of presences for each species. Therefore, it is equivalent to the SIM5 (proportional-fixed) method of Gotelli [-@gotelli2000]. Notice that it will lack spatial structure in the same way of randomization by `site`, however the size of the species distribution is (nearly) retained.
 
@@ -145,13 +153,13 @@ Randomizations are based on frequencies (given or calculated from the output ras
 
 ```{r}
 # bootstrapping once
-fr.prob <- SESraster::fr2prob(r10)
-prob <- terra::app(r10,
+fr.prob <- SESraster::fr2prob(r)
+prob <- terra::app(r,
                    function(x){
                      ifelse(is.na(x), 0, 1)
                    })
 
-randr10 <- bootspat_str(r10, rprob = prob, fr_prob = fr.prob)
+randr10 <- bootspat_str(r, rprob = prob, fr_prob = fr.prob)
 ```
 
 The species distribution was spatially randomized according to the frequency of presence of each species. This method randomizes the position of species presences in space keeping the species richness constant and number of occupied pixels of randomized distributions very similar those on the actual distributions.
@@ -163,18 +171,18 @@ plot(randr10, legend=F)
 See unchanged spatial pattern of species richness.
 
 ```{r, str-site-rich, fig.height=4, fig.width=6}
-plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
+plot(c(sum(r), sum(randr10)), main=c("observed", "randomized"))
 ```
 
 Check that the number of occupied pixels of randomized distributions are very similar those of the observed distributions.
 
 ```{r, table-freq}
-cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+cbind(observed=sapply(r, function(x)freq(x)[2,3]),
       randomized=sapply(randr10, function(x)freq(x)[2,3]))
 ```
   
   
-#### function `bootspat_ff()`: Fixed-Fixed
+#### function `bootspat_ff()`: Fixed-Fixed {#ff}
 
 In the function `bootspat_ff()` we implement a spatially structured randomization that keeps both, the species richness pattern and species distribution size, fixed. This method is equivalent to the SIM9 (fixed-fixed) method of Gotelli [-@gotelli2000] and is based on the null model of Connor & Simberloff [-@connor1979], but has some differences.
 
@@ -182,34 +190,34 @@ The original algorithm randomly chooses the sequence of species and fills sites 
 
 ```{r}
 # bootstrapping once
-randff <- bootspat_ff(r10)
+randff <- bootspat_ff(r)
 ```
 
 See how species distribution sizes are maintained.
 Compare the original and null distributions. Plots are sorted from the largest to the smallest distributions.
 
 ```{r, str-ff, fig.height=4, fig.width=6}
-obs_fr <- unlist(terra::global(r10, function(x) sum(x, na.rm = TRUE)))
+obs_fr <- unlist(terra::global(r, function(x) sum(x, na.rm = TRUE)))
 v_seq <- order(obs_fr)
-plot(c(r10[[v_seq[length(v_seq)-1:4]]], randff[[v_seq[length(v_seq)-1:4]]]), 
-     nr=2, main=paste(rep(c("original", "null"), each=4), names(r10[[v_seq[length(v_seq)-1:4]]])))
-plot(c(r10[[v_seq[floor(length(v_seq)/2) + 2:-1]]], randff[[v_seq[floor(length(v_seq)/2)+ 2:-1]]]),
-     nr=2, main=paste(rep(c("original", "null"), each=4), names(r10[[v_seq[floor(length(v_seq)/2)+ 2:-1]]])))
-plot(c(r10[[v_seq[4:1]]], randff[[v_seq[4:1]]]), 
-     nr=2, main=paste(rep(c("original", "null"), each=4), names(r10[[v_seq[4:1]]])))
+plot(c(r[[v_seq[length(v_seq)-1:4]]], randff[[v_seq[length(v_seq)-1:4]]]), 
+     nr=2, main=paste(rep(c("original", "null"), each=4), names(r[[v_seq[length(v_seq)-1:4]]])))
+plot(c(r[[v_seq[floor(length(v_seq)/2) + 2:-1]]], randff[[v_seq[floor(length(v_seq)/2)+ 2:-1]]]),
+     nr=2, main=paste(rep(c("original", "null"), each=4), names(r[[v_seq[floor(length(v_seq)/2)+ 2:-1]]])))
+plot(c(r[[v_seq[4:1]]], randff[[v_seq[4:1]]]), 
+     nr=2, main=paste(rep(c("original", "null"), each=4), names(r[[v_seq[4:1]]])))
 
 ```
 
 See unchanged spatial pattern of species richness.
 
 ```{r, str-ff-rich, fig.height=4, fig.width=6}
-plot(c(sum(r10), sum(randff), sum(r10)-sum(randff)), main=c("observed", "randomized", "difference"), nr=1)
+plot(c(sum(r), sum(randff), sum(r)-sum(randff)), main=c("observed", "randomized", "difference"), nr=1)
 ```
 
 Check that the number of occupied pixels of randomized distributions are very similar those of the observed distributions.
 
 ```{r, table-freqff}
-cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+cbind(observed=sapply(r, function(x)freq(x)[2,3]),
       randomized=sapply(randff, function(x)freq(x)[2,3]))
 ```
 
