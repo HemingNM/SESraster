@@ -39,16 +39,18 @@ library(SESraster)
 ### SESraster basics
 
 #### Null model algorithms
-An overview of the [null model algorithms](vignette(%22v1-null-models%22,%20package=%22SESraster%22)) 
+An overview of the
+[null model algorithms](vignette(%22v1-null-models%22,%20package=%22SESraster%22))
 for species co-occurrence analysis summarized in (Gotelli 2000, <doi:10.2307/177478>).
 
 #### Get started with spatial null model algorithms
 For installation instructions and to see how the null model algorithms
-implemented in SESraster work, just [get started](vignette(%22v2-get-started%22,%20package=%22SESraster%22)).
+implemented in `SESraster` work for spatial data,
+just [get started](vignette(%22v2-get-started%22,%20package=%22SESraster%22)).
 
 #### Standardized effect sizes (SES) computation 
-Learn how to compute standardized effect sizes (SES) using the null model
-algorithms implemented in SESraster, take a look at [SES
+For computing standardized effect sizes (SES) using `SESraster()` function and
+the null model algorithms implemented in the package, take a look at [SES
 computation](vignette(%22v3-SES-calculation%22,%20package=%22SESraster%22)).
 
 #### Vignettes
