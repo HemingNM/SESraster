@@ -94,13 +94,13 @@ plot(ses)
 ## example of how to use 'FUN_args'
 r[7][1] <- NA
 plot(r)
-sesNA <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
-                 FUN_args = list(na.rm = FALSE), spat_alg_args=list(random = "species"),
+sesNA <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = FALSE),
+                 spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
                  aleats = 5)
 plot(sesNA)
 
-ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
-               FUN_args = list(na.rm = TRUE), spat_alg_args=list(random = "species"),
+ses <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = TRUE),
+                spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
                  aleats = 5)
 plot(ses)
 

@@ -57,7 +57,7 @@ test_that("SES works", {
                         terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
   }
   n2 <- names(appsv(r, seq_len(terra::nlyr(r))))
-  ses <- SESraster(r, FUN=appsv, FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
+  ses <- SESraster(r, FUN=appsv, FUN_args = list(lyrv = seq_len(terra::nlyr(r)), na.rm = TRUE),
                    Fa_sample = "lyrv",
                    Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
                    aleats = aleats)

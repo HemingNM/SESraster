@@ -1,6 +1,6 @@
 ---
 title: "Null-model algorithms"
-author: "Neander Heming, Flávio Mota and Gabriela Alves-Ferreira"
+author: "Neander M. Heming, Flávio Mota, and Gabriela Alves-Ferreira"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -20,8 +20,13 @@ knitr::opts_chunk$set(
 
 ## Contents
 
+-   [Introduction](#intro)
 -   [Algorithms](#algorithms)
 -   [References](#references)
+
+## Introduction {#intro}
+
+Null models have been widely used to analyze the patterns observed in nature in the attempt to understand the ecological and evolutionary mechanisms structuring the biological communities. A null model is a simplified representation of how species would be distributed or biological communities be assembled if specific ecological processes were not operating. Until now, algorithms were designed to create null models using matrix data. The package [`SESraster`](https://github.com/HemingNM/SESraster) covers a current gap by implementing randomization algorithms to build null models using presence/absence raster data.
 
 ## Algorithms {#algorithms}
 

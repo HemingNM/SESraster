@@ -1,0 +1,131 @@
+---
+title: "SES calculation"
+author: "Neander M. Heming, Flávio Mota, and Gabriela Alves-Ferreira"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SES calculation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.bib
+# csl: restoration-ecology.csl
+# biblio-style: apelike
+link-citations: true
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(SESraster)
+```
+
+## Contents
+
+-   [Standardized effect sizes (SES)](#ses)
+-   [Analysis](#analysis)
+-   [References](#references)
+
+## Standardized effect sizes (SES) {#ses}
+Standardized effect sizes (SES) are....
+
+## Calculating SES {#analysis}
+### Random species generation
+
+Now, let's see some of the package features. First, we will create some random species distributions using the package `terra`.
+
+```{r, rand-spp, fig.height=8, fig.width=6}
+library(SESraster)
+library(terra)
+# creating random species distributions
+f <- system.file("ex/elev.tif", package="terra")
+r <- rast(f)
+set.seed(510)
+r <- rast(lapply(1:18,
+                function(i, r, mn, mx){
+                  app(r, function(x, t){
+                    sapply(x, function(x, t){
+                       x<max(t) & x>min(t)
+                    }, t=t)
+                  }, t=sample(seq(mn, mx), 2))
+                }, r=r, mn=minmax(r)[1]+10, mx=minmax(r)[2]-10))
+
+names(r) <- paste("sp", 1:nlyr(r))
+plot(r)
+```
+
+With the distributions in hand, we can perform the spatial randomizations.
+
+### SES from spatial randomization
+
+Create function to compute a metric.
+
+Compute metric and SES using `bootspat_naive()` and randomizing by species.
+```{r, ses-spat-sp, fig.height=8, fig.width=6}
+appmean <- function(x, ...){
+                      terra::app(x, "mean", ...)
+                    }
+ses.sp <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
+                 aleats = 5)
+plot(ses.sp)
+ses.st <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
+                 aleats = 5)
+plot(ses.st)
+```
+
+Compute metric and SES using `bootspat_naive()` and randomizing by site.
+
+```{r, ses-spat-st, fig.height=8, fig.width=6}
+ses.st <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
+                 aleats = 5)
+plot(ses.st)
+```
+
+
+## example of how to use 'FUN_args'
+```{r, ses-spat-na, fig.height=8, fig.width=6}
+
+# r[7][1] <- NA
+# plot(r)
+sesNA <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
+                 FUN_args = list(na.rm = FALSE), spat_alg_args=list(random = "species"),
+                 aleats = 5)
+plot(sesNA)
+#'
+ses.woNA <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
+               FUN_args = list(na.rm = TRUE), spat_alg_args=list(random = "species"),
+                 aleats = 5)
+plot(ses.woNA)
+```
+
+### SES from species trait randomization
+
+```{r, ses-trait, fig.height=8, fig.width=6}
+## example with 'Fa_alg'
+appsv <- function(x, lyrv, na.rm = FALSE, ...){
+                      sumw <- function(x, lyrv, na.rm, ...){
+                            ifelse(all(is.na(x)), NA,
+                                    sum(x*lyrv, na.rm=na.rm, ...))
+                      }
+                      terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
+                    }
+ses <- SESraster(r, FUN=appsv,
+                 FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
+                    Fa_sample = "lyrv",
+                    Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
+                    aleats = 5)
+plot(ses)
+
+ses <- SESraster(r, FUN=appsv,
+                 FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
+                    Fa_sample = "lyrv",
+                    Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
+                    aleats = 5)
+plot(ses)
+```
+
+## References {#references}

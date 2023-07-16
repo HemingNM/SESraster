@@ -61,13 +61,13 @@
 #' ## example of how to use 'FUN_args'
 #' r[7][1] <- NA
 #' plot(r)
-#' sesNA <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
-#'                  FUN_args = list(na.rm = FALSE), spat_alg_args=list(random = "species"),
+#' sesNA <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = FALSE),
+#'                  spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
 #'                  aleats = 5)
 #' plot(sesNA)
 #'
-#' ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
-#'                FUN_args = list(na.rm = TRUE), spat_alg_args=list(random = "species"),
+#' ses <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = TRUE),
+#'                 spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
 #'                  aleats = 5)
 #' plot(ses)
 #'
@@ -180,7 +180,7 @@ SESraster <- function(x,
   rast.rand <- terra::rast(rast.rand) # transform a list into a SpatRaster
 
   ## SES for multiple layers
-  out <- terra::rast(lapply(seq_len(nrow(rcomb)),
+  ses <- terra::rast(lapply(seq_len(nrow(rcomb)),
                             function(l, ro, rr, rcomb,
                                      mi, cores, filename, overwrite, ...){
                               ### Randomized mean value
@@ -194,7 +194,7 @@ SESraster <- function(x,
                                                            filename = ifelse(mi, "", paste0(temp.filename, "sd.tif")))
 
                               ## Calculating the standardized effect size (SES)
-                              out <- terra::app(c(ro[[rcomb[l,1]]], rast.rand.avg, rast.rand.sd),
+                              return(terra::app(c(ro[[rcomb[l,1]]], rast.rand.avg, rast.rand.sd),
                                                 fun=function(x){
                                                   return(c(Observed = x[1],
                                                            Null_Mean = x[2],
@@ -202,16 +202,14 @@ SESraster <- function(x,
                                                            SES = (x[1]-x[2])/x[3]))
                                                 }, cores = cores,
                                                 filename = ifelse(mi, "", paste0(temp.filename, l, "out.tif")),
-                                                overwrite = overwrite, ...)
-
-                              return(out)
+                                                overwrite = overwrite, ...))
                             }, ro=rast.obs, rr=rast.rand, rcomb=rcomb,
                             mi = mi,
                             cores = cores, # filename = filename,
                             overwrite = overwrite, ...))
 
   if(filename != ""){
-    out <- writeRaster(out, filename, overwrite = overwrite, ...)
+    ses <- terra::writeRaster(ses, filename, overwrite = overwrite, ...)
   }
 
   ## HD Cleanup
@@ -221,7 +219,7 @@ SESraster <- function(x,
   unlink(paste0(temp.filename, "sd.tif"))
   unlink(paste0(temp.filename, seq_len(nrow(rcomb)), "out.tif"))
 
-  return(out)
+  return(ses)
 }
 
 
