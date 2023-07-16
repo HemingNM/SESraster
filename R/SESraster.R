@@ -52,10 +52,10 @@
 #'                       terra::app(x, "mean", ...)
 #'                     }
 #' ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
-#'                  aleats = 5)
+#'                  aleats = 4)
 #' plot(ses)
 #' ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
-#'                  aleats = 5)
+#'                  aleats = 4)
 #' plot(ses)
 #'
 #' ## example of how to use 'FUN_args'
@@ -63,12 +63,12 @@
 #' plot(r)
 #' sesNA <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = FALSE),
 #'                  spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
-#'                  aleats = 5)
+#'                  aleats = 4)
 #' plot(sesNA)
 #'
 #' ses <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = TRUE),
 #'                 spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
-#'                  aleats = 5)
+#'                  aleats = 4)
 #' plot(ses)
 #'
 #' ## example with 'Fa_alg'
@@ -83,14 +83,14 @@
 #'                  FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
 #'                     Fa_sample = "lyrv",
 #'                     Fa_alg = "sample", Fa_alg_args = list(replace=FALSE),
-#'                     aleats = 5)
+#'                     aleats = 4)
 #' plot(ses)
 #'
 #' ses <- SESraster(r, FUN=appsv,
 #'                  FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
 #'                     Fa_sample = "lyrv",
 #'                     Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
-#'                     aleats = 5)
+#'                     aleats = 4)
 #' plot(ses)
 #'
 #' @export
