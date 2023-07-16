@@ -26,19 +26,22 @@ library(SESraster)
 
 ## Contents
 
--   [Standardized effect sizes (SES)](#ses)
--   [Analysis](#analysis)
--   [References](#references)
+*   [Standardized effect sizes (SES)](#ses)
+*   [Calculating SES](#analysis)
+    + [Random species generation](#randsp)
+    + [SES with spatial randomization](#ses-spat)
+    + [SES from species trait randomization](#ses-trait)
+*   [References](#references)
 
 ## Standardized effect sizes (SES) {#ses}
 Standardized effect sizes (SES) are....
 
 ## Calculating SES {#analysis}
-### Random species generation
+### Random species generation {#randsp}
 
 Now, let's see some of the package features. First, we will create some random species distributions using the package `terra`.
 
-```{r, rand-spp, fig.height=8, fig.width=6}
+```{r, rand-spp, fig.height=4, fig.width=4}
 library(SESraster)
 library(terra)
 # creating random species distributions
@@ -60,51 +63,64 @@ plot(r)
 
 With the distributions in hand, we can perform the spatial randomizations.
 
-### SES from spatial randomization
 
-Create function to compute a metric.
+### SES with spatial randomization {#ses-spat}
 
-Compute metric and SES using `bootspat_naive()` and randomizing by species.
-```{r, ses-spat-sp, fig.height=8, fig.width=6}
+First we need a function that computes the desired metric. The function must work
+with spatial data. Just to exemplify, we are creating a function to compute the mean of
+presences and absences (1/0) within each cell. You probably wants to use a more 
+ecologically meaningful function, but here is just an example of use.
+
+```{r, ses-fun}
 appmean <- function(x, ...){
                       terra::app(x, "mean", ...)
-                    }
-ses.sp <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
-                 aleats = 5)
+}
+```
+
+Now, to compute SES, we will send our function `appmean()` to `SESraster()` through
+'FUN' argument to compute our metric. We also randomize the original data using
+the `bootspat_naive()` algorithm and randomize by 'species' passing the argument 
+'random="species"' through 'spat_alg_args'.
+
+```{r, ses-spat-sp, fig.height=4, fig.width=4}
+ses.sp <- SESraster(r, FUN=appmean, 
+                    spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
+                    aleats = 5)
 plot(ses.sp)
-ses.st <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
-                 aleats = 5)
+```
+
+Compute metric and SES using `bootspat_naive()` and randomize by site.
+
+```{r, ses-spat-st, fig.height=4, fig.width=4}
+ses.st <- SESraster(r, FUN=appmean,
+                    spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
+                    aleats = 5)
 plot(ses.st)
 ```
 
-Compute metric and SES using `bootspat_naive()` and randomizing by site.
 
-```{r, ses-spat-st, fig.height=8, fig.width=6}
-ses.st <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
-                 aleats = 5)
-plot(ses.st)
-```
+#### Passing arguments to 'FUN' {#ses-fun-arg}
 
+Using 'FUN_args' to send arguments to the function that calculates the desired metric ('FUN')
 
-## example of how to use 'FUN_args'
-```{r, ses-spat-na, fig.height=8, fig.width=6}
+```{r, ses-spat-na, fig.height=4, fig.width=4}
 
 # r[7][1] <- NA
 # plot(r)
-sesNA <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
-                 FUN_args = list(na.rm = FALSE), spat_alg_args=list(random = "species"),
-                 aleats = 5)
+sesNA <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = FALSE),
+                   spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
+                   aleats = 5)
 plot(sesNA)
 #'
-ses.woNA <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive",
-               FUN_args = list(na.rm = TRUE), spat_alg_args=list(random = "species"),
-                 aleats = 5)
+ses.woNA <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = TRUE), 
+                      spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
+                      aleats = 5)
 plot(ses.woNA)
 ```
 
-### SES from species trait randomization
+### SES from species trait randomization {#ses-trait}
 
-```{r, ses-trait, fig.height=8, fig.width=6}
+```{r, ses-trait, fig.height=4, fig.width=4}
 ## example with 'Fa_alg'
 appsv <- function(x, lyrv, na.rm = FALSE, ...){
                       sumw <- function(x, lyrv, na.rm, ...){
