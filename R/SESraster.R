@@ -190,7 +190,7 @@ SESraster <- function(x,
   ## SES for multiple layers
   ses <- terra::rast(lapply(seq_len(nrow(rcomb)),
                             function(l, ro, rr, rcomb, resu,
-                                     mi, cores, filename, overwrite, ...){
+                                     mi, cores, temp.filename, overwrite, ...){
 
                               lnm <- names(ro[[rcomb[l,1]]])
                               resu <- stats::setNames(resu, paste(names(resu), lnm, sep = "."))
@@ -214,7 +214,7 @@ SESraster <- function(x,
 
                             }, ro = rast.obs, rr = rast.rand, rcomb = rcomb, resu = resu,
                             mi = mi,
-                            cores = cores, # filename = filename,
+                            cores = cores, temp.filename = temp.filename,
                             overwrite = overwrite, ...))
 
   if(filename != ""){
@@ -259,8 +259,8 @@ SESraster <- function(x,
 #' library(SESraster)
 #' library(terra)
 #' r <- load_ext_data()
-#' algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"), aleats = 5)
-#' algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"), aleats = 5)
+#' algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"), aleats = 4)
+#' algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"), aleats = 4)
 #' # algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="both"))
 #'
 #' @export

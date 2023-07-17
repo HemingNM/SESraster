@@ -57,8 +57,8 @@ between actual and randomized species distributions
 library(SESraster)
 library(terra)
 r <- load_ext_data()
-algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"), aleats = 5)
-algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"), aleats = 5)
+algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"), aleats = 4)
+algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"), aleats = 4)
 # algorithm_metrics(r, spat_alg = "bootspat_naive", spat_alg_args=list(random="both"))
 
 }
