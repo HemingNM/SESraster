@@ -43,12 +43,12 @@ for species co-occurrence analysis summarized in (Gotelli 2000, <doi:10.2307/177
 - #### Spatial null model algorithms in SESraster
 For installation instructions and to see how the null model algorithms
 implemented in `SESraster` work for spatial data,
-just [get started](https://hemingnm.github.io/SESraster/articles/spatial-null-models.html)).
+just [get started](https://hemingnm.github.io/SESraster/articles/spatial-null-models.html).
 
-- #### Standardized effect sizes (SES) 
+- #### Standardized effect sizes 
 For computing standardized effect sizes (SES) using `SESraster()` function and
 the null model algorithms implemented in the package, take a look at 
-[SES](https://hemingnm.github.io/SESraster/articles/SES.html)) computation.
+[SES computation](https://hemingnm.github.io/SESraster/articles/SES.html).
 
 <br>
 
