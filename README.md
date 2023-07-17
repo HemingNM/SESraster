@@ -32,7 +32,6 @@ Github:
 
 ```         
 require(devtools)
-load_all()
 install_github("HemingNM/SESraster", build_vignettes = TRUE)
 library(SESraster)
 ```
