@@ -166,10 +166,10 @@ fictional values for the trait.
 ## example with `Fa_alg`
 appsv <- function(x, lyrv, na.rm = FALSE, ...){
                       sumw <- function(x, lyrv, na.rm, ...){
-                            ifelse(all(is.na(x)), NA,
-                                    sum(x*lyrv, na.rm=na.rm, ...))
+                        ifelse(all(is.na(x)), NA,
+                               sum(x*lyrv, na.rm=na.rm, ...))
                       }
-                      terra::app(x, sumw, lyrv = lyrv, na.rm, ...)
+                      stats::setNames(terra::app(x, sumw, lyrv = lyrv, na.rm=na.rm, ...), "sumw")
 }
 
 set.seed(10)

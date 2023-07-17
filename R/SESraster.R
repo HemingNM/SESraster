@@ -61,11 +61,13 @@
 #' ## example of how to use 'FUN_args'
 #' r[7][1] <- NA
 #' plot(r)
+#' set.seed(10)
 #' sesNA <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = FALSE),
 #'                  spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
 #'                  aleats = 4)
 #' plot(sesNA)
 #'
+#' set.seed(10)
 #' ses <- SESraster(r, FUN=appmean, FUN_args = list(na.rm = TRUE),
 #'                 spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
 #'                  aleats = 4)
@@ -77,8 +79,9 @@
 #'                             ifelse(all(is.na(x)), NA,
 #'                                     sum(x*lyrv, na.rm=na.rm, ...))
 #'                       }
-#'                       terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
+#'                       stats::setNames(terra::app(x, sumw, lyrv = lyrv, na.rm=na.rm, ...), "sumw")
 #'                     }
+#' set.seed(10)
 #' ses <- SESraster(r, FUN=appsv,
 #'                  FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
 #'                     Fa_sample = "lyrv",
@@ -86,6 +89,7 @@
 #'                     aleats = 4)
 #' plot(ses)
 #'
+#' set.seed(10)
 #' ses <- SESraster(r, FUN=appsv,
 #'                  FUN_args = list(lyrv = seq_len(nlyr(r)), na.rm = TRUE),
 #'                     Fa_sample = "lyrv",
@@ -179,31 +183,36 @@ SESraster <- function(x,
 
   rast.rand <- terra::rast(rast.rand) # transform a list into a SpatRaster
 
+  ## vector to store results
+  resu <- stats::setNames(as.double(rep(NA, 4)),
+                          c("Observed", "Null_Mean", "Null_SD", "SES"))
+
   ## SES for multiple layers
   ses <- terra::rast(lapply(seq_len(nrow(rcomb)),
-                            function(l, ro, rr, rcomb,
+                            function(l, ro, rr, rcomb, resu,
                                      mi, cores, filename, overwrite, ...){
-                              ### Randomized mean value
-                              rast.rand.avg <- terra::mean(rr[[rcomb[l,]]] , na.rm = TRUE, #cores = cores,
-                                                           overwrite = TRUE,
-                                                           filename = ifelse(mi, "", paste0(temp.filename, "avg.tif")))
 
-                              ### Randomized stdev value
-                              rast.rand.sd <- terra::stdev(rr[[rcomb[l,]]], na.rm = TRUE, #cores = cores,
-                                                           overwrite = TRUE,
-                                                           filename = ifelse(mi, "", paste0(temp.filename, "sd.tif")))
+                              lnm <- names(ro[[rcomb[l,1]]])
+                              resu <- stats::setNames(resu, paste(names(resu), lnm, sep = "."))
 
                               ## Calculating the standardized effect size (SES)
-                              return(terra::app(c(ro[[rcomb[l,1]]], rast.rand.avg, rast.rand.sd),
-                                                fun=function(x){
-                                                  return(c(Observed = x[1],
-                                                           Null_Mean = x[2],
-                                                           Null_SD = x[3],
-                                                           SES = (x[1]-x[2])/x[3]))
-                                                }, cores = cores,
+                              return(terra::app(c(ro[[rcomb[l,1]]], rr[[rcomb[l,]]]),
+                                                fun=function(x, lnm, resu){
+
+                                                  nm <- mean(x[-1], na.rm=TRUE) ### Randomized mean value
+                                                  nsd <- stats::sd(x[-1], na.rm=TRUE) ### Randomized stdev value
+
+                                                  resu[] <- c(x[1], nm, nsd, ifelse(nsd==0, (x[1]-nm), (x[1]-nm)/nsd))
+
+                                                  return(resu)
+
+                                                },
+                                                lnm = lnm, resu = resu,
+                                                cores = cores,
                                                 filename = ifelse(mi, "", paste0(temp.filename, l, "out.tif")),
                                                 overwrite = overwrite, ...))
-                            }, ro=rast.obs, rr=rast.rand, rcomb=rcomb,
+
+                            }, ro = rast.obs, rr = rast.rand, rcomb = rcomb, resu = resu,
                             mi = mi,
                             cores = cores, # filename = filename,
                             overwrite = overwrite, ...))

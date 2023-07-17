@@ -10,7 +10,7 @@ test_that("SES works", {
   # test ses by species
   ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
                    aleats = aleats)
-  nms <- c("Observed.mean", "Null_Mean.mean", "Null_SD.std", "SES.mean")
+  nms <- paste0(c("Observed", "Null_Mean", "Null_SD", "SES"), ".mean")
 
   expect_true(inherits(ses, "SpatRaster"), "TRUE")
   expect_true(terra::nlyr(ses)==4)
@@ -18,14 +18,14 @@ test_that("SES works", {
 
   expect_equal(unlist(ses[1]), setNames(as.double(rep(NA, terra::nlyr(ses))), nms))
 
-  expect_equal(unlist(ses[2]), setNames(c(0, 0.4, 0.1069045, -3.7416574), nms))
+  expect_equal(unlist(ses[2]), setNames(c(0, 0.4, 0.11952286, -3.34664011), nms))
 
   expect_equal(round(sd(terra::values(ses[[2]]), na.rm = TRUE), 3), as.double(0.081)) # test spat variation
 
   ## test ses by site
   ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="site"),
                    aleats = aleats)
-  nms <- c("Observed.mean", "Null_Mean.mean", "Null_SD.std", "SES.mean")
+  # nms <- c("Observed.mean", "Null_Mean.mean", "Null_SD.std", "SES.mean")
 
   expect_true(inherits(ses, "SpatRaster"), "TRUE")
   expect_true(terra::nlyr(ses)==4)
@@ -33,7 +33,7 @@ test_that("SES works", {
 
   expect_equal(unlist(ses[1]), setNames(as.double(rep(NA, terra::nlyr(ses))), nms))
 
-  expect_equal(unlist(ses[2]), setNames(c(0, 0, 0, NA), nms))
+  expect_equal(unlist(ses[2]), setNames(c(0, 0, 0, 0), nms))
 
   expect_equal(as.vector(terra::values(ses[[1]])), as.vector(terra::values(ses[[2]]))) # test spat variation
 
@@ -54,7 +54,7 @@ test_that("SES works", {
                           ifelse(all(is.na(x)), NA,
                                  sum(x*lyrv, na.rm=na.rm, ...))
                         }
-                        terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
+                        stats::setNames(terra::app(x, sumw, lyrv = lyrv, na.rm=na.rm, ...), "sumw")
   }
   n2 <- names(appsv(r, seq_len(terra::nlyr(r))))
   ses <- SESraster(r, FUN=appsv, FUN_args = list(lyrv = seq_len(terra::nlyr(r)), na.rm = TRUE),
@@ -62,11 +62,10 @@ test_that("SES works", {
                    Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
                    aleats = aleats)
   # names(ses)
-  nms <- paste0(c("Observed.", "Null_Mean.mean", "Null_SD.std" ,"SES."),
-                c(n2, "", "", n2))
+  nms <- paste0(c("Observed", "Null_Mean", "Null_SD" ,"SES"), ".", n2)
   expect_equal(unlist(ses[1]), setNames(as.double(rep(NA, terra::nlyr(ses))), nms))
 
-  expect_equal(unlist(ses[2]), setNames(c(0, 0, 0, NA), nms))
+  expect_equal(unlist(ses[2]), setNames(c(0, 0, 0, 0), nms))
 
   expect_equal(round(sd(terra::values(ses[[2]]), na.rm = TRUE), 3), as.double(4.413)) # test spat variation
 })
