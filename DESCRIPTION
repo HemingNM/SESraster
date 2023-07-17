@@ -16,7 +16,8 @@ Description: Randomization of presence/absence species distribution raster
     matrices (Gotelli 2000, <doi:10.2307/177478>) implemented for raster
     data.
 License: GPL (>= 3)
-URL: https://github.com/HemingNM/SESraster,
+URL: https://CRAN.R-project.org/package=SESraster, 
+    https://github.com/HemingNM/SESraster,
     https://hemingnm.github.io/SESraster/
 BugReports: https://github.com/HemingNM/SESraster/issues
 Depends: 
