@@ -7,13 +7,16 @@
     <loc>https://hemingnm.github.io/SESraster/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://hemingnm.github.io/SESraster/articles/S1-get-started.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/articles/S2-null-models.html</loc>
+    <loc>https://hemingnm.github.io/SESraster/articles/SES.html</loc>
   </url>
   <url>
     <loc>https://hemingnm.github.io/SESraster/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://hemingnm.github.io/SESraster/articles/null-models.html</loc>
+  </url>
+  <url>
+    <loc>https://hemingnm.github.io/SESraster/articles/spatial-null-models.html</loc>
   </url>
   <url>
     <loc>https://hemingnm.github.io/SESraster/authors.html</loc>
@@ -25,6 +28,12 @@
     <loc>https://hemingnm.github.io/SESraster/news/index.html</loc>
   </url>
   <url>
+    <loc>https://hemingnm.github.io/SESraster/reference/SESraster.html</loc>
+  </url>
+  <url>
+    <loc>https://hemingnm.github.io/SESraster/reference/algorithm_metrics.html</loc>
+  </url>
+  <url>
     <loc>https://hemingnm.github.io/SESraster/reference/bootspat_ff.html</loc>
   </url>
   <url>
@@ -32,9 +41,6 @@
   </url>
   <url>
     <loc>https://hemingnm.github.io/SESraster/reference/bootspat_str.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/dot-fit.memory.html</loc>
   </url>
   <url>
     <loc>https://hemingnm.github.io/SESraster/reference/dot-lyr.sample.html</loc>
@@ -46,6 +52,9 @@
     <loc>https://hemingnm.github.io/SESraster/reference/dot-str.sample.html</loc>
   </url>
   <url>
+    <loc>https://hemingnm.github.io/SESraster/reference/fit.memory.html</loc>
+  </url>
+  <url>
     <loc>https://hemingnm.github.io/SESraster/reference/fr2prob.html</loc>
   </url>
   <url>
@@ -53,5 +62,8 @@
   </url>
   <url>
     <loc>https://hemingnm.github.io/SESraster/reference/load_ext_data.html</loc>
+  </url>
+  <url>
+    <loc>https://hemingnm.github.io/SESraster/reference/plot_alg_metrics.html</loc>
   </url>
 </urlset>

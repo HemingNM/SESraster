@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">SESraster</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,8 +24,9 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/S1-get-started.html">Introduction to SESraster</a>
-    <a class="dropdown-item" href="../articles/S2-null-models.html">Null-model algorithms</a>
+    <a class="dropdown-item" href="../articles/null-models.html">Null model algorithms</a>
+    <a class="dropdown-item" href="../articles/spatial-null-models.html">Spatial null model algorithms in SESraster</a>
+    <a class="dropdown-item" href="../articles/SES.html">Standardized effect sizes</a>
   </div>
 </li>
 <li class="active nav-item">
@@ -51,6 +52,25 @@
       <small>Source: <a href="https://github.com/HemingNM/SESraster/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.7.0" id="sesraster-070">SESraster 0.7.0<a class="anchor" aria-label="anchor" href="#sesraster-070"></a></h2>
+<ul><li>bug fixes
+<ul><li>bug fix on attachMSG</li>
+</ul></li>
+<li>new functions
+<ul><li>added <code><a href="../reference/SESraster.html">SESraster()</a></code> to handle aleatorizations</li>
+<li>added <code><a href="../reference/algorithm_metrics.html">algorithm_metrics()</a></code> to compare original and randomized rasters</li>
+<li>added <code><a href="../reference/plot_alg_metrics.html">plot_alg_metrics()</a></code> to plot site and species difference metrics between original and randomized rasters</li>
+</ul></li>
+<li>function changes
+<ul><li>changed function name from .fit.memory() to fit.memory() and added argument “n”</li>
+<li>Added cross links to functions</li>
+</ul></li>
+<li>vignette
+<ul><li>added vignette to exemplify how <code><a href="../reference/SESraster.html">SESraster()</a></code> works</li>
+<li>changed order of vignettes</li>
+</ul></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.2" id="sesraster-062">SESraster 0.6.2<a class="anchor" aria-label="anchor" href="#sesraster-062"></a></h2><p class="text-muted">CRAN release: 2023-07-05</p>
 <ul><li>bux fixes

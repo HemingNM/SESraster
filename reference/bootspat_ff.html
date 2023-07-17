@@ -20,7 +20,7 @@ being sampled for each species."><meta property="og:image" content="https://hemi
     
     <a class="navbar-brand me-2" href="../index.html">SESraster</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,9 @@ being sampled for each species."><meta property="og:image" content="https://hemi
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/S1-get-started.html">Introduction to SESraster</a>
-    <a class="dropdown-item" href="../articles/S2-null-models.html">Null-model algorithms</a>
+    <a class="dropdown-item" href="../articles/null-models.html">Null model algorithms</a>
+    <a class="dropdown-item" href="../articles/spatial-null-models.html">Spatial null model algorithms in SESraster</a>
+    <a class="dropdown-item" href="../articles/SES.html">Standardized effect sizes</a>
   </div>
 </li>
 <li class="nav-item">
@@ -157,7 +158,8 @@ incidence equals the observed frequency of incidence (Nj).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="bootspat_str.html">bootspat_str</a></code>, <code><a href="bootspat_naive.html">bootspat_naive</a></code></p></div>
+    <div class="dont-index"><p><code><a href="bootspat_str.html">bootspat_str</a></code>, <code><a href="bootspat_naive.html">bootspat_naive</a></code>,
+<code><a href="SESraster.html">SESraster</a></code>, <code><a href="algorithm_metrics.html">algorithm_metrics</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -169,7 +171,6 @@ incidence equals the observed frequency of incidence (Nj).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># load random species distributions</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HemingNM/SESraster" class="external-link">SESraster</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> terra 1.7.39</span>
 <span class="r-in"><span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_ext_data.html">load_ext_data</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="bootspat_ff-1.png" alt="" width="700" height="433"></span>
