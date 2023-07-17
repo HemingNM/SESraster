@@ -112,7 +112,7 @@ appsv <- function(x, lyrv, na.rm = FALSE, ...){
                             ifelse(all(is.na(x)), NA,
                                     sum(x*lyrv, na.rm=na.rm, ...))
                       }
-                      terra::app(x, sumw, lyrv=lyrv, na.rm, ...)
+                      stats::setNames(terra::app(x, sumw, lyrv = lyrv, na.rm=na.rm, ...), "sumw")
                     }
 set.seed(10)
 ses <- SESraster(r, FUN=appsv,
