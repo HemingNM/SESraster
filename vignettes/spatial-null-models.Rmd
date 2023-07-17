@@ -22,7 +22,6 @@ knitr::opts_chunk$set(
 
 ## Contents
 
-*   [Introduction](#intro)
 *   [Installation](#install)
 *   [Analysis](#analysis)
     + [Random species generation](#randsp)
@@ -35,17 +34,18 @@ knitr::opts_chunk$set(
       + [Fixed-Fixed](#ff)
 *   [References](#references)
 
-## Introduction {#intro}
+<br>
 
-After an overview of the [null model types](vignette(%22v1-null-models%22,%20package=%22SESraster%22)) 
-summarized in Gotelli [-@gotelli2000], let's see how the randomization algorithms
+After an overview of the null model algorithms forspecies co-occurrence analysis
+in `vignette("null-models")`, let's see how the randomization algorithms
 implemented in `SESraster` behave for spatial data.
 
-## Installation {#install}
+<br>
 
+## Installation {#install}
+Install from CRAN:
 ```{r, eval = FALSE}
 install.packages("SESraster")
-library(SESraster)
 ```
 
 The development version of `SESraster` can be installed from the [SESraster](https://github.com/HemingNM/SESraster) repository in Github:
@@ -53,14 +53,17 @@ The development version of `SESraster` can be installed from the [SESraster](htt
 ```{r, eval = FALSE}
 require(devtools)
 devtools::install_github("HemingNM/SESraster", build_vignettes = TRUE)
-library(SESraster)
 ```
+
+<br>
 
 ## Analysis {#analysis}
 
 The `SESraster` package implements functions to randomize presence/absence species distribution raster data with or without including spatial structure for calculating Standardized Effect Sizes (SES) necessary for null hypothesis testing. The function `bootspat_naive()` does not retain the spatial structure of community richness and species distribution size at the same time. It randomizes a raster stack according to the observed frequency of presences for each species (layer) using any of the following methods: sites (raster cells), species (raster layers) or both (layers and cells). This, randomization without retaining spatial structure of data, is the most commonly used method of randomization for community data. The function `bootspat_str()` does retain the spatial structure of community richness and species distribution size at the same time. It randomizes a raster stack keeping the species richness fixed across raster cells. To our knowledge this method was not previously implemented in `R`.
 
 Let's see some examples.
+
+<br>
 
 ### Random species generation {#randsp}
 
@@ -86,13 +89,17 @@ names(r) <- paste("sp", 1:nlyr(r))
 plot(r)
 ```
 
+<br>
+
 With the distributions in hand, we can perform the spatial randomizations.
+
+<br>
 
 ### Spatially Unstructured Randomization {#spat-unstr}
 
 First, let's randomize species distribution ignoring the spatial structure with the function `bootspat_naive`.
 
-#### both, by site and species simultaneously: Equiprobable-Equiprobable {#ee}
+#### Equiprobable-Equiprobable: by site and species simultaneously {#ee}
 
 We can randomize the presences/absences (1s/0s) using the method `both`. This method combines randomization by site and species at the same time. It will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time. It is equivalent to the SIM1 (equiprobable-equiprobable) method of Gotelli [-@gotelli2000]. Notice that NA cells are ignored.
 
@@ -105,7 +112,9 @@ plot(srb, legend=F)
 plot(c(sum(r), sum(srb)), main=c("observed", "randomized"))
 ```
 
-#### by species: Fixed-Equiprobable {#fe}
+<br>
+
+#### Fixed-Equiprobable: by species {#fe}
 
 We can randomize by `species`. This second method is performed at each layer (species) of the stack by randomizing the position of species presences in space. If the data fits to the computer RAM memory this randomization is equivalent to the SIM2 (fixed-equiprobable) method of Gotelli [-@gotelli2000] and to the flatland model of Laffan & Crisp [-@laffan2003]. It changes the species richness at each cell while retaining the size of the species distribution (except if randomization is performed by frequency). When running by frequency, presences/absences (1s/0s) are sampled at each pixel based on the probability (frequency) that the species is found within the study area. It is equivalent to the SIM7 (proportional-equiprobable) method of Gotelli [-@gotelli2000]. For each species, the randomized frequency of presences is very similar to the actual frequency but not exactly the same.
 
@@ -130,7 +139,9 @@ cbind(observed=sapply(r, function(x)freq(x)[2,3]),
       randomized_freq=sapply(sr1b, function(x)freq(x)[2,3]))
 ```
 
-#### by site: Equiprobable-Fixed {#ef}
+<br>
+
+#### Equiprobable-Fixed: by site {#ef}
 
 Now, we will randomize by `site`. This method randomizes the position (presence/absence) of the species within each site (cell) of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change, as more or less pixels can be randomly assigned to each species (raster layer). This randomization is equivalent to the SIM3 (equiprobable-fixed) method of Gotelli [-@gotelli2000]. Notice that, although the spatial structure of species richness is held constant, the number of pixels that each species occupy is completely randomized.
 
@@ -143,11 +154,15 @@ plot(sr2, legend=F)
 plot(c(sum(r), sum(sr2)), main=c("observed", "randomized"))
 ```
 
+<br>
+
 ### Spatially Structured Randomization {#spat-str}
 
 Notice that randomization by `site` from `bootspat_naive()` keeps the species richness fixed (i.e. equal to the input raster), but the size of the species' distribution (i.e. number of pixels of each species) is completely randomized. On the other hand, randomization by `species` keeps the number of pixels of each species fixed, but the richness is completely randomized. The functions `bootspat_str()` and `bootspat_ff()` add some constraints to the randomization. See below:
 
-#### function `bootspat_str()`: Fixed-Proportional {#fp}
+<br>
+
+#### Fixed-Proportional: function `bootspat_str()` {#fp}
 
 In the function `bootspat_str()` we implement a spatially structured randomization that keeps the species richness pattern fixed and distribution size of each species, proportional. This method is based on the second null model of Laffan & Crisp [-@laffan2003], but uses probability of sampling presences based on frequency of presences for each species. Therefore, it is equivalent to the SIM5 (proportional-fixed) method of Gotelli [-@gotelli2000]. Notice that it will lack spatial structure in the same way of randomization by `site`, however the size of the species distribution is (nearly) retained.
 
@@ -182,9 +197,10 @@ Check that the number of occupied pixels of randomized distributions are very si
 cbind(observed=sapply(r, function(x)freq(x)[2,3]),
       randomized=sapply(randr10, function(x)freq(x)[2,3]))
 ```
-  
-  
-#### function `bootspat_ff()`: Fixed-Fixed {#ff}
+
+<br>
+
+#### Fixed-Fixed: function `bootspat_ff()`{#ff}
 
 In the function `bootspat_ff()` we implement a spatially structured randomization that keeps both, the species richness pattern and species distribution size, fixed. This method is equivalent to the SIM9 (fixed-fixed) method of Gotelli [-@gotelli2000] and is based on the null model of Connor & Simberloff [-@connor1979], but has some differences.
 
@@ -222,5 +238,12 @@ Check that the number of occupied pixels of randomized distributions are very si
 cbind(observed=sapply(r, function(x)freq(x)[2,3]),
       randomized=sapply(randff, function(x)freq(x)[2,3]))
 ```
+
+<br>
+
+## Standardized effect sizes 
+Time to compute standardized effect sizes (SES) using the implemented null model algorithms: `vignette("SES")`.
+
+<br>
 
 ## References {#references}

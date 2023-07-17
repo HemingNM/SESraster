@@ -36,6 +36,11 @@ knitr::opts_chunk$set(
 
 <br>
 
+After understanding how the spatial null model algorithms work (`vignette("spatial-null-models")`),
+let's see how to create multiple null models and test for the effect size using `SESraster()`. 
+
+<br>
+
 ## Standardized effect size {#ses}
 
 Standardized effect size (SES) is a measure of the magnitude of the
@@ -49,7 +54,7 @@ the randomized observations $SES = (Obs-mean(Null))/sd(Null)$.
 
 ## Calculating SES {#analysis}
 ### Random species generation {#randsp}
-Now, let's see some of the package features. First, we will create some
+First, we will create some
 random species distributions using the package `terra`.
 
 ```{r, rand-spp, fig.height=4, fig.width=4}

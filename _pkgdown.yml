@@ -6,6 +6,8 @@ template:
     pkgdown-nav-height: 100px
   navbar:
   #  bg: dark
+deploy:
+  install_metadata: true
 articles:
 - title: Articles
   navbar: ~

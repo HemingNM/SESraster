@@ -24,9 +24,13 @@ knitr::opts_chunk$set(
 -   [Algorithms](#algorithms)
 -   [References](#references)
 
+<br>
+
 ## Introduction {#intro}
 
 Null models have been widely used to analyze the patterns observed in nature in the attempt to understand the ecological and evolutionary mechanisms structuring the biological communities. A null model is a simplified representation of how species would be distributed or biological communities be assembled if specific ecological processes were not operating. Until now, algorithms were designed to create null models using matrix data. The package [`SESraster`](https://github.com/HemingNM/SESraster) covers a current gap by implementing randomization algorithms to build null models using presence/absence raster data.
+
+<br>
 
 ## Algorithms {#algorithms}
 
@@ -73,5 +77,13 @@ kable(d, dbooktabs = TRUE, align=c("r", "c", "c", "c", "c"), escape = F,
   column_spec(5, background=c("#B4EEB4"))
 
 ```
+
+<br>
+
+## Spatial null model algorithms in SESraster
+Time to get started with `SESraster`: `vignette("spatial-null-models")`. 
+See installation instructions and how the implemented null model algorithms work with spatial data.
+
+<br>
 
 ## References {#references}

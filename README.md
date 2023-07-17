@@ -29,26 +29,20 @@ install_github("HemingNM/SESraster", build_vignettes = TRUE)
 
 ### SESraster basics
 
-Basic information about the package can be found below, at the [package's webpage](https://hemingnm.github.io/SESraster/), or as vignettes:
-
-```         
-browseVignettes("SESraster")
-```
+Basic information about the package can be found below, at the [package's webpage](https://hemingnm.github.io/SESraster/), or in the vignettes
+`browseVignettes("SESraster")`
+<br>
 
 - #### Null model algorithms
-An overview of the
-[null model algorithms](https://hemingnm.github.io/SESraster/articles/null-models.html)
-for species co-occurrence analysis summarized in (Gotelli 2000, <doi:10.2307/177478>).
+`vignette("null-models")`: For an overview of the null model algorithms for 
+species co-occurrence analysis summarized in (Gotelli 2000, <doi:10.2307/177478>).
 
 - #### Spatial null model algorithms in SESraster
-For installation instructions and to see how the null model algorithms
-implemented in `SESraster` work for spatial data,
-just [get started](https://hemingnm.github.io/SESraster/articles/spatial-null-models.html).
+`vignette("spatial-null-models")`: Get started with `SESraster`. 
+See installation instructions and how the implemented null model algorithms work with spatial data.
 
-- #### Standardized effect sizes 
-For computing standardized effect sizes (SES) using `SESraster()` function and
-the null model algorithms implemented in the package, take a look at 
-[SES computation](https://hemingnm.github.io/SESraster/articles/SES.html).
+- #### Standardized effect sizes
+`vignette("SES")`: For computing standardized effect sizes (SES) using the implemented null model algorithms.
 
 <br>
 
