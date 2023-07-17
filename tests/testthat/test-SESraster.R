@@ -60,7 +60,8 @@ test_that("SES works", {
   ses <- SESraster(r, FUN=appsv, FUN_args = list(lyrv = seq_len(terra::nlyr(r)), na.rm = TRUE),
                    Fa_sample = "lyrv",
                    Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
-                   aleats = aleats)
+                   aleats = aleats,
+                   filename = paste0(tempfile(),"ses.tif"))
   # names(ses)
   nms <- paste0(c("Observed", "Null_Mean", "Null_SD" ,"SES"), ".", n2)
   expect_equal(unlist(ses[1]), setNames(as.double(rep(NA, terra::nlyr(ses))), nms))
@@ -68,6 +69,22 @@ test_that("SES works", {
   expect_equal(unlist(ses[2]), setNames(c(0, 0, 0, 0), nms))
 
   expect_equal(round(sd(terra::values(ses[[2]]), na.rm = TRUE), 3), as.double(4.413)) # test spat variation
+
+  expect_error(SESraster(r, FUN=appsv, FUN_args = list(lyrv = seq_len(terra::nlyr(r)), na.rm = TRUE),
+                         Fa_sample = numeric(1),
+                         Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
+                         aleats = aleats))
+
+  expect_warning(SESraster(r, FUN=appsv, FUN_args = list(lyrv = seq_len(terra::nlyr(r)), na.rm = TRUE),
+                         Fa_sample = c("lyrv", "appmean"),
+                         Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
+                         aleats = aleats))
+
+  expect_error(SESraster(r, FUN=appsv, FUN_args = list(lyrv = seq_len(terra::nlyr(r)), na.rm = TRUE),
+                         Fa_sample = c("appmean"),
+                         Fa_alg = "sample", Fa_alg_args = list(replace=TRUE),
+                         aleats = aleats))
+  unlink(paste0(tempfile(),"ses.tif"))
 })
 
 
