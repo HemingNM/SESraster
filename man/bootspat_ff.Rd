@@ -121,7 +121,8 @@ cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
 Connor, E. F., & Simberloff, D. (1979). The Assembly of Species Communities: Chance or Competition? Ecology, 60(6), 1132–1140.
 }
 \seealso{
-\code{\link{bootspat_str}}, \code{\link{bootspat_naive}}
+\code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
+\code{\link{SESraster}}, \code{\link{algorithm_metrics}}
 }
 \author{
 Neander Marcel Heming

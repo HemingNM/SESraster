@@ -101,7 +101,8 @@ cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
 
 }
 \seealso{
-\code{\link{bootspat_naive}}
+\code{\link{bootspat_naive}}, \code{\link{bootspat_ff}},
+\code{\link{SESraster}}, \code{\link{algorithm_metrics}}
 }
 \author{
 Neander Marcel Heming

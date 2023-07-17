@@ -1,6 +1,6 @@
 Package: SESraster
 Title: Raster Randomization for Null Hypothesis Testing
-Version: 0.6.2
+Version: 0.7.0
 Authors@R: c(
     person("Neander Marcel", "Heming", , "neanderh@yahoo.com.br", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0003-2461-5045")),
@@ -13,8 +13,8 @@ Description: Randomization of presence/absence species distribution raster
     data with or without including spatial structure for calculating
     standardized effect sizes and testing null hypothesis. The
     randomization algorithms are based on classical algorithms for
-    matrices (Gotelli 2000, <doi:10.2307/177478>) implemented for
-    raster data.
+    matrices (Gotelli 2000, <doi:10.2307/177478>) implemented for raster
+    data.
 License: GPL (>= 3)
 URL: https://github.com/HemingNM/SESraster,
     https://hemingnm.github.io/SESraster/
@@ -22,7 +22,12 @@ BugReports: https://github.com/HemingNM/SESraster/issues
 Depends: 
     R (>= 2.10)
 Imports: 
-    terra
+    graphics,
+    methods,
+    rlang,
+    stats,
+    terra,
+    utils
 Suggests: 
     kableExtra,
     knitr,

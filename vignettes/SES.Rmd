@@ -1,0 +1,225 @@
+---
+title: "Standardized effect sizes"
+author: "Neander M. Heming, Flávio Mota, and Gabriela Alves-Ferreira"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Standardized effect sizes}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+bibliography: references.bib
+# csl: restoration-ecology.csl
+# biblio-style: apelike
+link-citations: true
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Contents
+
+-   [Standardized effect sizes](#ses)
+-   [Calculating SES](#analysis)
+    -   [Random species generation](#randsp)
+    -   [SES with spatial randomization](#ses-spat)
+    -   [SES from species trait randomization](#ses-trait)
+-   [Conclusion](#concl)
+-   [References](#references)
+
+<br>
+
+## Standardized effect size {#ses}
+
+Standardized effect size (SES) is a measure of the magnitude of the
+studied effect. It indicates the direction and the degree that the
+effect departures from the null model. SESraster uses Cohen's *d* [@cohen1988], 
+which is measured as the difference between the observed pattern and the 
+average of *n* randomized observations divided by the standard deviation of 
+the randomized observations $SES = (Obs-mean(Null))/sd(Null)$.
+
+<br>
+
+## Calculating SES {#analysis}
+### Random species generation {#randsp}
+Now, let's see some of the package features. First, we will create some
+random species distributions using the package `terra`.
+
+```{r, rand-spp, fig.height=4, fig.width=4}
+library(SESraster)
+library(terra)
+# creating random species distributions
+f <- system.file("ex/elev.tif", package="terra")
+r <- rast(f)
+set.seed(510)
+r <- rast(lapply(1:18,
+                function(i, r, mn, mx){
+                  app(r, function(x, t){
+                    sapply(x, function(x, t){
+                       x<max(t) & x>min(t)
+                    }, t = t)
+                  }, t = sample(seq(mn, mx), 2))
+                }, r = r, mn = minmax(r)[1]+10, mx = minmax(r)[2]-10))
+
+names(r) <- paste("sp", 1:nlyr(r))
+plot(r)
+```
+
+<br>
+
+With the distributions in hand, we can perform the spatial
+randomizations.
+
+<br>
+
+### SES with spatial randomization {#ses-spat}
+First we need a function that computes the desired metric. The function
+must work with spatial data. Just to exemplify, we are creating a
+function to compute the mean of presences and absences (1/0) within each
+cell. You probably wants to use a more ecologically meaningful function,
+but here is just an example of use.
+
+```{r, ses-fun}
+appmean <- function(x, ...){
+                      terra::app(x, "mean", ...)
+}
+```
+
+<br>
+
+Now, to compute SES, we will compute our desired metric by sending our
+function `appmean()` to `SESraster()` through `FUN` argument. We also randomize the
+original data by `species` using the `bootspat_naive()` algorithm
+and passing the argument `random="species"` through `spat_alg_args`.
+
+```{r, ses-spat-sp, fig.height=4, fig.width=4}
+ses.sp <- SESraster(r, FUN = appmean, 
+                    spat_alg = "bootspat_naive", spat_alg_args = list(random = "species"),
+                    aleats = 5)
+plot(ses.sp)
+```
+
+<br>
+
+Compute metric and SES using `bootspat_naive()` and randomize by `site`
+changing the argument to `random="site"` in `spat_alg_args`.
+
+```{r, ses-spat-st, fig.height=4, fig.width=4}
+ses.st <- SESraster(r, FUN = appmean,
+                    spat_alg = "bootspat_naive", spat_alg_args = list(random = "site"),
+                    aleats = 5)
+plot(ses.st)
+```
+
+<br>
+
+#### Passing arguments to `FUN` {#ses-fun-arg}
+It is also possible to send arguments to the function that calculates the
+desired metric (`FUN`). It can be done by sending a list of arguments 
+through `FUN_args`.
+
+```{r, ses-spat-na1, fig.height=4, fig.width=4}
+## let's create some missing values for layer/species 1
+r2 <- r
+set.seed(10)
+cellsNA <- terra::spatSample(r2, 30, na.rm = TRUE, cells = TRUE, values = FALSE)
+r2[cellsNA][1] <- NA
+# plot(r)
+set.seed(10)
+sesNA <- SESraster(r2, FUN = appmean, FUN_args = list(na.rm = FALSE),
+                   spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
+                   aleats = 5)
+head(sesNA[cellsNA])
+plot(sesNA)
+```
+
+<br>
+
+Notice that NAs can be ignored by the `appmean()` function by using
+`FUN_args = list(na.rm = TRUE)`:
+```{r, ses-spat-na2, fig.height=4, fig.width=4}
+set.seed(10)
+ses.woNA <- SESraster(r2, FUN = appmean, FUN_args = list(na.rm = TRUE), 
+                      spat_alg = "bootspat_naive", spat_alg_args=list(random = "species"),
+                      aleats = 5)
+head(ses.woNA[cellsNA])
+plot(ses.woNA)
+```
+
+<br>
+
+### SES from species trait randomization {#ses-trait}
+In addition to the spatial randomizations, it is possible to create a 
+null model by randomizing a parameter (i.e. argument) of the metric passed to FUN.
+This is useful, for example, to randomize a species trait (e.g. branch length) 
+that is used to compute the metric. In the example below the function `appsv()`
+uses the argument `lyrv` to compute the fictional metric. We also create some
+fictional values for the trait.
+
+```{r, ses-ftrait, fig.height=4, fig.width=4}
+## example with `Fa_alg`
+appsv <- function(x, lyrv, na.rm = FALSE, ...){
+                      sumw <- function(x, lyrv, na.rm, ...){
+                        ifelse(all(is.na(x)), NA,
+                               sum(x*lyrv, na.rm=na.rm, ...))
+                      }
+                      stats::setNames(terra::app(x, sumw, lyrv = lyrv, na.rm=na.rm, ...), "sumw")
+}
+
+set.seed(10)
+trait  <- sample(100:2000, nlyr(r))
+trait
+```
+
+<br>
+
+In this exapmle, no spatial randomization will be performed, only trait randomization.
+To select the _trait_ to be randomized, pick the desired argument of `FUN_args` 
+using `Fa_sample` and the name of the desired argument (here "lyrv"). 
+Then select a function, here "sample" is used. It is also possible to send
+arguments to the function in `Fa_alg` through `Fa_alg_args`. It works in the same way
+that arguments are sent to `FUN` and `spat_alg` through `FUN_args` and `spat_alg_args`.
+<br>
+In this first example it is performed a trait sampling **without** replacement.
+```{r, ses-trait1, fig.height=4, fig.width=4}
+set.seed(10)
+ses <- SESraster(r, FUN = appsv,
+                 FUN_args = list(lyrv = trait, na.rm = TRUE),
+                    Fa_sample = "lyrv",
+                    Fa_alg = "sample", Fa_alg_args = list(replace = FALSE),
+                    aleats = 5)
+plot(ses)
+```
+
+<br>
+
+In this second example it is performed a trait sampling **with** replacement by
+passing `replace = TRUE` through `Fa_alg_args`.
+```{r, ses-trait2, fig.height=4, fig.width=4}
+set.seed(10)
+ses <- SESraster(r, FUN = appsv,
+                 FUN_args = list(lyrv = trait, na.rm = TRUE),
+                    Fa_sample = "lyrv",
+                    Fa_alg = "sample", Fa_alg_args = list(replace = TRUE),
+                    aleats = 5)
+plot(ses)
+```
+
+<br>
+
+## Conclusion {#concl}
+The `SESraster` R package aims to simplify the randomization of raster data and the 
+calculation of standardized effect sizes for spatial data. We hope it is useful 
+to analize the vast amount of raster data generated for the analysis of
+biogeographycal and macroecological patterns.
+
+<br>
+
+## References {#references}

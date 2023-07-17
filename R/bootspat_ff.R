@@ -30,7 +30,8 @@
 #' @inheritParams bootspat_str
 #' @inheritParams terra::app
 #' @param ... additional parameters for terra::app
-#' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_naive}}
+#' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_naive}},
+#' \code{\link{SESraster}}, \code{\link{algorithm_metrics}}
 #' @author Neander Marcel Heming
 #'
 #' @references Connor, E. F., & Simberloff, D. (1979). The Assembly of Species Communities: Chance or Competition? Ecology, 60(6), 1132–1140.

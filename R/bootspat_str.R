@@ -99,7 +99,9 @@ fr2prob <- function(x, rprob=NULL){
 #' @param memory logical. Checks if there is enough available RAM memory. Calculated if NULL
 #' @inheritParams terra::app
 #' @param ... additional parameters for terra::app
-#' @seealso \code{\link{bootspat_naive}}
+#' @seealso \code{\link{bootspat_naive}}, \code{\link{bootspat_ff}},
+#' \code{\link{SESraster}}, \code{\link{algorithm_metrics}}
+#'
 #' @author Neander Marcel Heming
 #'
 #' @examples
@@ -155,9 +157,9 @@ fr2prob <- function(x, rprob=NULL){
 #' @export
 bootspat_str <- function(x, rprob=NULL, rich=NULL, fr_prob=NULL, cores = 1, filename = "", memory = NULL, overwrite = FALSE, ...){
 
-  if(is.null(memory)){
-    memory <- .fit.memory(x)
-  }
+  # if(is.null(memory)){
+  #   memory <- fit.memory(x, n=3)
+  # }
 
   if(is.null(fr_prob)){
     fr_prob <- fr2prob(x, rprob)

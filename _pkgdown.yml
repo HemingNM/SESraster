@@ -6,3 +6,10 @@ template:
     pkgdown-nav-height: 100px
   navbar:
   #  bg: dark
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - null-models
+  - spatial-null-models
+  - SES

@@ -1,3 +1,22 @@
+# SESraster 0.7.0
+
+* bug fixes
+  - bug fix on attachMSG
+
+* new functions
+  - added `SESraster()` to handle aleatorizations
+  - added `algorithm_metrics()` to compare original and randomized rasters
+  - added `plot_alg_metrics()` to plot site and species difference metrics 
+  between original and randomized rasters
+
+* function changes
+  - changed function name from .fit.memory() to fit.memory() and added argument "n"
+  - Added cross links to functions
+
+* vignette
+  - added vignette to exemplify how `SESraster()` works
+  - changed order of vignettes
+  
 # SESraster 0.6.2
 
 * bux fixes
@@ -19,5 +38,6 @@ species were absent from a cell (i.e. all values are zero)
 Released 2023-06-23
 
 * Initial CRAN submission.
+
 
 

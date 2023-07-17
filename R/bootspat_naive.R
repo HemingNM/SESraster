@@ -44,7 +44,8 @@
 #' @details The first method (site) is performed within each site (cell) by randomizing the position (presence/absence) of the species within each cell of the stack. This method keeps species richness constant at each cell but the size of the species distribution might change. The second method (species) is performed at each layer (species) of the stack by randomizing the position of species presences in space. This method changes the species richness at each cell but the size of the species distribution is held constant (except if randomization is performed by frequency). The third method (both) combines randomization by site and species at the same time. This method will shuffle all presences across cells and layers, changing site richness and species distribution sizes and location at the same time.
 #' @param ... additional arguments to be passed passed down from a calling function.
 #' @return SpatRaster object
-#' @seealso \code{\link{bootspat_str}}
+#' @seealso \code{\link{bootspat_str}}, \code{\link{bootspat_ff}},
+#' \code{\link{SESraster}}, \code{\link{algorithm_metrics}}
 #' @author Neander Marcel Heming and Gabriela Alves-Ferreira
 #'
 #' @examples
@@ -90,7 +91,7 @@ bootspat_naive <- function(x, random = c("site", "species", "both"),
 
 
   if(is.null(memory)){
-    memory <- .fit.memory(x)
+    memory <- fit.memory(x, n=2)
   }
 
   if (random == "species"){ # randomize sites within species (layers)
