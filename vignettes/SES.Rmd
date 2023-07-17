@@ -1,10 +1,10 @@
 ---
-title: "SES calculation"
+title: "Standardized effect sizes"
 author: "Neander M. Heming, Flávio Mota, and Gabriela Alves-Ferreira"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{SES calculation}
+  %\VignetteIndexEntry{Standardized effect sizes}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 bibliography: references.bib
@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 ## Contents
 
--   [Standardized effect sizes (SES)](#ses)
+-   [Standardized effect sizes](#ses)
 -   [Calculating SES](#analysis)
     -   [Random species generation](#randsp)
     -   [SES with spatial randomization](#ses-spat)
@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
 
 <br>
 
-## Standardized effect size (SES) {#ses}
+## Standardized effect size {#ses}
 
 Standardized effect size (SES) is a measure of the magnitude of the
 studied effect. It indicates the direction and the degree that the
@@ -95,7 +95,7 @@ appmean <- function(x, ...){
 <br>
 
 Now, to compute SES, we will compute our desired metric by sending our
-function `appmean()` through `FUN` argument. We also randomize the
+function `appmean()` to `SESraster()` through `FUN` argument. We also randomize the
 original data by `species` using the `bootspat_naive()` algorithm
 and passing the argument `random="species"` through `spat_alg_args`.
 
@@ -142,7 +142,8 @@ plot(sesNA)
 
 <br>
 
-Notice that NAs can be ignored by using `FUN_args = list(na.rm = TRUE)`:
+Notice that NAs can be ignored by the `appmean()` function by using
+`FUN_args = list(na.rm = TRUE)`:
 ```{r, ses-spat-na2, fig.height=4, fig.width=4}
 set.seed(10)
 ses.woNA <- SESraster(r2, FUN = appmean, FUN_args = list(na.rm = TRUE), 
@@ -185,6 +186,7 @@ using `Fa_sample` and the name of the desired argument (here "lyrv").
 Then select a function, here "sample" is used. It is also possible to send
 arguments to the function in `Fa_alg` through `Fa_alg_args`. It works in the same way
 that arguments are sent to `FUN` and `spat_alg` through `FUN_args` and `spat_alg_args`.
+<br>
 In this first example it is performed a trait sampling **without** replacement.
 ```{r, ses-trait1, fig.height=4, fig.width=4}
 set.seed(10)
@@ -198,7 +200,8 @@ plot(ses)
 
 <br>
 
-In this second example it is performed a trait sampling **with** replacement.
+In this second example it is performed a trait sampling **with** replacement by
+passing `replace = TRUE` through `Fa_alg_args`.
 ```{r, ses-trait2, fig.height=4, fig.width=4}
 set.seed(10)
 ses <- SESraster(r, FUN = appsv,

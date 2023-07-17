@@ -27,13 +27,11 @@ install.packages("SESraster")
 ```
 
 The development version can be installed from the
-[`SESraster repository`](https://github.com/HemingNM/SESraster) in
-Github:
+[`Github`](https://github.com/HemingNM/SESraster) repository:
 
 ```         
 require(devtools)
 install_github("HemingNM/SESraster", build_vignettes = TRUE)
-library(SESraster)
 ```
 <br>
 
@@ -49,12 +47,12 @@ An overview of the
 [null model algorithms](vignette(%22v1-null-models%22,%20package=%22SESraster%22))
 for species co-occurrence analysis summarized in (Gotelli 2000, <doi:10.2307/177478>).
 
-- #### Get started with spatial null model algorithms
+- #### Spatial null model algorithms in SESraster
 For installation instructions and to see how the null model algorithms
 implemented in `SESraster` work for spatial data,
 just [get started](vignette(%22v2-get-started%22,%20package=%22SESraster%22)).
 
-- #### Standardized effect sizes (SES) computation 
+- #### Standardized effect sizes (SES) 
 For computing standardized effect sizes (SES) using `SESraster()` function and
 the null model algorithms implemented in the package, take a look at [SES
 computation](vignette(%22v3-SES-calculation%22,%20package=%22SESraster%22)).

@@ -1,10 +1,10 @@
 ---
-title: "Introduction to SESraster"
+title: "Spatial null model algorithms in SESraster"
 author: "Neander M. Heming, Flávio Mota, and Gabriela Alves-Ferreira"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to SESraster}
+  %\VignetteIndexEntry{Spatial null model algorithms in SESraster}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: references.bib
@@ -37,15 +37,14 @@ knitr::opts_chunk$set(
 
 ## Introduction {#intro}
 
-After an overview of the [null model algorithms](vignette(%22v1-null-models%22,%20package=%22SESraster%22)) 
-summarized in Gotelli ([-@gotelli2000]), let's see how the randomization algorithms
-implemented in `SESraster` behave for 
-spatial data.
+After an overview of the [null model types](vignette(%22v1-null-models%22,%20package=%22SESraster%22)) 
+summarized in Gotelli [-@gotelli2000], let's see how the randomization algorithms
+implemented in `SESraster` behave for spatial data.
 
 ## Installation {#install}
 
 ```{r, eval = FALSE}
-# install.packages("SESraster")
+install.packages("SESraster")
 library(SESraster)
 ```
 
