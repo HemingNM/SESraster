@@ -224,8 +224,8 @@ SESraster <- function(x,
   ## HD Cleanup
   unlink(temp.a) # delete the file that will not be used
   unlink(temp.raster) # delete the file that will not be used
-  unlink(paste0(temp.filename, "avg.tif"))
-  unlink(paste0(temp.filename, "sd.tif"))
+  # unlink(paste0(temp.filename, "avg.tif"))
+  # unlink(paste0(temp.filename, "sd.tif"))
   unlink(paste0(temp.filename, seq_len(nrow(rcomb)), "out.tif"))
 
   return(ses)
