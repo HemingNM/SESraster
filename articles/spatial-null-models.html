@@ -96,7 +96,6 @@ Heming, Flávio Mota, and Gabriela Alves-Ferreira</h4>
 <h2 id="contents">Contents<a class="anchor" aria-label="anchor" href="#contents"></a>
 </h2>
 <ul>
-<li><a href="#intro">Introduction</a></li>
 <li><a href="#install">Installation</a></li>
 <li>
 <a href="#analysis">Analysis</a>
@@ -121,28 +120,26 @@ Heming, Flávio Mota, and Gabriela Alves-Ferreira</h4>
 </li>
 <li><a href="#references">References</a></li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="intro">Introduction<a class="anchor" aria-label="anchor" href="#intro"></a>
-</h2>
-<p>After an overview of the <a href="vignette(%22v1-null-models%22,%20package=%22SESraster%22)">null
-model types</a> summarized in Gotelli <span class="citation">(<a href="#ref-gotelli2000" role="doc-biblioref">2000</a>)</span>, let’s see
-how the randomization algorithms implemented in <code>SESraster</code>
-behave for spatial data.</p>
+<p><br></p>
+<p>After an overview of the null model algorithms forspecies
+co-occurrence analysis in <code><a href="../articles/null-models.html">vignette("null-models")</a></code>, let’s
+see how the randomization algorithms implemented in
+<code>SESraster</code> behave for spatial data.</p>
+<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="install">Installation<a class="anchor" aria-label="anchor" href="#install"></a>
 </h2>
+<p>Install from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"SESraster"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HemingNM/SESraster" class="external-link">SESraster</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"SESraster"</span><span class="op">)</span></span></code></pre></div>
 <p>The development version of <code>SESraster</code> can be installed
 from the <a href="https://github.com/HemingNM/SESraster" class="external-link">SESraster</a>
 repository in Github:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"HemingNM/SESraster"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/HemingNM/SESraster" class="external-link">SESraster</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"HemingNM/SESraster"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p><br></p>
 </div>
 <div class="section level2">
 <h2 id="analysis">Analysis<a class="anchor" aria-label="anchor" href="#analysis"></a>
@@ -164,6 +161,7 @@ same time. It randomizes a raster stack keeping the species richness
 fixed across raster cells. To our knowledge this method was not
 previously implemented in <code>R</code>.</p>
 <p>Let’s see some examples.</p>
+<p><br></p>
 <div class="section level3">
 <h3 id="randsp">Random species generation<a class="anchor" aria-label="anchor" href="#randsp"></a>
 </h3>
@@ -193,8 +191,10 @@ some random species distributions using the package
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"sp"</span>, <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/dimensions.html" class="external-link">nlyr</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial-null-models_files/figure-html/rand-spp-1.png" width="576"></p>
+<p><br></p>
 <p>With the distributions in hand, we can perform the spatial
 randomizations.</p>
+<p><br></p>
 </div>
 <div class="section level3">
 <h3 id="spat-unstr">Spatially Unstructured Randomization<a class="anchor" aria-label="anchor" href="#spat-unstr"></a>
@@ -202,8 +202,7 @@ randomizations.</p>
 <p>First, let’s randomize species distribution ignoring the spatial
 structure with the function <code>bootspat_naive</code>.</p>
 <div class="section level4">
-<h4 id="ee">both, by site and species simultaneously:
-Equiprobable-Equiprobable<a class="anchor" aria-label="anchor" href="#ee"></a>
+<h4 id="ee">Equiprobable-Equiprobable: by site and species simultaneously<a class="anchor" aria-label="anchor" href="#ee"></a>
 </h4>
 <p>We can randomize the presences/absences (1s/0s) using the method
 <code>both</code>. This method combines randomization by site and
@@ -219,9 +218,10 @@ that NA cells are ignored.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">srb</span><span class="op">)</span><span class="op">)</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"observed"</span>, <span class="st">"randomized"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial-null-models_files/figure-html/naive-both-rich-1.png" width="576"></p>
+<p><br></p>
 </div>
 <div class="section level4">
-<h4 id="fe">by species: Fixed-Equiprobable<a class="anchor" aria-label="anchor" href="#fe"></a>
+<h4 id="fe">Fixed-Equiprobable: by species<a class="anchor" aria-label="anchor" href="#fe"></a>
 </h4>
 <p>We can randomize by <code>species</code>. This second method is
 performed at each layer (species) of the stack by randomizing the
@@ -272,9 +272,10 @@ are similar to those of the observed distributions.</p>
 <span><span class="co">#&gt; [16,]     2198       2198            2216</span></span>
 <span><span class="co">#&gt; [17,]     2427       2427            2392</span></span>
 <span><span class="co">#&gt; [18,]      235        235             229</span></span></code></pre></div>
+<p><br></p>
 </div>
 <div class="section level4">
-<h4 id="ef">by site: Equiprobable-Fixed<a class="anchor" aria-label="anchor" href="#ef"></a>
+<h4 id="ef">Equiprobable-Fixed: by site<a class="anchor" aria-label="anchor" href="#ef"></a>
 </h4>
 <p>Now, we will randomize by <code>site</code>. This method randomizes
 the position (presence/absence) of the species within each site (cell)
@@ -292,6 +293,7 @@ that each species occupy is completely randomized.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/terra/man/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">sr2</span><span class="op">)</span><span class="op">)</span>, main<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"observed"</span>, <span class="st">"randomized"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="spatial-null-models_files/figure-html/naive-site-rich-1.png" width="576"></p>
+<p><br></p>
 </div>
 </div>
 <div class="section level3">
@@ -306,8 +308,9 @@ keeps the number of pixels of each species fixed, but the richness is
 completely randomized. The functions <code><a href="../reference/bootspat_str.html">bootspat_str()</a></code> and
 <code><a href="../reference/bootspat_ff.html">bootspat_ff()</a></code> add some constraints to the randomization.
 See below:</p>
+<p><br></p>
 <div class="section level4">
-<h4 id="fp">function <code>bootspat_str()</code>: Fixed-Proportional<a class="anchor" aria-label="anchor" href="#fp"></a>
+<h4 id="fp">Fixed-Proportional: function <code>bootspat_str()</code><a class="anchor" aria-label="anchor" href="#fp"></a>
 </h4>
 <p>In the function <code><a href="../reference/bootspat_str.html">bootspat_str()</a></code> we implement a spatially
 structured randomization that keeps the species richness pattern fixed
@@ -371,9 +374,10 @@ are very similar those of the observed distributions.</p>
 <span><span class="co">#&gt; [16,]     2198       2193</span></span>
 <span><span class="co">#&gt; [17,]     2427       2483</span></span>
 <span><span class="co">#&gt; [18,]      235        182</span></span></code></pre></div>
+<p><br></p>
 </div>
 <div class="section level4">
-<h4 id="ff">function <code>bootspat_ff()</code>: Fixed-Fixed<a class="anchor" aria-label="anchor" href="#ff"></a>
+<h4 id="fixed-fixed-function-bootspat_ff">Fixed-Fixed: function <code id="ff">bootspat_ff()</code><a class="anchor" aria-label="anchor" href="#fixed-fixed-function-bootspat_ff"></a>
 </h4>
 <p>In the function <code><a href="../reference/bootspat_ff.html">bootspat_ff()</a></code> we implement a spatially
 structured randomization that keeps both, the species richness pattern
@@ -441,8 +445,16 @@ are very similar those of the observed distributions.</p>
 <span><span class="co">#&gt; [16,]     2198       2198</span></span>
 <span><span class="co">#&gt; [17,]     2427       2427</span></span>
 <span><span class="co">#&gt; [18,]      235        235</span></span></code></pre></div>
+<p><br></p>
 </div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="standardized-effect-sizes">Standardized effect sizes<a class="anchor" aria-label="anchor" href="#standardized-effect-sizes"></a>
+</h2>
+<p>Time to compute standardized effect sizes (SES) using the implemented
+null model algorithms: <code><a href="../articles/SES.html">vignette("SES")</a></code>.</p>
+<p><br></p>
 </div>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
