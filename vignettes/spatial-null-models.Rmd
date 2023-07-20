@@ -232,7 +232,7 @@ See unchanged spatial pattern of species richness.
 plot(c(sum(r), sum(randff), sum(r)-sum(randff)), main=c("observed", "randomized", "difference"), nr=1)
 ```
 
-Check that the number of occupied pixels of randomized distributions are very similar those of the observed distributions.
+Check that the number of occupied pixels of the randomized and the observed distributions are the same.
 
 ```{r, table-freqff}
 cbind(observed=sapply(r, function(x)freq(x)[2,3]),
