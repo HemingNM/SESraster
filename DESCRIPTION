@@ -33,6 +33,7 @@ Suggests:
     kableExtra,
     knitr,
     rmarkdown,
+    bookdown,
     testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
