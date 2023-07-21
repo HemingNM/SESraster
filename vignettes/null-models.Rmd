@@ -2,10 +2,10 @@
 title: "Null model algorithms"
 author: "Neander M. Heming, Flávio Mota, and Gabriela Alves-Ferreira"
 date: "`r Sys.Date()`"
-output: 
-  bookdown::html_document2:
-      base_format: rmarkdown::html_vignette
-      number_sections: FALSE
+output: rmarkdown::html_vignette
+  #bookdown::html_document2:
+  #    base_format: rmarkdown::html_vignette
+  #    number_sections: FALSE
 vignette: >
   %\VignetteIndexEntry{Null model algorithms}
   %\VignetteEngine{knitr::rmarkdown}
@@ -39,7 +39,7 @@ Null models have been widely used to analyze the patterns observed in nature in 
 
 ## Algorithms {#algorithms}
 
-The data for null model analyses usually consists of a binary presence-absence matrix, in which the entries represent the presence (1) or absence (0) of a particular species in a particular site, rows represent species or taxa, columns represent sites or samples [@ulrich2012]. Gotelli [-@gotelli2000] summarizes nine null model algorithms for species co-occurrence analysis based on how sums of species (originally rows) and sites (originally columns) are treated (i.e. fixed, equiprobable, or proportional sums; see Table \@ref(tab:table1)) [@gotelli2000]. When using raster data, layers represent species or taxa and cells represent sites or samples. `SESraster` currently implements six (green cells in Table \@ref(tab:table1)) of the nine algorithms for co-occurrence analysis.
+The data for null model analyses usually consists of a binary presence-absence matrix, in which the entries represent the presence (1) or absence (0) of a particular species in a particular site, rows represent species or taxa, columns represent sites or samples [@ulrich2012]. There are nine major types of null model algorithms for species co-occurrence analysis based on how sums of species (originally rows) and sites (originally columns) are treated (i.e. fixed, equiprobable, or proportional sums; see Table 1; Table 2 of [@gotelli2000]). When using raster data, layers represent species or taxa and cells represent sites or samples. `SESraster` currently implements six (green cells in Table 1) of the nine algorithms for co-occurrence analysis summarized by Gotelli [-@gotelli2000].
 
 ```{r table1-data, echo=FALSE}
 type <- c("Equiprobable", "Proportional", "Fixed")
@@ -75,7 +75,7 @@ colnames(d) <- c(" ", " ", paste0("", type))
 # opts_current$append(list(label = "table1"))
 kable(d, dbooktabs = TRUE, align=c("r", "c", "c", "c", "c"), escape = F, 
       label = "table1", #format = "html",
-      caption = "Nine null model algorithms for species co-occurrence analysis listed in Gotelli (2000). Cells in green represent the algorithms currently implemented in SESraster.") %>%
+      caption = "Table 1. Nine null model algorithms for species co-occurrence analysis listed in Gotelli (2000). Cells in green represent the algorithms currently implemented in SESraster.") %>%
   collapse_rows() %>%
   kable_styling(bootstrap_options = c("bordered")) %>%
   add_header_above(c(" " = 2, "Site (Col, Cell)" = 3), background = "#F2F2F2") %>%
