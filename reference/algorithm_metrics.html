@@ -138,7 +138,7 @@ between actual and bootstrapped site (cell) richness</p></li>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://CRAN.R-project.org/package=SESraster" class="external-link">SESraster</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="load_ext_data.html">load_ext_data</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">algorithm_metrics</span><span class="op">(</span><span class="va">r</span>, spat_alg <span class="op">=</span> <span class="st">"bootspat_naive"</span>, spat_alg_args<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>random<span class="op">=</span><span class="st">"species"</span><span class="op">)</span>, aleats <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">algorithm_metrics</span><span class="op">(</span><span class="va">r</span>, spat_alg <span class="op">=</span> <span class="st">"bootspat_naive"</span>, spat_alg_args<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>random<span class="op">=</span><span class="st">"species"</span><span class="op">)</span>, aleats <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $spp_metrics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     actual rand_avg rand_sd rand_min rand_max sp_reldiff global_reldiff</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> sp1      1        1       0        1        1          0              0</span>
@@ -164,28 +164,28 @@ between actual and bootstrapped site (cell) richness</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> coord. ref. : lon/lat WGS 84 (EPSG:4326) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> source(s)   : memory</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> names       : mean_diff, sd_diff, min_diff, max_diff </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> min values  :     -2.25,     0.5,       -3,       -1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> max values  :      2.75,     1.5,        2,        4 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> names       : mean_diff,  sd_diff, min_diff, max_diff </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> min values  : -2.333333, 0.000000,       -3,       -2 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> max values  :  3.000000, 1.732051,        2,        4 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span><span class="fu">algorithm_metrics</span><span class="op">(</span><span class="va">r</span>, spat_alg <span class="op">=</span> <span class="st">"bootspat_naive"</span>, spat_alg_args<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>random<span class="op">=</span><span class="st">"site"</span><span class="op">)</span>, aleats <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">algorithm_metrics</span><span class="op">(</span><span class="va">r</span>, spat_alg <span class="op">=</span> <span class="st">"bootspat_naive"</span>, spat_alg_args<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>random<span class="op">=</span><span class="st">"site"</span><span class="op">)</span>, aleats <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $spp_metrics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     actual rand_avg   rand_sd rand_min rand_max  sp_reldiff global_reldiff</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp1      1    10.25 0.9574271        9       11  9.25000000     0.38541667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp2     14    13.75 1.8929694       11       15 -0.01785714    -0.01041667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp3      9     9.75 1.2583057        8       11  0.08333333     0.03125000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp4     12    10.00 2.1602469        7       12 -0.16666667    -0.08333333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp5     12    12.25 2.5000000        9       15  0.02083333     0.01041667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp6     10    12.00 3.4641016        7       15  0.20000000     0.08333333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp7     23    13.00 0.8164966       12       14 -0.43478261    -0.41666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp1      1 11.00000 2.6457513        9       14 10.00000000     0.41666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp2     14 13.33333 2.0816660       11       15 -0.04761905    -0.02777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp3      9 10.33333 1.5275252        9       12  0.14814815     0.05555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp4     12 11.33333 3.2145503        9       15 -0.05555556    -0.02777778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp5     12 11.66667 2.3094011        9       13 -0.02777778    -0.01388889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp6     10 11.33333 0.5773503       11       12  0.13333333     0.05555556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp7     23 12.00000 4.5825757        7       16 -0.47826087    -0.45833333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     sp_reldiff_l sp_reldiff_u global_reldiff_l global_reldiff_u</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp1   8.29257289  10.20742711       0.34552387      0.425309463</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp2  -0.15306925   0.11735496      -0.08929039      0.068457060</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp3  -0.05647842   0.22314508      -0.02117941      0.083679406</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp4  -0.34668724   0.01335391      -0.17334362      0.006676954</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp5  -0.18750000   0.22916667      -0.09375000      0.114583333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp6  -0.14641016   0.54641016      -0.06100423      0.227670901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sp7  -0.47028246  -0.39928276      -0.45068736     -0.382645976</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp1   7.35424869   12.6457513      0.306427029       0.52690630</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp2  -0.19630948    0.1010714     -0.114513861       0.05895831</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp3  -0.02157688    0.3178732     -0.008091329       0.11920244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp4  -0.32343474    0.2123236     -0.161717372       0.10616182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp5  -0.22022787    0.1646723     -0.110113934       0.08233616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp6   0.07559831    0.1910684      0.031499294       0.07961182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sp7  -0.67750329   -0.2790184     -0.649273987      -0.26739268</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $spat_rich_diff</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class       : SpatRaster </span>

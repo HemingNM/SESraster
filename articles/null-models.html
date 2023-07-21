@@ -123,19 +123,20 @@ null models using presence/absence raster data.</p>
 presence-absence matrix, in which the entries represent the presence (1)
 or absence (0) of a particular species in a particular site, rows
 represent species or taxa, columns represent sites or samples <span class="citation">(<a href="#ref-ulrich2012" role="doc-biblioref">Ulrich
-and Gotelli 2012</a>)</span>. Gotelli <span class="citation">(<a href="#ref-gotelli2000" role="doc-biblioref">2000</a>)</span> summarizes
-nine null model algorithms for species co-occurrence analysis based on
-how sums of species (originally rows) and sites (originally columns) are
-treated (i.e. fixed, equiprobable, or proportional sums; see Table
-@ref(tab:table1)) <span class="citation">(<a href="#ref-gotelli2000" role="doc-biblioref">Gotelli 2000</a>)</span>. When using raster data,
+and Gotelli 2012</a>)</span>. There are nine major types of null model
+algorithms for species co-occurrence analysis based on how sums of
+species (originally rows) and sites (originally columns) are treated
+(i.e. fixed, equiprobable, or proportional sums; see Table 1; Table 2 of
+<span class="citation">(<a href="#ref-gotelli2000" role="doc-biblioref">Gotelli 2000</a>)</span>). When using raster data,
 layers represent species or taxa and cells represent sites or samples.
-<code>SESraster</code> currently implements six (green cells in Table
-@ref(tab:table1)) of the nine algorithms for co-occurrence analysis.</p>
+<code>SESraster</code> currently implements six (green cells in Table 1)
+of the nine algorithms for co-occurrence analysis summarized by Gotelli
+<span class="citation">(<a href="#ref-gotelli2000" role="doc-biblioref">2000</a>)</span>.</p>
 <table class="table table table-bordered" style="margin-left: auto; margin-right: auto;">
 <caption>
-Nine null model algorithms for species co-occurrence analysis listed in
-Gotelli (2000). Cells in green represent the algorithms currently
-implemented in SESraster.
+Table 1. Nine null model algorithms for species co-occurrence analysis
+listed in Gotelli (2000). Cells in green represent the algorithms
+currently implemented in SESraster.
 </caption>
 <thead>
 <tr>
