@@ -1,8 +1,5 @@
 # SESraster 0.7.0
 
-* bug fixes
-  - bug fix on attachMSG
-
 * new functions
   - added `SESraster()` to handle aleatorizations
   - added `algorithm_metrics()` to compare original and randomized rasters
