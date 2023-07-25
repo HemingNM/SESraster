@@ -48,7 +48,12 @@ See installation instructions and how the implemented null model algorithms work
 
 ### Citation
 
-If this package is useful to you, please cite it in your publications. Find more information using:
+- If you use this R package, please cite in your publications: <br>
+
+Heming N. M., Mota F. M. M., Alves-Ferreira G. (2023). “SESraster: Raster Randomization for Null Hypothesis Testing.” R package version 0.7.0, <https://CRAN.R-project.org/package=SESraster>
+<br>
+
+- For more information:
 
 ```         
 citation("SESraster")

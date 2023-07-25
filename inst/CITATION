@@ -7,9 +7,11 @@ note <- sprintf("R package version %s", meta$Version)
 bibentry(
   bibtype = "Misc",
   title   = "{SESraster}: Raster Randomization for Null Hypothesis Testing",
-  author = c(person("Neander Marcel", "Heming"), person("Flávio M. M.", "Mota"), person("Gabriela", "Alves-Ferreira")),
+  author = c(person(c("Neander", "Marcel"), "Heming"),
+              person(c("Flávio", "M.", "M."), "Mota"),
+              person("Gabriela", "Alves-Ferreira")),
   year   = year,
   note   = note,
-  url    = c("https://CRAN.R-project.org/package=SESraster", "https://github.com/HemingNM/SESraster")
+  url    = c("https://CRAN.R-project.org/package=SESraster")
 )
 
