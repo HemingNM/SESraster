@@ -6,7 +6,7 @@ note <- sprintf("R package version %s", meta$Version)
 
 bibentry(
   bibtype = "Misc",
-  title   = "{SESraster}: Raster Randomization for Null Hypothesis Testing",
+  title   = "SESraster: Raster Randomization for Null Hypothesis Testing",
   author = c(person(c("Neander", "Marcel"), "Heming"),
               person(c("Flávio", "M.", "M."), "Mota"),
               person("Gabriela", "Alves-Ferreira")),
