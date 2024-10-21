@@ -1,27 +1,20 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+── R CMD check results ──────────────────────────────────────────────────────────────── SESraster 0.7.1 ────
+Duration: 1m 4.7s
 
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-❯ checking HTML version of manual ... NOTE
-  Skipping checking HTML validation: no command 'tidy' found
-
+Maintainer: ‘Neander Marcel Heming <neanderh@yahoo.com.br>’
 
 ## Maintainer comments
-Main changes are listed below and in the NEWS file:
+Main changes are listed below:
 
-* This is a new release.
+# SESraster 0.7.1
 
-* new functions
-  - added `SESraster()` to handle aleatorizations
-  - added `algorithm_metrics()` to compare original and randomized rasters
-  - added `plot_alg_metrics()` to plot site and species difference metrics 
-  between original and randomized rasters
+* bug fixes
+  - bug fix on SESraster() that was creating only a single temporary raster for 
+  FUN metrics results. Now it creates "n = aleats" temporary rasters.
 
 * function changes
-  - changed function name from .fit.memory() to fit.memory() and added argument "n"
-  - Added cross links to functions
-
-* vignette
-  - added vignette to exemplify how `SESraster()` works
-  - changed order of vignettes
+  - SESraster() now also returns p values for the upper and lower tails (i.e. "p_lower", "p_upper")

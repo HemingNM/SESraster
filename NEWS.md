@@ -1,3 +1,12 @@
+# SESraster 0.7.1
+
+* bug fixes
+  - bug fix on SESraster() that was creating only a single temporary raster for 
+  FUN metrics results. Now it creates "n = aleats" temporary rasters.
+
+* function changes
+  - SESraster() now also returns p values for the upper and lower tails (i.e. "p_lower", "p_upper")
+
 # SESraster 0.7.0
 
 * new functions
@@ -18,7 +27,7 @@
 
 * bux fixes
   - fixed error in `.str.sample()` to avoid negative probabilities when all 
-species were absent from a cell (i.e. all values are zero)
+  species were absent from a cell (i.e. all values are zero)
 
 * new function
   - added `bootspat_ff()` to include Fixed-Fixed algorithm
