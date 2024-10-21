@@ -5,7 +5,6 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="SESraster">
 <title>Null model algorithms • SESraster</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -14,64 +13,48 @@
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Null model algorithms">
-<meta property="og:description" content="SESraster">
-<meta property="og:image" content="https://hemingnm.github.io/SESraster/logo.png">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Null model algorithms">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">SESraster</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.1</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/null-models.html">Null model algorithms</a>
-    <a class="dropdown-item" href="../articles/spatial-null-models.html">Spatial null model algorithms in SESraster</a>
-    <a class="dropdown-item" href="../articles/SES.html">Standardized effect sizes</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/null-models.html">Null model algorithms</a></li>
+    <li><a class="dropdown-item" href="../articles/spatial-null-models.html">Spatial null model algorithms in SESraster</a></li>
+    <li><a class="dropdown-item" href="../articles/SES.html">Standardized effect sizes</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/HemingNM/SESraster/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/HemingNM/SESraster/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
 
@@ -84,9 +67,9 @@
                         <h4 data-toc-skip class="author">Neander M.
 Heming, Flávio Mota, and Gabriela Alves-Ferreira</h4>
             
-            <h4 data-toc-skip class="date">2023-08-10</h4>
+            <h4 data-toc-skip class="date">2024-10-21</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/HemingNM/SESraster/blob/HEAD/vignettes/null-models.Rmd" class="external-link"><code>vignettes/null-models.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/HemingNM/SESraster/blob/master/vignettes/null-models.Rmd" class="external-link"><code>vignettes/null-models.Rmd</code></a></small>
       <div class="d-none name"><code>null-models.Rmd</code></div>
     </div>
 
@@ -122,16 +105,16 @@ null models using presence/absence raster data.</p>
 <p>The data for null model analyses usually consists of a binary
 presence-absence matrix, in which the entries represent the presence (1)
 or absence (0) of a particular species in a particular site, rows
-represent species or taxa, columns represent sites or samples <span class="citation">(<a href="#ref-ulrich2012" role="doc-biblioref">Ulrich
-and Gotelli 2012</a>)</span>. There are nine major types of null model
-algorithms for species co-occurrence analysis based on how sums of
-species (originally rows) and sites (originally columns) are treated
+represent species or taxa, columns represent sites or samples <span class="citation">(<a href="#ref-ulrich2012">Ulrich and Gotelli
+2012</a>)</span>. There are nine major types of null model algorithms
+for species co-occurrence analysis based on how sums of species
+(originally rows) and sites (originally columns) are treated
 (i.e. fixed, equiprobable, or proportional sums; see Table 1; Table 2 of
-<span class="citation">(<a href="#ref-gotelli2000" role="doc-biblioref">Gotelli 2000</a>)</span>). When using raster data,
-layers represent species or taxa and cells represent sites or samples.
-<code>SESraster</code> currently implements six (green cells in Table 1)
-of the nine algorithms for co-occurrence analysis summarized by Gotelli
-<span class="citation">(<a href="#ref-gotelli2000" role="doc-biblioref">2000</a>)</span>.</p>
+<span class="citation">(<a href="#ref-gotelli2000">Gotelli
+2000</a>)</span>). When using raster data, layers represent species or
+taxa and cells represent sites or samples. <code>SESraster</code>
+currently implements six (green cells in Table 1) of the nine algorithms
+for co-occurrence analysis summarized by Gotelli <span class="citation">(<a href="#ref-gotelli2000">2000</a>)</span>.</p>
 <table class="table table table-bordered" style="margin-left: auto; margin-right: auto;">
 <caption>
 Table 1. Nine null model algorithms for species co-occurrence analysis
@@ -142,76 +125,76 @@ currently implemented in SESraster.
 <tr>
 <th style="empty-cells: hide;border-bottom:hidden;" colspan="2">
 </th>
-<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; padding-right: 4px; padding-left: 4px; background-color: #F2F2F2 !important;" colspan="3">
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; padding-right: 4px; padding-left: 4px; background-color: rgba(242, 242, 242, 255) !important;" colspan="3">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
 Site (Col, Cell)
 </div>
 </th>
 </tr>
 <tr>
-<th style="text-align:right;background-color: #F2F2F2 !important;">
+<th style="text-align:right;background-color: rgba(242, 242, 242, 255) !important;">
 </th>
-<th style="text-align:center;background-color: #F2F2F2 !important;">
+<th style="text-align:center;background-color: rgba(242, 242, 242, 255) !important;">
 </th>
-<th style="text-align:center;background-color: #F2F2F2 !important;">
+<th style="text-align:center;background-color: rgba(242, 242, 242, 255) !important;">
 Equiprobable
 </th>
-<th style="text-align:center;background-color: #F2F2F2 !important;">
+<th style="text-align:center;background-color: rgba(242, 242, 242, 255) !important;">
 Proportional
 </th>
-<th style="text-align:center;background-color: #F2F2F2 !important;">
+<th style="text-align:center;background-color: rgba(242, 242, 242, 255) !important;">
 Fixed
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align:right;font-weight: bold;background-color: #F2F2F2 !important;border-right:1px solid;">
-Species<br>(Row, Layer)
+<td style="text-align:right;font-weight: bold;background-color: rgba(242, 242, 242, 255) !important;border-right:1px solid;">
+Species&lt;br&gt;(Row, Layer)
 </td>
-<td style="text-align:center;font-weight: bold;background-color: #F2F2F2 !important;border-right:1px solid;">
+<td style="text-align:center;font-weight: bold;background-color: rgba(242, 242, 242, 255) !important;border-right:1px solid;">
 Equiprobable
 </td>
-<td style="text-align:center;border-right:1px solid;background-color: #B4EEB4 !important;">
-SIM1: EE<br>occurrence frequency: E <br> site richness: E
+<td style="text-align:center;border-right:1px solid;background-color: rgba(180, 238, 180, 255) !important;">
+SIM1: EE&lt;br&gt;occurrence frequency: E &lt;br&gt; site richness: E
 </td>
-<td style="text-align:center;border-right:1px solid;background-color: #FFFAFA !important;">
-SIM6: EP<br>occurrence frequency: E <br> site richness: P
+<td style="text-align:center;border-right:1px solid;background-color: rgba(255, 250, 250, 255) !important;">
+SIM6: EP&lt;br&gt;occurrence frequency: E &lt;br&gt; site richness: P
 </td>
-<td style="text-align:center;background-color: #B4EEB4 !important;">
-SIM3: EF<br>occurrence frequency: E <br> site richness: F
+<td style="text-align:center;background-color: rgba(180, 238, 180, 255) !important;">
+SIM3: EF&lt;br&gt;occurrence frequency: E &lt;br&gt; site richness: F
 </td>
 </tr>
 <tr>
-<td style="text-align:right;font-weight: bold;background-color: #F2F2F2 !important;border-right:1px solid;">
+<td style="text-align:right;font-weight: bold;background-color: rgba(242, 242, 242, 255) !important;border-right:1px solid;">
 </td>
-<td style="text-align:center;font-weight: bold;background-color: #F2F2F2 !important;border-right:1px solid;">
+<td style="text-align:center;font-weight: bold;background-color: rgba(242, 242, 242, 255) !important;border-right:1px solid;">
 Proportional
 </td>
-<td style="text-align:center;border-right:1px solid;background-color: #B4EEB4 !important;">
-SIM7: PE<br>occurrence frequency: P <br> site richness: E
+<td style="text-align:center;border-right:1px solid;background-color: rgba(180, 238, 180, 255) !important;">
+SIM7: PE&lt;br&gt;occurrence frequency: P &lt;br&gt; site richness: E
 </td>
-<td style="text-align:center;border-right:1px solid;background-color: #FFFAFA !important;">
-SIM8: PP<br>occurrence frequency: P <br> site richness: P
+<td style="text-align:center;border-right:1px solid;background-color: rgba(255, 250, 250, 255) !important;">
+SIM8: PP&lt;br&gt;occurrence frequency: P &lt;br&gt; site richness: P
 </td>
-<td style="text-align:center;background-color: #B4EEB4 !important;">
-SIM5: PF<br>occurrence frequency: P <br> site richness: F
+<td style="text-align:center;background-color: rgba(180, 238, 180, 255) !important;">
+SIM5: PF&lt;br&gt;occurrence frequency: P &lt;br&gt; site richness: F
 </td>
 </tr>
 <tr>
-<td style="text-align:right;font-weight: bold;background-color: #F2F2F2 !important;border-right:1px solid;">
+<td style="text-align:right;font-weight: bold;background-color: rgba(242, 242, 242, 255) !important;border-right:1px solid;">
 </td>
-<td style="text-align:center;font-weight: bold;background-color: #F2F2F2 !important;border-right:1px solid;">
+<td style="text-align:center;font-weight: bold;background-color: rgba(242, 242, 242, 255) !important;border-right:1px solid;">
 Fixed
 </td>
-<td style="text-align:center;border-right:1px solid;background-color: #B4EEB4 !important;">
-SIM2: FE<br>occurrence frequency: F <br> site richness: E
+<td style="text-align:center;border-right:1px solid;background-color: rgba(180, 238, 180, 255) !important;">
+SIM2: FE&lt;br&gt;occurrence frequency: F &lt;br&gt; site richness: E
 </td>
-<td style="text-align:center;border-right:1px solid;background-color: #FFFAFA !important;">
-SIM4: FP<br>occurrence frequency: F <br> site richness: P
+<td style="text-align:center;border-right:1px solid;background-color: rgba(255, 250, 250, 255) !important;">
+SIM4: FP&lt;br&gt;occurrence frequency: F &lt;br&gt; site richness: P
 </td>
-<td style="text-align:center;background-color: #B4EEB4 !important;">
-SIM9: FF<br>occurrence frequency: F <br> site richness: F
+<td style="text-align:center;background-color: rgba(180, 238, 180, 255) !important;">
+SIM9: FF&lt;br&gt;occurrence frequency: F &lt;br&gt; site richness: F
 </td>
 </tr>
 </tbody>
@@ -230,7 +213,7 @@ spatial data.</p>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-gotelli2000" class="csl-entry">
 Gotelli, Nicholas J. 2000. <span>“Null Model Analysis of Species
 Co-Occurrence Patterns.”</span> <em>Ecology</em> 81 (9): 2606–21. <a href="https://doi.org/10.2307/177478" class="external-link">https://doi.org/10.2307/177478</a>.
@@ -243,28 +226,26 @@ Proportional Resampling.”</span> <em>Ecological Modelling</em> 244
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Neander Marcel Heming, Flávio M. M. Mota, Gabriela Alves-Ferreira.</p>
+  <p>Developed by Neander Marcel Heming, Flávio M. M. Mota, Gabriela Alves-Ferreira.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>

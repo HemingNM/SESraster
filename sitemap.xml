@@ -1,69 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/404.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/articles/SES.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/articles/null-models.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/articles/spatial-null-models.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/index.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/SESraster.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/algorithm_metrics.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/bootspat_ff.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/bootspat_naive.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/bootspat_str.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/dot-lyr.sample.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/dot-sample.not.NA.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/dot-str.sample.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/fit.memory.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/fr2prob.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/load_ext_data.html</loc>
-  </url>
-  <url>
-    <loc>https://hemingnm.github.io/SESraster/reference/plot_alg_metrics.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://hemingnm.github.io/SESraster/404.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/LICENSE.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/articles/SES.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/articles/index.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/articles/null-models.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/articles/spatial-null-models.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/authors.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/index.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/news/index.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/SESraster.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/algorithm_metrics.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/bootspat_ff.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/bootspat_naive.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/bootspat_str.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/dot-lyr.sample.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/dot-sample.not.NA.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/dot-str.sample.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/fit.memory.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/fr2prob.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/index.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/load_ext_data.html</loc></url>
+<url><loc>https://hemingnm.github.io/SESraster/reference/plot_alg_metrics.html</loc></url>
 </urlset>
+
