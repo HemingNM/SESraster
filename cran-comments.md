@@ -18,4 +18,3 @@ Main changes are listed below:
 
 * function changes
   - SESraster() now also returns p values for the upper and lower tails (i.e. "p_lower", "p_upper")
-

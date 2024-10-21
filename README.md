@@ -6,7 +6,7 @@
 
 # SESraster <a href="https://hemingnm.github.io/SESraster/"><img src="man/figures/logo.png" alt="SESraster website" align="right" height="139"/></a>
 
-Randomization of presence/absence species distribution raster data with or without including spatial structure for calculating standardized effect sizes and testing null hypothesis. The randomization algorithms are based on classical algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>) implemented for raster data.
+Randomization of presence/absence species distribution raster data for calculating standardized effect sizes and testing null hypothesis. The randomization algorithms are based on classical algorithms for matrices (Gotelli 2000, <doi:10.2307/177478>) implemented for raster data.
 
 <br>
 
@@ -48,7 +48,12 @@ See installation instructions and how the implemented null model algorithms work
 
 ### Citation
 
-If this package is useful to you, please cite it in your publications. Find more information using:
+- If you use this R package, please cite in your publications: <br>
+
+Heming N. M., Mota F. M. M., Alves-Ferreira G. (2023). SESraster: Raster Randomization for Null Hypothesis Testing. R package version 0.7.0, <https://CRAN.R-project.org/package=SESraster>
+<br>
+
+- For more information:
 
 ```         
 citation("SESraster")
