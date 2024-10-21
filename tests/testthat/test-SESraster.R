@@ -10,15 +10,15 @@ test_that("SES works", {
   # test ses by species
   ses <- SESraster(r, FUN=appmean, spat_alg = "bootspat_naive", spat_alg_args=list(random="species"),
                    aleats = aleats)
-  nms <- paste0(c("Observed", "Null_Mean", "Null_SD", "SES", "co_lower", "co_upper", "p_lower", "p_upper"), ".mean")
+  nms <- paste0(c("Observed", "Null_Mean", "Null_SD", "SES", "p_lower", "p_upper"), ".mean")
 
   expect_true(inherits(ses, "SpatRaster"), "TRUE")
   expect_true(terra::nlyr(ses) == length(nms))
   expect_named(ses, nms)
 
-  expect_equal(unlist(ses[1]), setNames(as.double(rep(c(NA, 0), each=terra::nlyr(ses)/2)), nms))
+  expect_equal(unlist(ses[1]), setNames(as.double(rep(c(NA, 0), c(4, 2))), nms))
 
-  expect_equal(unlist(ses[2]), setNames(c(0, 0.4, 0.11952286, -3.34664011, 5, 0, 1, 0), nms))
+  expect_equal(unlist(ses[2]), setNames(c(0, 0.4, 0.11952286, -3.34664011, 1, 0), nms))
 
   expect_equal(round(sd(terra::values(ses[[2]]), na.rm = TRUE), 3), as.double(0.081)) # test spat variation
 
@@ -31,7 +31,7 @@ test_that("SES works", {
   expect_true(terra::nlyr(ses) == length(nms))
   expect_named(ses, nms)
 
-  expect_equal(unlist(ses[1]), setNames(as.double(rep(c(NA, 0), each=terra::nlyr(ses)/2)), nms))
+  expect_equal(unlist(ses[1]), setNames(as.double(rep(c(NA, 0), c(4, 2))), nms))
 
   expect_equal(unlist(ses[2]), setNames(rep(0, length(nms)), nms))
 
@@ -46,7 +46,7 @@ test_that("SES works", {
   expect_true(terra::nlyr(ses) == length(nms))
   expect_named(ses, nms)
 
-  expect_equal(unlist(ses[1]), setNames(as.double(rep(c(NA, 0), each=terra::nlyr(ses)/2)), nms))
+  expect_equal(unlist(ses[1]), setNames(as.double(rep(c(NA, 0), c(4, 2))), nms))
 
   ## example with 'vec_alg'
   appsv <- function(x, lyrv, na.rm=T, ...){
@@ -63,8 +63,8 @@ test_that("SES works", {
                    aleats = aleats,
                    filename = paste0(tempfile(),"ses.tif"))
   # names(ses)
-  nms <- paste0(c("Observed", "Null_Mean", "Null_SD" ,"SES", "co_lower", "co_upper", "p_lower", "p_upper"), ".", n2)
-  expect_equal(unlist(ses[1]), setNames(as.double(rep(c(NA, 0), each=terra::nlyr(ses)/2)), nms))
+  nms <- paste0(c("Observed", "Null_Mean", "Null_SD" ,"SES", "p_lower", "p_upper"), ".", n2)
+  expect_equal(unlist(ses[1]), setNames(as.double(rep(c(NA, 0), c(4, 2))), nms))
 
   expect_equal(unlist(ses[2]), setNames(rep(0, length(nms)), nms))
 

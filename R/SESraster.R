@@ -187,9 +187,9 @@ SESraster <- function(x,
   rast.rand <- terra::rast(rast.rand) # transform a list into a SpatRaster
 
   ## vector to store results
-  resu <- stats::setNames(as.double(rep(NA, 8)),
+  resu <- stats::setNames(as.double(rep(NA, 6)),
                           c("Observed","Null_Mean", "Null_SD", "SES",
-                            "co_lower", "co_upper", "p_lower", "p_upper"))
+                            "p_lower", "p_upper"))
 
   ## SES for multiple layers
   ses <- terra::rast(lapply(seq_len(nrow(rcomb)),
@@ -205,14 +205,12 @@ SESraster <- function(x,
 
                                                   nm <- mean(x[-1], na.rm=TRUE) ### Randomized mean value
                                                   nsd <- stats::sd(x[-1], na.rm=TRUE) ### Randomized stdev value
-                                                  co_lower <- sum((x[1] < x[-1]), na.rm = T) #Count of times observed value was lower than random values
-                                                  co_upper <- sum((x[1] > x[-1]), na.rm = T) # Count of times observed value was higher than random values
-                                                  p_lower <- co_lower / aleats # Calculate p-value for lower tail
-                                                  p_upper <- co_upper / aleats # Calculate p-value for upper tail
+                                                  p_lower <- sum((x[1] < x[-1]), na.rm = T)/aleats # Count of times observed value was lower than random values and calculate p-value
+                                                  p_upper <- sum((x[1] > x[-1]), na.rm = T)/aleats # Count of times observed value was higher than random values and calculate p-value
 
                                                   resu[] <- c(x[1], nm, nsd,
                                                               ifelse(nsd==0, (x[1]-nm), (x[1]-nm)/nsd),
-                                                              co_lower, co_upper, p_lower, p_upper)
+                                                              p_lower, p_upper)
 
                                                   return(resu)
 
@@ -224,7 +222,7 @@ SESraster <- function(x,
 
                             }, ro = rast.obs, rr = rast.rand, rcomb = rcomb, resu = resu,
                             mi = mi,
-                            cores = cores, aleats, temp.filename = temp.filename,
+                            cores = cores, aleats = aleats, temp.filename = temp.filename,
                             overwrite = overwrite, ...))
 
   if(filename != ""){
