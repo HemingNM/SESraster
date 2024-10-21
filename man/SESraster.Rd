@@ -64,7 +64,8 @@ files fit in memory. Mostly used for internal test units.}
 \value{
 SpatRaster. The function returns the observed metric, the mean of the
 simulations calculated over n=aleats times, the standard deviation of the
-simulations, and the standardized effect size (SES) for the metric defined in FUN.
+simulations, the standardized effect size (SES) for the metric defined in FUN,
+and p values for the upper and lower tails.
 }
 \description{
 Calculates the standardized effect sizes using a custom function

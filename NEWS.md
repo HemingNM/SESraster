@@ -5,8 +5,7 @@
   FUN metrics results. Now it creates "n = aleats" temporary rasters.
 
 * function changes
-  - SESraster() now returns "co_lower", "co_upper", "p_lower", "p_upper" values
-  in addition to the former resulting values
+  - SESraster() now also returns p values for the upper and lower tails (i.e. "p_lower", "p_upper")
 
 # SESraster 0.7.0
 

@@ -30,7 +30,8 @@
 #'
 #' @return SpatRaster. The function returns the observed metric, the mean of the
 #'  simulations calculated over n=aleats times, the standard deviation of the
-#'  simulations, and the standardized effect size (SES) for the metric defined in FUN.
+#'  simulations, the standardized effect size (SES) for the metric defined in FUN,
+#'  and p values for the upper and lower tails.
 #'
 #' @details Perform n=aleats spatial randomizations based on the randomization
 #' method defined in 'spat_alg' argument and calculates the metric
