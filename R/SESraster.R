@@ -173,6 +173,9 @@ SESraster <- function(x,
       FUN_args[[Fa_sample]] <- rlang::exec(Fa_alg, FUN_args[[Fa_sample]], !!!Fa_alg_args)
     }
 
+    ## filename for null raster i
+    FUN_args[["filename"]] <- ifelse(mi, "", temp.r[i])
+
     ### calculate metric
     rast.rand[[i]] <- rlang::exec(FUN, pres.site.null, !!!FUN_args)
 
@@ -184,37 +187,44 @@ SESraster <- function(x,
   rast.rand <- terra::rast(rast.rand) # transform a list into a SpatRaster
 
   ## vector to store results
-  resu <- stats::setNames(as.double(rep(NA, 4)),
-                          c("Observed", "Null_Mean", "Null_SD", "SES"))
+  resu <- stats::setNames(as.double(rep(NA, 8)),
+                          c("Observed","Null_Mean", "Null_SD", "SES",
+                            "co_lower", "co_upper", "p_lower", "p_upper"))
 
   ## SES for multiple layers
   ses <- terra::rast(lapply(seq_len(nrow(rcomb)),
                             function(l, ro, rr, rcomb, resu,
-                                     mi, cores, temp.filename, overwrite, ...){
+                                     mi, cores, aleats, temp.filename, overwrite, ...){
 
                               lnm <- names(ro[[rcomb[l,1]]])
                               resu <- stats::setNames(resu, paste(names(resu), lnm, sep = "."))
 
                               ## Calculating the standardized effect size (SES)
                               return(terra::app(c(ro[[rcomb[l,1]]], rr[[rcomb[l,]]]),
-                                                fun=function(x, lnm, resu){
+                                                fun=function(x, lnm, resu, aleats){
 
                                                   nm <- mean(x[-1], na.rm=TRUE) ### Randomized mean value
                                                   nsd <- stats::sd(x[-1], na.rm=TRUE) ### Randomized stdev value
+                                                  co_lower <- sum((x[1] < x[-1]), na.rm = T) #Count of times observed value was lower than random values
+                                                  co_upper <- sum((x[1] > x[-1]), na.rm = T) # Count of times observed value was higher than random values
+                                                  p_lower <- co_lower / aleats # Calculate p-value for lower tail
+                                                  p_upper <- co_upper / aleats # Calculate p-value for upper tail
 
-                                                  resu[] <- c(x[1], nm, nsd, ifelse(nsd==0, (x[1]-nm), (x[1]-nm)/nsd))
+                                                  resu[] <- c(x[1], nm, nsd,
+                                                              ifelse(nsd==0, (x[1]-nm), (x[1]-nm)/nsd),
+                                                              co_lower, co_upper, p_lower, p_upper)
 
                                                   return(resu)
 
                                                 },
                                                 lnm = lnm, resu = resu,
-                                                cores = cores,
+                                                cores = cores, aleats,
                                                 filename = ifelse(mi, "", paste0(temp.filename, l, "out.tif")),
                                                 overwrite = overwrite, ...))
 
                             }, ro = rast.obs, rr = rast.rand, rcomb = rcomb, resu = resu,
                             mi = mi,
-                            cores = cores, temp.filename = temp.filename,
+                            cores = cores, aleats, temp.filename = temp.filename,
                             overwrite = overwrite, ...))
 
   if(filename != ""){
@@ -223,6 +233,7 @@ SESraster <- function(x,
 
   ## HD Cleanup
   unlink(temp.a) # delete the file that will not be used
+  unlink(temp.r) # delete the file that will not be used
   unlink(temp.raster) # delete the file that will not be used
   # unlink(paste0(temp.filename, "avg.tif"))
   # unlink(paste0(temp.filename, "sd.tif"))

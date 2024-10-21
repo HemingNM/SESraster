@@ -25,18 +25,13 @@ know they are correct, so I am submitting as it is.
 
 Main changes are listed below:
 
-* This is a new release.
+# SESraster 0.7.1
 
-* bux fixes
-  - fixed error in `.str.sample()` to avoid negative probabilities when all 
-species were absent from a cell (i.e. all values are zero)
+* bug fixes
+  - bug fix on SESraster() that was creating only a single temporary raster for 
+  FUN metrics results. Now it creates "n = aleats" temporary rasters.
 
-* new function
-  - added `bootspat_ff()` to include Fixed-Fixed algorithm
+* function changes
+  - SESraster() now returns "co_lower", "co_upper", "p_lower", "p_upper" values
+  in addition to the former resulting values
 
-* enhancements
-  - added new vignette
-  - added references and improved accuracy of algorithm description in DESCRIPTION, 
-  README, and vignettes
-  - improved accuracy of null model descriptions in vignettes
-  - added link to functions in documentation
